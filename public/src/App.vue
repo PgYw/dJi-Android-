@@ -1,18 +1,20 @@
 <template>
   <div class="main">
-    <div class="downloadApp">
-      <button>
-        <i class="shanchu" @click="hiddlen()"></i>
-      </button>
-      <span class="logo">
-        <img src="../static/images/djiapp.png" alt="">
-      </span>
-      <span class="text">
-        <div>大疆商城 APP</div>
-        <div>随时获取优惠信息！</div>
-      </span>
-      <span class="button">立即下载</span>
-    </div>
+    <transition name="fade">
+      <div class="downloadApp">
+        <button>
+          <i class="shanchu" @click="hiddlen()" v-on:click="show = !show"></i>
+        </button>
+        <span class="logo">
+          <img src="../static/images/djiapp.png" alt="">
+        </span>
+        <span class="text">
+          <div>大疆商城 APP</div>
+          <div>随时获取优惠信息！</div>
+        </span>
+        <span class="button">立即下载</span>
+      </div>
+    </transition>
     <div class="header">
       <span class="nav">
         <button class="menuButton">
@@ -30,18 +32,61 @@
       </span>
       <span class="cart">
         <i class="el-icon-search search"></i>
-        <i class="el-icon-shopping-cart-full"></i>
+        <el-badge :value="0" class="item"  type="primary">
+          <i class="el-icon-shopping-cart-full"></i>
+        </el-badge>
       </span>
+    </div>
+    <div class="body">
+      <div class="swipe">
+        <mt-swipe :auto="5500">
+          <mt-swipe-item v-for="item in items" :key="item.id">
+            <a :href="item.href">
+              <div class="productLn">
+                <h2>{{item.productLnTop}}</h2>
+                <span>{{item.productLnButton}}</span>
+              </div>
+              <img :src="item.url" alt=""/>
+            </a>
+          </mt-swipe-item>
+        </mt-swipe>
+      </div>
+      <div class="index_one">
+        <div class="productTe">
+          <h3>灵眸 Osmo</h3>
+        </div>
+        <div class="one_product">
+          <ul>
+            <li>
+              <a href="" class="product">
+                <div class="product_img">
+                  <img src="" alt="">
+                </div>
+                <div class="product_ln"></div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: 'App',
+  data(){
+    return{
+      items:[
+        {href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
+        {href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
+      ]
+    }
+  },
   methods:{
     hiddlen(){
-      this.$el.style.display="none"
-    }
+      this.$el.children[0].style="display:none;"
+    },
+    show:true
   },
 }
 </script>
@@ -49,6 +94,12 @@ export default {
 *{
   padding: 0px;
   margin:0px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
 .main{
   position: relative;
@@ -119,10 +170,12 @@ export default {
   position: absolute;
   top: 8px;
   right: 18px;
+  cursor: pointer;
 }
 .header{
   height:48px;
   background: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
 }
 .nav{
   padding:10px 8px;
@@ -158,7 +211,7 @@ export default {
   width: 20px;
 }
 .header>.center{
-  position: absolute;
+  position: fixed;
   height:48px;
   line-height: 55px;
   width: 100%;
@@ -171,15 +224,84 @@ export default {
 }
 .header .cart>.search{
   font-size: 25px;
-  line-height: 45px;
+  line-height: 48px;
   padding:0 20px;
+  cursor: pointer;
 }
 .cart{
   float: right;
   padding-right: 20px;
+  height:100%;
 }
-.cart>i{
+.cart>.item>i{
   font-size: 25px;
-  line-height: 46px;
+}
+.el-badge{
+  vertical-align: inherit;
+  cursor: pointer;
+}
+.body{
+  max-width: 414px;
+  margin: auto;
+  overflow-x: hidden;
+}
+.mint-swipe{
+  height:320px;
+}
+.mint-swipe img{
+  width:100%;
+  height:100%;
+}
+.swipe>.mint-swipe a{
+  text-decoration: none;
+}
+.swipe>.mint-swipe a>.productLn{
+  position: absolute;
+  width: 320px;
+  left: 0;
+  right: 0;
+  bottom:38px;
+  margin: 0 auto;
+  text-align: center;
+}
+.swipe>.mint-swipe a>.productLn>h2,.swipe>.mint-swipe a>.productLn>span{
+  color:#fff;
+}
+.index_one{
+  border-bottom: none;
+  padding: .75rem 1rem;
+  background: transparent;
+}
+.index_one .one_product>ul{
+  list-style: none;
+  float: left;
+  overflow: hidden;
+}
+.index_one .one_product>ul::after{
+  content:"";
+  display:block;
+  clear: both;
+}
+.index_one .one_product>ul>li{
+  width:50%;
+  padding: 0 4px 8px;
+  box-sizing: border-box;
+}
+.index_one .one_product li>a{
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: #fff;
+  position: relative;
+  color: #3b3e40;
+  min-height: 100%;
+  width: 100%;
+}
+.index_one .one_product li>a>.product_img{
+  width:152px;
+  position: relative;
+  display: block;
+  margin: auto;
+  max-width: 240px;
 }
 </style>
