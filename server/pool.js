@@ -4,7 +4,7 @@ var pool=mysql.createPool({
   host:"127.0.0.1",
   user:"root",
   password:"",
-  database:"myject",
+  database:"djiApp",
   connctionLimit:15
 });
 module.exports=pool;

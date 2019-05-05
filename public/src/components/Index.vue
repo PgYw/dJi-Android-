@@ -1,0 +1,370 @@
+<template>
+  <div class="main">
+    <div class="downloadApp">
+      <button>
+        <i class="shanchu" @click="hiddlen()"></i>
+      </button>
+      <span class="logo">
+        <img src="http://localhost:8080/static/images/djiapp.png" alt="">
+      </span>
+      <span class="text">
+        <div>大疆商城 APP</div>
+        <div>随时获取优惠信息！</div>
+      </span>
+      <span class="button">立即下载</span>
+    </div>
+    <div class="header">
+      <span class="nav">
+        <button class="menuButton">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </span>
+      <span class="center">
+        <a href="">
+          <svg xmlns="http://www.w3.org/2000/svg" width="102" height="24" viewBox="0 0 102 24">
+            <path fill="#3B3E40" fill-rule="evenodd" d="M974.618882,425.963018 L977.713886,413 L984.493896,413 L980.970891,427.74602 C980.29289,430.592024 978.178887,431.276025 976.223884,431.276025 L960.599863,431.276025 C958.87786,431.276025 957.436858,430.543024 958.217859,427.25602 L959.625861,421.375012 C960.337862,418.390007 962.554865,417.710007 964.157867,417.710007 L975.062883,417.710007 L974.183881,421.385012 L968.615874,421.385012 C967.797873,421.385012 967.348872,421.562012 967.120872,422.518013 L966.22087,426.275018 C965.90087,427.62002 966.370871,427.71402 967.357872,427.71402 L972.458879,427.71402 C973.39288,427.71402 974.214881,427.65402 974.618882,425.962018 L974.618882,425.963018 Z M993.013907,417.665006 L989.823903,431.234025 L996.410912,431.234025 L999.599916,417.665006 L993.013907,417.665006 Z M982.291893,428.860022 L984.976896,417.665006 L991.562905,417.665006 L988.493901,430.419024 C987.216899,435.762031 983.643894,437.000033 981.223891,437.000033 L971.985878,437.000033 L973.09088,432.401027 C973.09088,432.401027 978.004887,432.426027 978.178887,432.404027 C979.936889,432.257027 981.685892,431.400025 982.291893,428.860022 Z M1009.50793,430.278024 C1008.85354,429.868389 1008.33022,429.27983 1007.99993,428.582022 L1009.49093,427.75002 C1009.81493,428.282021 1010.15293,428.668022 1010.50493,428.909022 C1010.96293,429.229022 1011.51893,429.388023 1012.17293,429.388023 C1013.51894,429.388023 1014.19294,428.853022 1014.19294,427.78402 C1014.19294,427.31402 1014.02694,426.919019 1013.69794,426.600019 C1013.42394,426.348018 1012.93793,426.068018 1012.23993,425.760018 L1011.46893,425.416017 C1010.54193,425.000017 1009.86993,424.559016 1009.45793,424.089015 C1008.97793,423.540015 1008.73793,422.840014 1008.73793,421.989012 C1008.73793,421.122011 1009.04193,420.41101 1009.65093,419.857009 C1010.26493,419.297009 1011.05293,419.017008 1012.01393,419.017008 C1013.52694,419.017008 1014.62494,419.630009 1015.30594,420.856011 L1013.88194,421.738012 C1013.45194,420.976011 1012.82893,420.596011 1012.01393,420.596011 C1011.00793,420.596011 1010.50493,421.049011 1010.50493,421.956012 C1010.50493,422.656013 1011.06693,423.252014 1012.18893,423.745015 L1012.94393,424.089015 C1014.00394,424.559016 1014.76394,425.046017 1015.22294,425.550017 C1015.73694,426.138018 1015.99294,426.877019 1015.99294,427.76702 C1015.99294,428.769022 1015.63894,429.567023 1014.92894,430.160024 C1014.23094,430.720025 1013.32294,431.000025 1012.20593,431.000025 C1011.16193,431.000025 1010.26193,430.760025 1009.50793,430.278024 Z M1020.79495,420.755011 L1017.32494,420.755011 L1017.32494,419.151009 L1026.05695,419.151009 L1026.05695,420.755011 L1022.59695,420.755011 L1022.59695,430.850025 L1020.79495,430.850025 L1020.79495,420.755011 Z M1029.23196,429.321023 C1028.06496,428.173021 1027.48196,426.734019 1027.48196,425.004017 C1027.48196,423.269014 1028.06496,421.830012 1029.23196,420.688011 C1030.38996,419.563009 1031.81296,419.000008 1033.50596,419.000008 C1035.18697,419.000008 1036.60597,419.563009 1037.76197,420.688011 C1038.92997,421.830012 1039.51297,423.268014 1039.51297,425.004017 C1039.51297,426.734019 1038.92997,428.173021 1037.76297,429.321023 C1036.60497,430.440024 1035.18597,431.000025 1033.50496,431.000025 C1031.81196,431.000025 1030.38796,430.440024 1029.23096,429.320023 L1029.23196,429.321023 Z M1036.48897,428.111021 C1037.26497,427.28802 1037.65297,426.253018 1037.65297,425.004017 C1037.65297,423.750015 1037.26497,422.712013 1036.48897,421.889012 C1035.71197,421.049011 1034.71797,420.629011 1033.50596,420.629011 C1032.29296,420.629011 1031.29096,421.049011 1030.49796,421.889012 C1029.72096,422.712013 1029.33296,423.750015 1029.33296,425.004017 C1029.33296,426.253018 1029.72096,427.28802 1030.49796,428.111021 C1031.29096,428.951022 1032.29296,429.371023 1033.50596,429.371023 C1034.71797,429.371023 1035.71197,428.951022 1036.48897,428.111021 Z M1041.78397,419.151009 L1045.69698,419.151009 C1046.96498,419.151009 1047.97098,419.451009 1048.71398,420.05001 C1049.52899,420.693011 1049.93699,421.634012 1049.93699,422.871014 C1049.93699,424.556016 1049.14698,425.673018 1047.56598,426.221018 L1050.31399,430.849025 L1048.23598,430.849025 L1045.71398,426.516019 L1043.60198,426.516019 L1043.60198,430.849025 L1041.78397,430.849025 L1041.78397,419.150009 L1041.78397,419.151009 Z M1045.62998,424.987017 C1047.25598,424.987017 1048.06798,424.282016 1048.06798,422.871014 C1048.06798,421.461012 1047.25598,420.755011 1045.62998,420.755011 L1043.60198,420.755011 L1043.60198,424.987017 L1045.62998,424.987017 Z M1052.34999,419.151009 L1059.765,419.151009 L1059.765,420.755011 L1054.16799,420.755011 L1054.16799,424.190015 L1059.128,424.190015 L1059.128,425.760018 L1054.16799,425.760018 L1054.16799,429.253022 L1060,429.253022 L1060,430.849025 L1052.34999,430.849025 L1052.34999,419.150009 L1052.34999,419.151009 Z" transform="translate(-958 -413)"/>
+          </svg>
+        </a>
+      </span>
+      <span class="cart">
+        <i class="el-icon-search search"></i>
+        <el-badge :value="0" class="item"  type="primary">
+          <i class="el-icon-shopping-cart-full"></i>
+        </el-badge>
+      </span>
+    </div>
+    <div class="body">
+      <div class="swipe">
+        <mt-swipe :auto="5500">
+          <mt-swipe-item v-for="item in items" :key="item.id">
+            <a :href="item.href">
+              <div class="productLn">
+                <h2>{{item.productLnTop}}</h2>
+                <span>{{item.productLnButton}}</span>
+              </div>
+              <img :src="item.url" alt=""/>
+            </a>
+          </mt-swipe-item>
+        </mt-swipe>
+      </div>
+      <div class="index_one">
+        <div class="productTe">
+          <h3>{{product_ify}}</h3>
+        </div>
+        <div class="one_product">
+          <ul>
+            <li v-for="one_product in one_products" :key="one_product.product_id">
+              <a :href="one_product.product_id" class="product">
+                <div class="product_img">
+                  <img :src="one_product.product_img" :alt="one_product.product_title">
+                </div>
+                <div class="product_ln">
+                  <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
+                  <div class="ln_price">{{"¥"+one_product.product_Oprice}}</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <a href="" class="Osmo">更多 {{product_ify}} 产品></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import Axios from 'axios'
+export default {
+  name:"App",
+  data(){
+    return{
+      one_products:[],
+      product_ify:[],
+      two_products:[],
+      three_products:[],
+      four_products:[],
+      items:[
+        {href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
+        {href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
+      ]
+    }
+  },
+  created(){
+    this.one_pr();
+    this.two_pr();
+  },
+  methods:{
+    hiddlen(){
+      this.$el.children[0].style="display:none;"
+    },
+    one_pr:function(){
+      this.$axios.get("http://127.0.0.1:3000/index/one_product").then(res=>{
+        this.one_products=res.data;
+        this.product_ify=res.data[0].product_ify;
+      })
+    },
+    two_pr:function(){
+      this.$axios.get("http://127.0.0.1:3000/index/two_product").then(res=>{
+        this.two_products=res.data;
+        console.log(res.data)
+        this.product_ify=res.data[0].product_ify;
+        console.log(this,two_products)
+        // 后台单双引号的问题
+        // this.product_ify=res.data[0].product_ify;重复使用的问题
+        // 二楼的循环
+      })
+    }
+  },
+  computed:{
+    
+  },
+}
+</script>
+
+<style lang="css">
+*{
+  padding: 0px;
+  margin:0px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
+.main{
+  position: relative;
+  background: #f7f9fa;
+}
+.downloadApp{
+  padding:0 16px;
+  height:55px;
+  background:rgb(59, 62, 64);
+}
+.downloadApp button{
+  float: left;
+  color: #fff;
+  padding: 16px 8px;
+  border:none;
+  background: none;
+  outline: none;
+}
+.downloadApp .shanchu{
+  font-style: normal;
+  font-family: "quark-mobile";
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+}
+.downloadApp .shanchu::after{
+  content:"X";
+}
+.logo{
+  float: left;
+  line-height: 50px;
+}
+.logo>img{
+  width:40px;
+  height:40px;
+  vertical-align:middle;
+  border-radius: 10px;
+}
+.text{
+  float: left;
+  margin-left:8px;
+  padding: 10px 0;
+  position: absolute;
+  overflow: hidden;
+}
+.text div:first-child{
+  font-size: 14px;
+  color: #fff;
+  line-height: 16px;
+  font-weight: 500;
+}
+.text div:nth-child(2){
+  font-size: 12px;
+  color: #9fa3a6;
+  line-height: 16px;
+}
+.button{
+  width:75px;
+  background:#1897f2;
+  height:2rem;
+  float: right;
+  border-radius: 5px;
+  color:#fff;
+  text-align: center;
+  line-height: 32px;
+  padding: 3px 5px;
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  cursor: pointer;
+}
+.header{
+  height:48px;
+  position: sticky;
+  top:0;
+  z-index: 3;
+  background: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
+}
+.nav{
+  padding:10px 8px;
+  line-height: 48px;
+}
+.nav .menuButton{
+  width: 40px;
+  height:48px;
+  display: inline-block;
+  vertical-align: top;
+  border: 0;
+  background: transparent;
+  outline: none;
+  -webkit-appearance: none;
+}
+.nav .menuButton>span{
+  display: block;
+  transition: all .4s ease;
+  line-height: 0;
+  font-size: 0;
+}
+.nav .menuButton>span:nth-child(2){
+  padding:5px 0;
+}
+.nav .menuButton>span::after{
+  background-color: #303233;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+  content: "";
+  display: inline-block;
+  height: 2px;
+  transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
+  width: 20px;
+}
+.header>.center{
+  position: absolute;
+  height:48px;
+  line-height: 55px;
+  width: 100%;
+  left: 0;
+  padding: 0 42px;
+  z-index: 1;
+  text-align: center;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.header .cart>.search{
+  font-size: 25px;
+  line-height: 48px;
+  padding:0 20px;
+  cursor: pointer;
+}
+.cart{
+  float: right;
+  padding-right: 20px;
+  height:100%;
+}
+.cart>.item>i{
+  font-size: 25px;
+}
+.el-badge{
+  vertical-align: inherit;
+  cursor: pointer;
+}
+.body{
+  max-width: 414px;
+  margin: auto;
+  overflow-x: hidden;
+}
+.mint-swipe{
+  height:320px;
+}
+.mint-swipe img{
+  width:100%;
+  height:100%;
+}
+.swipe>.mint-swipe a{
+  text-decoration: none;
+}
+.swipe>.mint-swipe a>.productLn{
+  position: absolute;
+  width: 320px;
+  left: 0;
+  right: 0;
+  bottom:38px;
+  margin: 0 auto;
+  text-align: center;
+}
+.swipe>.mint-swipe a>.productLn>h2,.swipe>.mint-swipe a>.productLn>span{
+  color:#fff;
+}
+.index_one{
+  border-bottom: none;
+  background: transparent;
+}
+.one_product{
+  margin-top:16px;
+}
+.index_one>.productTe{
+  padding:1rem 1rem;
+}
+.index_one .one_product>ul{
+  list-style: none;
+  overflow: hidden;
+}
+.index_one .one_product>ul::after{
+  content:"";
+  display:block;
+  clear: both;
+}
+.index_one .one_product>ul>li{
+  width:50%;
+  float: left;
+  padding: 0 4px 8px;
+  box-sizing: border-box;
+}
+.index_one .one_product li>a{
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: #fff;
+  position: relative;
+  color: #3b3e40;
+  min-height: 100%;
+  width: 100%;
+}
+.index_one .one_product li>a>.product_img{
+  width:152px;
+  position: relative;
+  display: block;
+  margin: auto;
+  max-width: 240px;
+}
+.index_one .one_product li>a>.product_img>img{
+  width:100%;
+  height:100%;
+
+}
+.index_one .one_product li>a>.product_ln{
+  padding: 0 16px 24px;
+  text-align: center;
+  overflow: hidden;
+}
+.index_one .one_product li>a>.product_ln>.ln_price{
+    margin: 16px 0 0;
+    font-size: 14px;
+}
+.one_product>.Osmo{
+  display:block;
+  text-decoration: none;
+  background: #fff;
+  text-align: center;
+  height:48px;
+  line-height: 48px;
+  color:#3b3e40;
+}
+</style>

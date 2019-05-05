@@ -15,13 +15,19 @@ INSERT INTO dji_user VALUES
 
 CREATE TABLE dji_product(
   product_id INT  PRIMARY KEY AUTO_INCREMENT comment '商品的id',
+  product_img VARCHAR(128) comment '商品的图片',
   product_ify VARCHAR(28) comment '商品的分类',
   product_title VARCHAR(128) comment '商品的介绍',
   product_Oprice DECIMAL(8,2) comment '商品的本来的价格',
-  product_Nprice DECIMAL(8,2) comment '商品的打折后的价格'
+  product_Nprice DECIMAL(8,2) comment '商品的打折后的价格',
+  relevancy_id INT comment '关联的子产品id'
 );
 INSERT INTO dji_product VALUES
-(NULL,'Mavic','灵眸 Osmo 口袋云台相机',2499,0);
+(NULL,'http://127.0.0.1:8080/static/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Mavic1_one.jpg','"御" Mavic','2',9888,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Mavic2_one.jpg','"御" Mavic','Air',4999,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Mavic3_one.jpg','"御" Mavic','Pro 铂金版',6499,0,NULL);
 
 CREATE TABLE dji_img(
   img_id INT  PRIMARY KEY AUTO_INCREMENT comment '图片的id',
@@ -29,10 +35,18 @@ CREATE TABLE dji_img(
   img_url VARCHAR(128) comment '图片的地址'
 );
 INSERT INTO dji_img VALUES
-(NULL,"1","http://127.0.0.1:3000/static/images/Osmo_one.jpg"),
-(NULL,"1","http://127.0.0.1:3000/static/images/Osmo_two.jpg"),
-(NULL,"1","http://127.0.0.1:3000/static/images/Osmo_three.jpg");
-CREATE TABLE dji_mate(
-  mate_id INT  PRIMARY KEY AUTO_INCREMENT comment '必备商品id',
-  mate_Pid INT comment '绑定的商品id',
-)
+(NULL,"1","http://127.0.0.1:8080/static/images/Osmo1_one.jpg"),
+(NULL,"1","http://127.0.0.1:8080/static/images/Osmo1_two.jpg"),
+(NULL,"1","http://127.0.0.1:8080/static/images/Osmo1_three.jpg"),
+(NULL,"2","http://127.0.0.1:8080/static/images/Osmo2_one.jpg"),
+(NULL,"2","http://127.0.0.1:8080/static/images/Osmo2_two.jpg"),
+(NULL,"2","http://127.0.0.1:8080/static/images/Osmo2_three.jpg"),
+(NULL,"3","http://127.0.0.1:8080/static/images/Mavic1_one.jpg"),
+(NULL,"3","http://127.0.0.1:8080/static/images/Mavic1_two.jpg"),
+(NULL,"3","http://127.0.0.1:8080/static/images/Mavic1_three.jpg"),
+(NULL,"4","http://127.0.0.1:8080/static/images/Mavic2_one.jpg"),
+(NULL,"4","http://127.0.0.1:8080/static/images/Mavic2_two.jpg"),
+(NULL,"4","http://127.0.0.1:8080/static/images/Mavic2_three.jpg"),
+(NULL,"5","http://127.0.0.1:8080/static/images/Mavic3_one.jpg"),
+(NULL,"5","http://127.0.0.1:8080/static/images/Mavic3_two.jpg"),
+(NULL,"5","http://127.0.0.1:8080/static/images/Mavic3_three.jpg");
