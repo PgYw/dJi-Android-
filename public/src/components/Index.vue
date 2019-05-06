@@ -1,18 +1,20 @@
 <template>
   <div class="main">
-    <div class="downloadApp">
-      <button>
-        <i class="shanchu" @click="hiddlen()"></i>
-      </button>
-      <span class="logo">
-        <img src="http://localhost:8080/static/images/djiapp.png" alt="">
-      </span>
-      <span class="text">
-        <div>大疆商城 APP</div>
-        <div>随时获取优惠信息！</div>
-      </span>
-      <span class="button">立即下载</span>
-    </div>
+    <transition name="fade">
+      <div class="downloadApp" v-if="show">
+        <button>
+          <i class="shanchu" v-on:click="show = !show"></i>
+        </button>
+        <span class="logo">
+          <img src="http://localhost:8080/static/images/djiapp.png" alt="">
+        </span>
+        <span class="text">
+          <div>大疆商城 APP</div>
+          <div>随时获取优惠信息！</div>
+        </span>
+        <span class="button">立即下载</span>
+      </div>
+    </transition>
     <div class="header">
       <span class="nav">
         <button class="menuButton">
@@ -36,7 +38,7 @@
       </span>
     </div>
     <div class="body">
-      <div class="swipe">
+      <div class="index_swipe">
         <mt-swipe :auto="5500">
           <mt-swipe-item v-for="item in items" :key="item.id">
             <a :href="item.href">
@@ -51,25 +53,145 @@
       </div>
       <div class="index_one">
         <div class="productTe">
-          <h3>{{product_ify}}</h3>
+          <h3>{{product_ifys[0]}}</h3>
         </div>
-        <div class="one_product">
+        <div class="products">
           <ul>
-            <li v-for="one_product in one_products" :key="one_product.product_id">
-              <a :href="one_product.product_id" class="product">
+            <li v-for="products in products" :key="products.product_id">
+              <a :href="products.product_id" class="product">
                 <div class="product_img">
-                  <img :src="one_product.product_img" :alt="one_product.product_title">
+                  <img :src="products.product_img" :alt="products.product_title">
                 </div>
                 <div class="product_ln">
-                  <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
-                  <div class="ln_price">{{"¥"+one_product.product_Oprice}}</div>
+                  <div class="ln_notice">{{products.product_ify+" "+products.product_title}}</div>
+                  <div class="ln_price">{{"¥"+products.product_Oprice}}</div>
                 </div>
               </a>
             </li>
           </ul>
-          <a href="" class="Osmo">更多 {{product_ify}} 产品></a>
+          <a href="" class="Osmo">更多 {{product_ifys[0]}} 产品></a>
         </div>
       </div>
+      <div class="index_two">
+        <div class="productTe">
+          <h3>{{product_ifys[1]}}</h3>
+        </div>
+        <div class="products">
+          <ul>
+            <li v-for="two_product in two_products" :key="two_product.product_id">
+              <a :href="two_product.product_id" class="product">
+                <div class="product_img">
+                  <img :src="two_product.product_img" :alt="two_product.product_title">
+                </div>
+                <div class="product_ln">
+                  <div class="ln_notice">{{two_product.product_ify+" "+two_product.product_title}}</div>
+                  <div class="ln_price">{{"¥"+two_product.product_Oprice}}</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <a href="" class="Osmo">更多 {{product_ifys[1]}} 产品></a>
+        </div>
+      </div>
+      <div class="index_shaky" v-for="shaky in shakys" :key="shaky.id">
+        <a href="" >
+          <div class="shaky_title">{{shaky.shaky_title}}</div>
+          <img :src="shaky.shaky_imgUrl" style="width:100%;height:100%;" alt=""/>
+        </a>
+      </div>
+      <div class="index_three">
+        <div class="productTe">
+          <h3>{{product_ifys[2]}}</h3>
+        </div>
+        <div class="products">
+          <ul>
+            <li v-for="three_product in three_products" :key="three_product.product_id">
+              <a :href="three_product.product_id" class="product">
+                <div class="product_img">
+                  <img :src="three_product.product_img" :alt="three_product.product_title">
+                </div>
+                <div class="product_ln">
+                  <div class="ln_notice">{{three_product.product_ify+" "+three_product.product_title}}</div>
+                  <div class="ln_price">{{"¥"+three_product.product_Oprice}}</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <a href="" class="Osmo">更多 {{product_ifys[2]}} 产品></a>
+        </div>
+      </div>
+      <div class="index_favourable">
+        <div class="productTe">
+          <h3>优惠</h3>
+        </div>
+        <a href="" v-for="favourable in favourables" :key="favourable.id">
+          <div class="favourable_title">{{favourable.favourable_title}}</div>
+          <img :src="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
+        </a>
+      </div>
+    <el-collapse v-model="activeName" accordion>
+      <el-collapse-item title="产品分类" name="1">
+        <div>
+          <ul>
+            <li v-for="product_ify in product_ifys" :key="product_ify.id">
+              <a href="">{{product_ify}}</a>
+            </li>
+          </ul>
+        </div>
+      </el-collapse-item>
+      <el-collapse-item title="帮助与支持" name="2">
+        <div>
+          <ul>
+            <li>
+              <a href="">支付方式</a>
+            </li>
+            <li>
+              <a href="">发货与物流</a>
+            </li>
+            <li>
+              <a href="">Dji币介绍</a>
+            </li>
+            <li>
+              <a href="">订单帮助</a>
+            </li>
+            <li>
+              <a href="">退换货条款</a>
+            </li>
+          </ul>
+        </div>
+      </el-collapse-item>
+      <el-collapse-item title="账号" name="3">
+        <div>
+          <ul>
+            <li>
+              <a href="">我的账号</a>
+            </li>
+            <li>
+              <a href="">我的订单</a>
+            </li>
+          </ul>
+        </div>
+      </el-collapse-item>
+    </el-collapse>
+    <footer class="index_footer">
+      <div>
+        <a href="">Dji.com</a>
+        <a href="">隐私政策</a>
+        <a href="">使用条款</a>
+      </div>
+      <div class="lang">
+        <a href="">
+          <div>
+            <span>中国大陆(简体中文/¥ CNY)</span>
+            <i class="el-icon-arrow-right"></i>
+          </div>
+        </a>
+      </div>
+      <div class="copyRight">版权所有© 2019 大疆创新保留所有权利</div>
+    </footer>
+    </div>
+    <div id="backTop" @click="backTop()">
+      <i class="mint-toast-icon mintui mintui-back"></i>
     </div>
   </div>
 </template>
@@ -79,11 +201,15 @@ export default {
   name:"App",
   data(){
     return{
-      one_products:[],
-      product_ify:[],
+      show:true,
+      products:[],
+      product_ifys:[],
       two_products:[],
       three_products:[],
       four_products:[],
+      shakys:[],
+      favourables:[],
+      activeName: '0',
       items:[
         {href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
         {href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
@@ -91,33 +217,59 @@ export default {
     }
   },
   created(){
+    window.onscroll=function(){
+      if(document.documentElement.scrollTop<=500){
+        document.getElementById("backTop").style.display="none";
+      }else{
+        document.getElementById("backTop").style.display="block";
+      }
+    }
     this.one_pr();
     this.two_pr();
+    this.shaky();
+    this.three_pr();
+    this.favourable();
   },
   methods:{
-    hiddlen(){
-      this.$el.children[0].style="display:none;"
-    },
     one_pr:function(){
       this.$axios.get("http://127.0.0.1:3000/index/one_product").then(res=>{
-        this.one_products=res.data;
-        this.product_ify=res.data[0].product_ify;
+        this.products=res.data;
+        this.product_ifys[0]=res.data[0].product_ify;
       })
     },
     two_pr:function(){
       this.$axios.get("http://127.0.0.1:3000/index/two_product").then(res=>{
         this.two_products=res.data;
-        console.log(res.data)
-        this.product_ify=res.data[0].product_ify;
-        console.log(this,two_products)
-        // 后台单双引号的问题
-        // this.product_ify=res.data[0].product_ify;重复使用的问题
-        // 二楼的循环
+        this.product_ifys[1]=res.data[0].product_ify;
       })
+    },
+    shaky:function(){
+      this.$axios.get("http://127.0.0.1:3000/index/shaky").then(res=>{
+        this.shakys=res.data;
+      })
+    },
+    three_pr:function(){
+      this.$axios.get("http://127.0.0.1:3000/index/three_product").then(res=>{
+        this.three_products=res.data;
+        this.product_ifys[2]=res.data[0].product_ify;
+      })
+    },
+    favourable:function(){
+      this.$axios.get("http://127.0.0.1:3000/index/favourable").then(res=>{
+        this.favourables=res.data;
+      })
+    },
+    backTop(){
+      var top=setInterval(function(){
+        document.documentElement.scrollTop-=150;
+        if(document.documentElement.scrollTop==0){
+          clearInterval(top);
+        }
+      },30)
     }
   },
   computed:{
-    
+
   },
 }
 </script>
@@ -126,6 +278,9 @@ export default {
 *{
   padding: 0px;
   margin:0px;
+}
+a{
+  text-decoration: none;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
@@ -287,10 +442,7 @@ export default {
   width:100%;
   height:100%;
 }
-.swipe>.mint-swipe a{
-  text-decoration: none;
-}
-.swipe>.mint-swipe a>.productLn{
+.index_swipe>.mint-swipe a>.productLn{
   position: absolute;
   width: 320px;
   left: 0;
@@ -299,72 +451,155 @@ export default {
   margin: 0 auto;
   text-align: center;
 }
-.swipe>.mint-swipe a>.productLn>h2,.swipe>.mint-swipe a>.productLn>span{
+.index_swipe>.mint-swipe a>.productLn>h2,.index_swipe>.mint-swipe a>.productLn>span{
   color:#fff;
 }
-.index_one{
+.index_one,.index_two{
   border-bottom: none;
   background: transparent;
 }
-.one_product{
-  margin-top:16px;
-}
-.index_one>.productTe{
+.productTe{
   padding:1rem 1rem;
 }
-.index_one .one_product>ul{
+.productTe>h3{
+  font-weight: 500;
+  color:#3b3e40;
+}
+.products>ul{
   list-style: none;
   overflow: hidden;
 }
-.index_one .one_product>ul::after{
+.products>ul::after,.downloadApp{
   content:"";
   display:block;
   clear: both;
 }
-.index_one .one_product>ul>li{
+.products>ul>li{
   width:50%;
+  height:241.5px;
   float: left;
-  padding: 0 4px 8px;
+  padding: 0 4px 8px 0;
   box-sizing: border-box;
 }
-.index_one .one_product li>a{
+.index_two ul>li:first-child,.index_three ul>li:first-child{
+  width:100%;
+}
+.products li>a{
   display: block;
   text-align: center;
-  text-decoration: none;
   background: #fff;
   position: relative;
   color: #3b3e40;
   min-height: 100%;
   width: 100%;
 }
-.index_one .one_product li>a>.product_img{
+.products li>a>.product_img{
   width:152px;
   position: relative;
   display: block;
   margin: auto;
   max-width: 240px;
 }
-.index_one .one_product li>a>.product_img>img{
+.products li>a>.product_img>img{
   width:100%;
   height:100%;
 
 }
-.index_one .one_product li>a>.product_ln{
+.products li>a>.product_ln{
   padding: 0 16px 24px;
   text-align: center;
   overflow: hidden;
 }
-.index_one .one_product li>a>.product_ln>.ln_price{
+.products li>a>.product_ln>.ln_price{
     margin: 16px 0 0;
     font-size: 14px;
 }
-.one_product>.Osmo{
+.products>.Osmo{
   display:block;
-  text-decoration: none;
   background: #fff;
   text-align: center;
   height:48px;
   line-height: 48px;
   color:#3b3e40;
+}
+.index_shaky .shaky_title,.favourable_title{
+  position: absolute;
+  width: 205px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+}
+.index_favourable{
+  position: relative;
+}
+.index_shaky>a,.index_favourable>a{
+  color:#3B3E40;
+  display:block;
+  margin-top:10px;
+}
+#backTop{
+  display: none;
+  height:40px;
+  border-radius: 50%;
+  border: 1px solid #d4d7d9;
+  width:40px;
+  background:#fff;
+  position: fixed;
+  right:20px;
+  bottom:70px;
+}
+#backTop>i{
+  line-height: 40px;
+  transform: rotate(90deg);
+  transition: all 2s linear;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.el-collapse{
+  padding: 0 16px;
+}
+.el-collapse-item__content>div>ul>li>a{
+  font-size: 14px;
+  color:#3b3e40;
+  line-height: 30px;
+}
+.el-collapse-item__header,.el-collapse-item__wrap{
+  background: transparent;
+}
+.index_footer{
+  padding:8px 16px 16px 16px;
+}
+.index_footer>div:first-child>a{
+  font-size: 12px;
+  margin-right: 16px;
+  color: #3b3e40;
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
+}
+.lang>a{
+  width:100%;
+  font-size: 12px;
+  color: #3b3e40;
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
+}
+.lang>a>div>i{
+  float: right;
+  line-height: 32px;
+}
+.copyRight{
+  font-size: 12px;
+  line-height: 32px;
+  color:#9fa3a6;
+}
+.el-collapse-item__content>div>ul>li{
+  padding: 10px 0;
 }
 </style>
