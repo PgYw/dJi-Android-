@@ -16,13 +16,17 @@
       </div>
     </transition>
     <div class="header">
-      <span class="nav">
-        <button class="menuButton">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </span>
+        <span class="menu">
+          <button ref="show" class="menuButton" @click="menu()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <button ref="hidden" class="hiddenButton" @click="hidden()">
+            <span></span>
+            <span></span>
+          </button>
+        </span>
       <span class="center">
         <a href="">
           <svg xmlns="http://www.w3.org/2000/svg" width="102" height="24" viewBox="0 0 102 24">
@@ -32,7 +36,7 @@
       </span>
       <span class="cart">
         <i class="el-icon-search search"></i>
-        <el-badge :value="0" class="item"  type="primary">
+        <el-badge :value="false" class="item"  type="primary">
           <i class="el-icon-shopping-cart-full"></i>
         </el-badge>
       </span>
@@ -57,14 +61,14 @@
         </div>
         <div class="products">
           <ul>
-            <li v-for="products in products" :key="products.product_id">
-              <a :href="products.product_id" class="product">
+            <li v-for="one_product in one_products" :key="one_product.product_id">
+              <a :href="one_product.product_id" class="product">
                 <div class="product_img">
-                  <img :src="products.product_img" :alt="products.product_title">
+                  <img :src="one_product.product_img" :alt="one_product.product_title">
                 </div>
                 <div class="product_ln">
-                  <div class="ln_notice">{{products.product_ify+" "+products.product_title}}</div>
-                  <div class="ln_price">{{"¥"+products.product_Oprice}}</div>
+                  <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
+                  <div class="ln_price">{{"¥"+one_product.product_Oprice}}</div>
                 </div>
               </a>
             </li>
@@ -173,6 +177,9 @@
         </div>
       </el-collapse-item>
     </el-collapse>
+    <div id="backTop" @click="backTop()">
+      <i class="mint-toast-icon mintui mintui-back"></i>
+    </div>
     <footer class="index_footer">
       <div>
         <a href="">Dji.com</a>
@@ -190,25 +197,86 @@
       <div class="copyRight">版权所有© 2019 大疆创新保留所有权利</div>
     </footer>
     </div>
-    <div id="backTop" @click="backTop()">
-      <i class="mint-toast-icon mintui mintui-back"></i>
+    <div class="reclassify">
+      <div class="padding">
+        <div class="user">
+          <a href="">登录</a>
+        </div>
+        <div class="product_ify">
+          <div class="ify_title">商品分类</div>
+          <ul>
+            <li v-for="product in products" :key="product.id">
+              <a href="">
+                <img :src=product.product_img class="product_img" alt="">
+                <p>{{product.product_ify}}</p>
+              </a>
+            </li>
+            <el-collapse v-model="activeName" accordion>
+              <el-collapse-item title="其他" name="1">
+                <ul>
+                  <li v-for="product in products" :key="product.id">
+                    <a href="">
+                      <img :src=product.product_img class="product_img" alt="">
+                      <p>{{product.product_ify}}</p>
+                    </a>
+                  </li>
+                </ul>
+              </el-collapse-item>
+            </el-collapse>
+          </ul>
+        </div>
+        <div>
+        <div class="ify_title">优惠</div>
+          <ul>
+            <li v-for="product in products" :key="product.id">
+              <a href="">
+                <p>{{product.product_ify}}</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+        <div class="ify_title">指南</div>
+          <ul>
+            <li>
+              <a href="">
+                <p>购机指南</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <footer class="nav_footer">
+        <div class="footer_title">服务与支持</div>
+        <div class="footer_ln">
+          <h3>中国大陆</h3>
+          <a href="tel:4007000303" class="tel">4007000303</a>
+          <p>周一至周日 9:00-21:00 (北京时间)</p>
+        </div>
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </footer>
     </div>
   </div>
 </template>
 <script>
 import Axios from 'axios'
 export default {
-  name:"App",
+  name:"app",
   data(){
     return{
       show:true,
-      products:[],
-      product_ifys:[],
+      one_products:[],
       two_products:[],
       three_products:[],
       four_products:[],
+      product_ifys:[],
       shakys:[],
       favourables:[],
+      products:[],
       activeName: '0',
       items:[
         {href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
@@ -229,11 +297,28 @@ export default {
     this.shaky();
     this.three_pr();
     this.favourable();
+    this.nav_pr();
+  },
+  mounted(){
   },
   methods:{
+    menu:function(){
+      this.$refs.hidden.style="display:inline-block";
+      this.$refs.show.style="display:none";
+      this.$el.children[2].style="z-index:0";
+      this.$el.children[3].style="z-index:3";
+      this.$el.children[1].children[2].style="display:none";
+    },
+    hidden:function(){
+      this.$refs.hidden.style="display:none";
+      this.$refs.show.style="display:inline-block";
+      this.$el.children[2].style="z-index:3";
+      this.$el.children[3].style="z-index:0";
+      this.$el.children[1].children[2].style="display:block";
+    },
     one_pr:function(){
       this.$axios.get("http://127.0.0.1:3000/index/one_product").then(res=>{
-        this.products=res.data;
+        this.one_products=res.data;
         this.product_ifys[0]=res.data[0].product_ify;
       })
     },
@@ -246,6 +331,11 @@ export default {
     shaky:function(){
       this.$axios.get("http://127.0.0.1:3000/index/shaky").then(res=>{
         this.shakys=res.data;
+      })
+    },
+    nav_pr:function(){
+      this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
+        this.products=res.data;
       })
     },
     three_pr:function(){
@@ -269,7 +359,6 @@ export default {
     }
   },
   computed:{
-
   },
 }
 </script>
@@ -281,6 +370,10 @@ export default {
 }
 a{
   text-decoration: none;
+  color:#3B3E40;
+}
+ul{
+  list-style: none;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
@@ -363,34 +456,34 @@ a{
   height:48px;
   position: sticky;
   top:0;
-  z-index: 3;
+  z-index: 1;
   background: #fff;
   box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
 }
-.nav{
-  padding:10px 8px;
+.menu{
   line-height: 48px;
 }
-.nav .menuButton{
+.menu .menuButton{
   width: 40px;
-  height:48px;
+  position: relative;
+  z-index:3;
   display: inline-block;
-  vertical-align: top;
+  vertical-align: super;
   border: 0;
   background: transparent;
   outline: none;
   -webkit-appearance: none;
 }
-.nav .menuButton>span{
+.menu .menuButton>span{
   display: block;
   transition: all .4s ease;
   line-height: 0;
   font-size: 0;
 }
-.nav .menuButton>span:nth-child(2){
+.menu .menuButton>span:nth-child(2){
   padding:5px 0;
 }
-.nav .menuButton>span::after{
+.menu .menuButton>span::after{
   background-color: #303233;
   border-bottom-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -398,6 +491,52 @@ a{
   display: inline-block;
   height: 2px;
   transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
+  transform: translateY(-5px);
+  width: 20px;
+}.menu .hiddenButton{
+  width: 40px;
+  position: relative;
+  display:none;
+  z-index:3;
+  vertical-align: super;
+  border: 0;
+  background: transparent;
+  outline: none;
+  -webkit-appearance: none;
+}
+.menu .hiddenButton>span{
+  display: block;
+  transition: all .4s ease;
+  line-height: 0;
+  font-size: 0;
+}
+.menu .hiddenButton>span:first-child{
+  transform: translateY(2px);
+}
+.menu .hiddenButton>span:first-child::after{
+  background-color: #303233;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+  content: "";
+  display: inline-block;
+  height: 2px;
+  transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
+  transform: rotate(45deg);
+  width: 20px;
+}
+.menu .hiddenButton>span:nth-child(2){
+  transform: translateY(-5px);
+  padding:5px 0;
+}
+.menu .hiddenButton>span:nth-child(2)::after{
+  background-color: #303233;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+  content: "";
+  display: inline-block;
+  height: 2px;
+  transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
+  transform: rotate(-45deg);
   width: 20px;
 }
 .header>.center{
@@ -407,7 +546,6 @@ a{
   width: 100%;
   left: 0;
   padding: 0 42px;
-  z-index: 1;
   text-align: center;
   box-sizing: border-box;
   max-width: 100%;
@@ -434,6 +572,7 @@ a{
   max-width: 414px;
   margin: auto;
   overflow-x: hidden;
+  display:none;
 }
 .mint-swipe{
   height:320px;
@@ -473,6 +612,7 @@ a{
   content:"";
   display:block;
   clear: both;
+  transition: all 1.5s linear;
 }
 .products>ul>li{
   width:50%;
@@ -540,6 +680,7 @@ a{
 }
 #backTop{
   display: none;
+  z-index:999;
   height:40px;
   border-radius: 50%;
   border: 1px solid #d4d7d9;
@@ -557,7 +698,7 @@ a{
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter, .fade-leave-to{
   opacity: 0;
 }
 .el-collapse{
@@ -601,5 +742,92 @@ a{
 }
 .el-collapse-item__content>div>ul>li{
   padding: 10px 0;
+}
+.reclassify{
+  /* display:none; */
+}
+.padding{
+  padding: 0 20px 20px;
+  background-color: #fff;
+}
+.padding a{
+    position: relative;
+    display: block;
+    opacity: 1;
+    line-height: 44px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    overflow: hidden;
+    font-size: 14px;
+}
+.padding a::after{
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  background: url(https://asset2.djicdn.com/assets/images/header/arrow-36dad273465fa755b72c37465a836692.svg) 50% no-repeat;
+  transform: rotate(-90deg);
+}
+.padding .ify_title{
+  padding: 20px 0 15px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #333;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+}
+.padding .product_img{
+  width:70px;
+  height:44px;
+  float: left;
+  vertical-align: middle;
+  margin-left:5px;
+  margin-right:5px;
+}
+.padding>.product_ify ul>li:last-child>a{
+  border-bottom:0px solid transparent;
+}
+.el-collapse{
+  padding:0px;
+  line-height: 44px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+  font-size: 14px;
+}
+.el-collapse-item__content{
+  padding:0px;
+}
+.nav_footer{
+  background-color: #fff;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.nav_footer .footer_title{
+  padding: 10px 20px 10px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #333;
+  background-color: #fff;
+}
+.nav_footer .footer_ln{
+  display:none;
+  color: #707473;
+  padding: 15px 0;
+  text-align: center;
+  background-color: #f7f8f9;
+}
+.nav_footer .footer_ln .tel{
+  direction: ltr;
+  display:block;
+  margin:10px 0;
+}
+.nav_footer .footer_ln>h3{
+  color:blue;
 }
 </style>

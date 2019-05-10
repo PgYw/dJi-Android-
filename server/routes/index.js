@@ -31,4 +31,10 @@ router.get("/favourable",(req,res)=>{
     res.send(result);
   })
 });
+router.get("/products",(req,res)=>{
+  pool.query("select * from dji_product group by product_ify",(err,result)=>{
+    if(err) throw err;
+    res.send(result);
+  })
+});
 module.exports=router;
