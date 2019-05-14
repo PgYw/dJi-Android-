@@ -41,7 +41,7 @@
         </el-badge>
       </span>
     </div>
-    <div class="body">
+    <div class="body" ref="body">
       <div class="index_swipe">
         <mt-swipe :auto="5500">
           <mt-swipe-item v-for="item in items" :key="item.id">
@@ -97,7 +97,7 @@
           <a href="" class="Osmo">更多 {{product_ifys[1]}} 产品></a>
         </div>
       </div>
-      <div class="index_shaky" v-for="shaky in shakys" :key="shaky.id">
+      <div class="index_shaky" v-for="shaky in shakys" :key="shaky.shaky_id">
         <a href="" >
           <div class="shaky_title">{{shaky.shaky_title}}</div>
           <img :src="shaky.shaky_imgUrl" style="width:100%;height:100%;" alt=""/>
@@ -128,7 +128,7 @@
         <div class="productTe">
           <h3>优惠</h3>
         </div>
-        <a href="" v-for="favourable in favourables" :key="favourable.id">
+        <a href="" v-for="favourable in favourables" :key="favourable.favourable_id">
           <div class="favourable_title">{{favourable.favourable_title}}</div>
           <img :src="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
         </a>
@@ -137,7 +137,7 @@
       <el-collapse-item title="产品分类" name="1">
         <div>
           <ul>
-            <li v-for="product_ify in product_ifys" :key="product_ify.id">
+            <li v-for="product_ify in product_ifys" :key="undefined">
               <a href="">{{product_ify}}</a>
             </li>
           </ul>
@@ -197,26 +197,26 @@
       <div class="copyRight">版权所有© 2019 大疆创新保留所有权利</div>
     </footer>
     </div>
-    <div class="reclassify">
+    <div class="reclassify" ref="reclassify">
       <div class="padding">
         <div class="user">
-          <a href="">登录</a>
+          <router-link to="/Login">登录</router-link>
         </div>
         <div class="product_ify">
           <div class="ify_title">商品分类</div>
           <ul>
             <li v-for="product in products" :key="product.id">
               <a href="">
-                <img :src=product.product_img class="product_img" alt="">
+                <img :src="product.product_img" class="product_img" alt="">
                 <p>{{product.product_ify}}</p>
               </a>
             </li>
             <el-collapse v-model="activeName" accordion>
               <el-collapse-item title="其他" name="1">
                 <ul>
-                  <li v-for="product in products" :key="product.id">
+                  <li v-for="product in products" :key="product.product_id">
                     <a href="">
-                      <img :src=product.product_img class="product_img" alt="">
+                      <img v-lazy="product.product_img" class="product_img" alt="">
                       <p>{{product.product_ify}}</p>
                     </a>
                   </li>
@@ -228,7 +228,7 @@
         <div>
         <div class="ify_title">优惠</div>
           <ul>
-            <li v-for="product in products" :key="product.id">
+            <li v-for="product in products" :key="product.product_id">
               <a href="">
                 <p>{{product.product_ify}}</p>
               </a>
@@ -253,17 +253,29 @@
           <a href="tel:4007000303" class="tel">4007000303</a>
           <p>周一至周日 9:00-21:00 (北京时间)</p>
         </div>
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
+        <ul class="help_list">
+          <li>
+            <img src="http://localhost:8080/static/images/email.png" alt="">
+            <p>邮箱</p>
+          </li>
+          <li>
+            <img src="http://localhost:8080/static/images/chat.png" alt="">
+            <p>在线交谈</p>
+          </li>
+          <li>
+            <img src="http://localhost:8080/static/images/phone.png" alt="">
+            <p>电话</p>
+          </li>
         </ul>
       </footer>
+      <div class="Uparea">
+       <a href="">更改国家或者地区</a>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import Axios from 'axios'
+import Axios from 'axios';
 export default {
   name:"app",
   data(){
@@ -272,15 +284,14 @@ export default {
       one_products:[],
       two_products:[],
       three_products:[],
-      four_products:[],
       product_ifys:[],
       shakys:[],
       favourables:[],
       products:[],
       activeName: '0',
       items:[
-        {href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
-        {href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
+        {id:1,href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
+        {id:2,href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
       ]
     }
   },
@@ -292,6 +303,8 @@ export default {
         document.getElementById("backTop").style.display="block";
       }
     }
+  },
+  mounted() {
     this.one_pr();
     this.two_pr();
     this.shaky();
@@ -299,21 +312,19 @@ export default {
     this.favourable();
     this.nav_pr();
   },
-  mounted(){
-  },
   methods:{
     menu:function(){
       this.$refs.hidden.style="display:inline-block";
       this.$refs.show.style="display:none";
-      this.$el.children[2].style="z-index:0";
-      this.$el.children[3].style="z-index:3";
+      this.$refs.body.style="display:none";
+      this.$refs.reclassify.style="display:block";
       this.$el.children[1].children[2].style="display:none";
     },
     hidden:function(){
       this.$refs.hidden.style="display:none";
       this.$refs.show.style="display:inline-block";
-      this.$el.children[2].style="z-index:3";
-      this.$el.children[3].style="z-index:0";
+      this.$refs.body.style="display:block";
+      this.$refs.reclassify.style="display:none";
       this.$el.children[1].children[2].style="display:block";
     },
     one_pr:function(){
@@ -363,10 +374,10 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style>
 *{
-  padding: 0px;
-  margin:0px;
+  padding:0;
+  margin:0;
 }
 a{
   text-decoration: none;
@@ -572,7 +583,6 @@ ul{
   max-width: 414px;
   margin: auto;
   overflow-x: hidden;
-  display:none;
 }
 .mint-swipe{
   height:320px;
@@ -744,13 +754,13 @@ ul{
   padding: 10px 0;
 }
 .reclassify{
-  /* display:none; */
+  display:none;
 }
 .padding{
   padding: 0 20px 20px;
   background-color: #fff;
 }
-.padding a{
+.reclassify>.padding a{
     position: relative;
     display: block;
     opacity: 1;
@@ -760,7 +770,7 @@ ul{
     overflow: hidden;
     font-size: 14px;
 }
-.padding a::after{
+.reclassify>.padding a::after{
   content: "";
   position: absolute;
   right: 0;
@@ -769,6 +779,9 @@ ul{
   height: 24px;
   background: url(https://asset2.djicdn.com/assets/images/header/arrow-36dad273465fa755b72c37465a836692.svg) 50% no-repeat;
   transform: rotate(-90deg);
+}
+.reclassify .padding ul .el-collapse{
+  padding: 0;
 }
 .padding .ify_title{
   padding: 20px 0 15px;
@@ -790,8 +803,7 @@ ul{
 .padding>.product_ify ul>li:last-child>a{
   border-bottom:0px solid transparent;
 }
-.el-collapse{
-  padding:0px;
+.body .el-collapse{
   line-height: 44px;
   color: #333;
   border-bottom: 1px solid #eee;
@@ -829,5 +841,34 @@ ul{
 }
 .nav_footer .footer_ln>h3{
   color:blue;
+}
+.help_list{
+  display:table;
+  width:100%;
+}
+.help_list>li{
+  display:inline-table;
+  margin-left:23px;
+  text-align: center;
+  font-size: 12px;
+  border:1px solid #ccc;
+  color:#333;
+  padding: 5px 0;
+  width:25%;
+}
+.help_list>li>img{
+  width:40px;
+}
+.Uparea{
+  background: #fff;
+  margin-top:10px;
+  font-size: 12px;
+  height:54px;
+}
+.Uparea>a{
+  display:block;
+  color:#44a8f2;
+  line-height: 54px;
+  text-align: center;
 }
 </style>
