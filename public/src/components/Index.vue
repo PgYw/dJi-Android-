@@ -16,17 +16,17 @@
       </div>
     </transition>
     <div class="header">
-        <span class="menu">
-          <button ref="show" class="menuButton" @click="menu()">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-          <button ref="hidden" class="hiddenButton" @click="hidden()">
-            <span></span>
-            <span></span>
-          </button>
-        </span>
+      <span class="menu">
+        <button ref="show" class="menuButton" @click=" menu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <button ref="hidden" class="hiddenButton" @click="hidden()">
+          <span></span>
+          <span></span>
+        </button>
+      </span>
       <span class="center">
         <a href="">
           <svg xmlns="http://www.w3.org/2000/svg" width="102" height="24" viewBox="0 0 102 24">
@@ -62,7 +62,7 @@
         <div class="products">
           <ul>
             <li v-for="one_product in one_products" :key="one_product.product_id">
-              <a :href="one_product.product_id" class="product">
+              <router-link :to="{path:'/Detail',query:{goodId:one_product.product_id}}" class="products">
                 <div class="product_img">
                   <img :src="one_product.product_img" :alt="one_product.product_title">
                 </div>
@@ -70,7 +70,7 @@
                   <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
                   <div class="ln_price">{{"¥"+one_product.product_Oprice}}</div>
                 </div>
-              </a>
+              </router-link>
             </li>
           </ul>
           <a href="" class="Osmo">更多 {{product_ifys[0]}} 产品></a>
@@ -83,7 +83,7 @@
         <div class="products">
           <ul>
             <li v-for="two_product in two_products" :key="two_product.product_id">
-              <a :href="two_product.product_id" class="product">
+              <router-link :to="{path:'/Detail',query: {goodId: two_product.product_id}}" class="products">
                 <div class="product_img">
                   <img :src="two_product.product_img" :alt="two_product.product_title">
                 </div>
@@ -91,7 +91,7 @@
                   <div class="ln_notice">{{two_product.product_ify+" "+two_product.product_title}}</div>
                   <div class="ln_price">{{"¥"+two_product.product_Oprice}}</div>
                 </div>
-              </a>
+              </router-link>
             </li>
           </ul>
           <a href="" class="Osmo">更多 {{product_ifys[1]}} 产品></a>
@@ -110,7 +110,7 @@
         <div class="products">
           <ul>
             <li v-for="three_product in three_products" :key="three_product.product_id">
-              <a :href="three_product.product_id" class="product">
+              <router-link :to="{path:'/Detail',query: {goodId: three_product.product_id}}" class="products">
                 <div class="product_img">
                   <img :src="three_product.product_img" :alt="three_product.product_title">
                 </div>
@@ -118,7 +118,7 @@
                   <div class="ln_notice">{{three_product.product_ify+" "+three_product.product_title}}</div>
                   <div class="ln_price">{{"¥"+three_product.product_Oprice}}</div>
                 </div>
-              </a>
+              </router-link>
             </li>
           </ul>
           <a href="" class="Osmo">更多 {{product_ifys[2]}} 产品></a>
@@ -133,74 +133,15 @@
           <img :src="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
         </a>
       </div>
-    <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="产品分类" name="1">
-        <div>
-          <ul>
-            <li v-for="product_ify in product_ifys" :key="undefined">
-              <a href="">{{product_ify}}</a>
-            </li>
-          </ul>
-        </div>
-      </el-collapse-item>
-      <el-collapse-item title="帮助与支持" name="2">
-        <div>
-          <ul>
-            <li>
-              <a href="">支付方式</a>
-            </li>
-            <li>
-              <a href="">发货与物流</a>
-            </li>
-            <li>
-              <a href="">Dji币介绍</a>
-            </li>
-            <li>
-              <a href="">订单帮助</a>
-            </li>
-            <li>
-              <a href="">退换货条款</a>
-            </li>
-          </ul>
-        </div>
-      </el-collapse-item>
-      <el-collapse-item title="账号" name="3">
-        <div>
-          <ul>
-            <li>
-              <a href="">我的账号</a>
-            </li>
-            <li>
-              <a href="">我的订单</a>
-            </li>
-          </ul>
-        </div>
-      </el-collapse-item>
-    </el-collapse>
     <div id="backTop" @click="backTop()">
       <i class="mint-toast-icon mintui mintui-back"></i>
     </div>
-    <footer class="index_footer">
-      <div>
-        <a href="">Dji.com</a>
-        <a href="">隐私政策</a>
-        <a href="">使用条款</a>
-      </div>
-      <div class="lang">
-        <a href="">
-          <div>
-            <span>中国大陆(简体中文/¥ CNY)</span>
-            <i class="el-icon-arrow-right"></i>
-          </div>
-        </a>
-      </div>
-      <div class="copyRight">版权所有© 2019 大疆创新保留所有权利</div>
-    </footer>
+    <foter></foter>
     </div>
     <div class="reclassify" ref="reclassify">
       <div class="padding">
         <div class="user">
-          <router-link to="/Login">登录</router-link>
+          <router-link to="/Login" ref="login">登录</router-link>
         </div>
         <div class="product_ify">
           <div class="ify_title">商品分类</div>
@@ -275,12 +216,14 @@
   </div>
 </template>
 <script>
-import Axios from 'axios';
+import foter from "@/components/IndexFooter.vue"
 export default {
   name:"app",
+  components:{"foter":foter},
   data(){
     return{
       show:true,
+      show1:true,
       one_products:[],
       two_products:[],
       three_products:[],
@@ -288,7 +231,7 @@ export default {
       shakys:[],
       favourables:[],
       products:[],
-      activeName: '0',
+      activeName:"0",
       items:[
         {id:1,href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
         {id:2,href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
@@ -296,6 +239,9 @@ export default {
     }
   },
   created(){
+    this.Products();
+  },
+  mounted() {
     window.onscroll=function(){
       if(document.documentElement.scrollTop<=500){
         document.getElementById("backTop").style.display="none";
@@ -304,58 +250,40 @@ export default {
       }
     }
   },
-  mounted() {
-    this.one_pr();
-    this.two_pr();
-    this.shaky();
-    this.three_pr();
-    this.favourable();
-    this.nav_pr();
-  },
   methods:{
     menu:function(){
       this.$refs.hidden.style="display:inline-block";
-      this.$refs.show.style="display:none";
+      this.$refs.show.style="height:0;opacity:0;width:0";
       this.$refs.body.style="display:none";
       this.$refs.reclassify.style="display:block";
       this.$el.children[1].children[2].style="display:none";
     },
     hidden:function(){
-      this.$refs.hidden.style="display:none";
+      this.$refs.hidden.style="height:0;opacity:0;width:0";
       this.$refs.show.style="display:inline-block";
       this.$refs.body.style="display:block";
       this.$refs.reclassify.style="display:none";
       this.$el.children[1].children[2].style="display:block";
     },
-    one_pr:function(){
+    Products:function(){
       this.$axios.get("http://127.0.0.1:3000/index/one_product").then(res=>{
         this.one_products=res.data;
         this.product_ifys[0]=res.data[0].product_ify;
       })
-    },
-    two_pr:function(){
       this.$axios.get("http://127.0.0.1:3000/index/two_product").then(res=>{
         this.two_products=res.data;
         this.product_ifys[1]=res.data[0].product_ify;
       })
-    },
-    shaky:function(){
       this.$axios.get("http://127.0.0.1:3000/index/shaky").then(res=>{
         this.shakys=res.data;
       })
-    },
-    nav_pr:function(){
       this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
         this.products=res.data;
       })
-    },
-    three_pr:function(){
       this.$axios.get("http://127.0.0.1:3000/index/three_product").then(res=>{
         this.three_products=res.data;
         this.product_ifys[2]=res.data[0].product_ify;
       })
-    },
-    favourable:function(){
       this.$axios.get("http://127.0.0.1:3000/index/favourable").then(res=>{
         this.favourables=res.data;
       })
@@ -369,16 +297,23 @@ export default {
       },30)
     }
   },
-  computed:{
-  },
 }
 </script>
 
-<style>
+<style lang="css">
 *{
   padding:0;
   margin:0;
 }
+.el-collapse-item__header,.el-collapse-item__wrap{
+  background-color: transparent;
+}
+.el-collapse-item__content{
+  padding:0px;
+}
+</style>
+
+<style scoped lang="css">
 a{
   text-decoration: none;
   color:#3B3E40;
@@ -436,6 +371,7 @@ ul{
   padding: 10px 0;
   position: absolute;
   overflow: hidden;
+  margin: 0 auto;
 }
 .text div:first-child{
   font-size: 14px;
@@ -484,10 +420,10 @@ ul{
   background: transparent;
   outline: none;
   -webkit-appearance: none;
+  transition: 1s all linear;
 }
 .menu .menuButton>span{
   display: block;
-  transition: all .4s ease;
   line-height: 0;
   font-size: 0;
 }
@@ -514,6 +450,7 @@ ul{
   background: transparent;
   outline: none;
   -webkit-appearance: none;
+  transition: 1s all linear;
 }
 .menu .hiddenButton>span{
   display: block;
@@ -580,7 +517,7 @@ ul{
   cursor: pointer;
 }
 .body{
-  max-width: 414px;
+  max-width:24rem;
   margin: auto;
   overflow-x: hidden;
 }
@@ -810,9 +747,6 @@ ul{
   overflow: hidden;
   font-size: 14px;
 }
-.el-collapse-item__content{
-  padding:0px;
-}
 .nav_footer{
   background-color: #fff;
   margin-top: 10px;
@@ -871,4 +805,5 @@ ul{
   line-height: 54px;
   text-align: center;
 }
+/* 动画类名 */
 </style>

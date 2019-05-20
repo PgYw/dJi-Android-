@@ -1,5 +1,4 @@
 <template>
-<router-view>
   <footer class="user_footer">
     <div class="copyRight">Copyright © 2019 DJI All Rights Reserved.</div>
     <div class="serve">
@@ -12,15 +11,28 @@
       <a href="">粤ICP备12022215号-11</a>
     </div>
   </footer>
-</router-view>
 </template>
 <script>
-export default {
-  name:'user_footer',
-  data(){
-    return{
-
-    }
-  }
-}
+export default {};
 </script>
+<style scoped lang="css">
+.user_footer{
+  position: relative;
+  height:10rem;
+  background-color: #f7f8f9;
+  top:10rem;
+  font-size: 0.12rem;
+  font-weight: 400;
+  color: #979797;
+  text-align: center;
+}
+.user_footer>div{
+  padding-top: 0.79rem;
+}
+.user_footer a{
+  color:#979797;
+ }
+ .copyRight>a{
+   text-decoration: none;
+ }
+</style>

@@ -20,11 +20,11 @@ CREATE TABLE dji_product(
   product_title VARCHAR(128) comment '商品的介绍',
   product_Oprice DECIMAL(8,2) comment '商品的本来的价格',
   product_Nprice DECIMAL(8,2) comment '商品的打折后的价格',
-  relevancy_id INT comment '关联的子产品id'
+  relevancy_id INT comment '关联的主产品id'
 );
 INSERT INTO dji_product VALUES
-(NULL,'http://127.0.0.1:8080/static/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,0,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,0,1),
+(NULL,'http://127.0.0.1:8080/static/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,0,1),
 (NULL,'http://127.0.0.1:8080/static/images/Mavic1_one.jpg','"御" Mavic','2',9888,0,NULL),
 (NULL,'http://127.0.0.1:8080/static/images/Mavic2_one.jpg','"御" Mavic','Air',4999,0,NULL),
 (NULL,'http://127.0.0.1:8080/static/images/Mavic3_one.jpg','"御" Mavic','Pro 铂金版',6499,0,NULL),
@@ -73,3 +73,24 @@ CREATE TABLE dji_favourable(
 INSERT INTO dji_favourable VALUES
 (NULL,"翻新机 实惠价格 | 质量保证 | 同等保修",NULL,"http://127.0.0.1:8080/static/images/refurbished.png"),
 (NULL,"教育折扣 最高九折",NULL,"http://127.0.0.1:8080/static/images/edu_discount.png");
+
+CREATE TABLE dji_relevancy(
+  product_id INT  PRIMARY KEY AUTO_INCREMENT comment '子商品的id',
+  product_img VARCHAR(128) comment '子商品的图片',
+  product_ify VARCHAR(28) comment '子商品的分类',
+  product_title VARCHAR(128) comment '子商品的介绍',
+  product_Oprice DECIMAL(8,2) comment '子商品的本来的价格',
+  product_Nprice DECIMAL(8,2) comment '子商品的打折后的价格'
+);
+INSERT INTO dji_relevancy VALUES
+(NULL,"http://127.0.0.1:8080/static/images/mobile1_relevancy.jpg","闪迪 microSD卡","64GB","119","0");
+
+CREATE TABLE relevancy_img(
+  img_id INT  PRIMARY KEY AUTO_INCREMENT comment '子商品图片的id',
+  relevancy_id INT comment '子商品图片关联的商品id',
+  img_url VARCHAR(128) comment '子商品图片的地址'
+);
+INSERT INTO relevancy_img VALUES
+(NULL,"1","http://127.0.0.1:8080/static/images/mobile1_relevancy.jpg"),
+(NULL,"1","http://127.0.0.1:8080/static/images/mobile2_relevancy.jpg"),
+(NULL,"1","http://127.0.0.1:8080/static/images/mobile3_relevancy.jpg");

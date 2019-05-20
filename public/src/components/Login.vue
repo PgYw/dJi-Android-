@@ -1,6 +1,7 @@
 <template>
   <div id="user">
-    <div class="value">
+    <div class="user">
+      <div class="goOut" @click="goOut()">←返回</div>
       <div class="login">
         <div class="from">
           <div class="login_title">登录</div>
@@ -30,13 +31,15 @@
           </div>
         </div>
       </div>
-      <router-view></router-view>
     </div>
+    <child></child>
   </div>
 </template>
 <script>
+import child from "@/components/UserFooter.vue"
 export default {
   name:"user",
+  components:{"child":child},
   data(){
     return{
       bg:true,
@@ -49,6 +52,9 @@ export default {
     this.getLogin();
   },
   methods: {
+    goOut:function(){
+      this.$router.go(-1);
+    },
     Bg(){
       if(this.bg){
         this.$refs.upwdHidden.style.backgroundImage="url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTYgMTIiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNMTUuODE1IDcuMjg2QzE0LjI1IDQuNDgzIDExLjMyOCAyLjYxIDggMi42MWMtMy4zMyAwLTYuMjUgMS44NzUtNy44MTUgNC42NzctLjI0Ny40NC0uMjQ3Ljk4NyAwIDEuNDI4QzEuNzUgMTEuNTE3IDQuNjcyIDEzLjM5MSA4IDEzLjM5MWMzLjMzIDAgNi4yNS0xLjg3NSA3LjgxNS00LjY3Ny4yNDctLjQ0LjI0Ny0uOTg3IDAtMS40Mjh6TTggMTEuOTg0Yy0yLjA4OCAwLTMuNzc4LTEuNzgyLTMuNzc4LTMuOTg0UzUuOTEyIDQuMDE2IDggNC4wMTYgMTEuNzc4IDUuNzk4IDExLjc3OCA4IDEwLjA4OCAxMS45ODQgOCAxMS45ODR6TTEwLjg4OSA4YzAgMS42ODMtMS4yOTQgMy4wNDctMi44ODkgMy4wNDctMS41OTUgMC0yLjg4OS0xLjM2NC0yLjg4OS0zLjA0NyAwLS41MTkuMTIzLTEuMDA3LjM0LTEuNDM1di4wMDFjMCAuNjkzLjUzMyAxLjI1NSAxLjE5IDEuMjU1LjY1NyAwIDEuMTktLjU2MiAxLjE5LTEuMjU1IDAtLjY5My0uNTMzLTEuMjU0LTEuMTktMS4yNTRINi42NEEyLjc1OCAyLjc1OCAwIDAgMSA4IDQuOTUzYzEuNTk1IDAgMi44ODkgMS4zNjQgMi44ODkgMy4wNDd6Ii8+PC9kZWZzPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAtMikiPjxtYXNrIGlkPSJiIiBmaWxsPSIjZmZmIj48dXNlIHhsaW5rOmhyZWY9IiNhIi8+PC9tYXNrPjx1c2UgZmlsbD0iIzAwMCIgZmlsbC1ydWxlPSJub256ZXJvIiB4bGluazpocmVmPSIjYSIvPjxnIGZpbGw9IiMzQjNFNDAiIG1hc2s9InVybCgjYikiPjxwYXRoIGQ9Ik0wIDBoMTZ2MTZIMHoiLz48L2c+PC9nPjwvc3ZnPg==)";
@@ -73,7 +79,7 @@ export default {
         this.$axios.get("http://127.0.0.1:3000/login/user?admin="+this.getAdmin+"&upwd="+this.getUpwd).then(res=>{
           if(res.data.code==1){
             this.$refs.err.innerHTML="";
-            // 登录成功做的事情
+            this.$router.push({path:'/Index'});
           }else{
             var num=5;
             this.$refs.err.innerHTML="账号或密码错误("+num+"s)"
@@ -87,7 +93,6 @@ export default {
                 this.$refs.err.disabled=false;
               }
             },1000)
-            console.log(num)
           }
         })
       }
@@ -105,10 +110,24 @@ export default {
         var num=new Number(this.getAdmin);
         this.$refs.clearInput.style="display:block";
         if(num.toString()=="NaN"&&(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getAdmin)){
+          this.$axios.get("http://127.0.0.1:3000/login/email?email="+this.getAdmin).then(res=>{
+            if(res.data.code!=1){
+              this.$refs.admin_err.innerHTML="该邮箱未被注册!"
+              this.$refs.admin.style="border: 1px solid #f04848;"
+              this.isLogin[0]=false;
+            }
+          })
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
           this.isLogin[0]=true;
         }else if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getAdmin)){
+           this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getAdmin).then(res=>{ 
+            if(res.data.code!=1){
+              this.$refs.admin_err.innerHTML="该手机号未被注册!"
+              this.$refs.admin.style="border: 1px solid #f04848;"
+              this.isLogin[0]=false;
+            }
+          })
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
           this.isLogin[0]=true;
@@ -139,22 +158,35 @@ export default {
         this.$refs.upwd.style="border: 1px solid #f04848;"
         this.isLogin[1]=false;
       }
-    }
+    },
   },
 }
 </script>
-<style scoped>
+<style lang="css">
 *{
-  margin:0;
   padding:0;
+  margin:0;
 }
-html,body,#user,.value{
+</style>
+<style scoped lang="css">
+html,body,#user,.user{
   height:100%;
+  border: 0.01rem solid white;
 }
-.value{
+.user{
   text-align: center;
   margin:0 auto;
   max-width: 22.5rem;
+  position: relative;
+}
+.goOut{
+  width:60px;
+  line-height: 30px;
+  border-radius: 0.6rem;
+  text-align: center;
+  background-color: #f8f8f9;
+  position: absolute;
+  top:2rem;
 }
 .login{
   position: relative;
@@ -167,7 +199,6 @@ html,body,#user,.value{
   margin:25px 0;
 }
 .login>.from{
-  vertical-align: middle;
   padding: 0 20px;
 }
 #admin,#upwd{
@@ -210,21 +241,6 @@ html,body,#user,.value{
   color:#44a8f2;
   text-decoration:none;
 }
-.user_footer{
-  position: relative;
-  height:10rem;
-  background-color: #f7f8f9;
-  top:10rem;
-  font-size: 0.12rem;
-  font-weight: 400;
-  color: #979797;
-}
-.user_footer>div{
-  padding-top: 0.79rem;
-}
-.user_footer a{
-  color:#979797;
- }
 .login>.from .clearInput,.login>.from .upwdHidden{
   height:1rem;
   width:1rem;

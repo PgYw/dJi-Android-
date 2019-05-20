@@ -5,6 +5,7 @@ const cors=require("cors");
 const bodyParser=require("body-parser");
 const index=require("./routes/index.js");
 const login=require("./routes/login.js");
+const detail=require("./routes/detail.js");
 var app=express();
 app.listen(3000);
 app.use(bodyParser.urlencoded({
@@ -15,3 +16,4 @@ app.use(cors({
 }))
 app.use("/index",index);
 app.use("/login",login);
+app.use("/detail",detail);

@@ -27,3 +27,13 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+// 跳转其它组件或者页面时显示顶部
+router.beforeEach((to, from, next) => {
+  // chrome
+  document.body.scrollTop = 0
+  // firefox
+  document.documentElement.scrollTop = 0
+  // safari
+  window.pageYOffset = 0
+  next()
+})
