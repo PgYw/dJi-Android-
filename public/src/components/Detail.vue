@@ -1,6 +1,6 @@
 <template>
   <div id="detail">
-    <div class="header">
+    <div class="header" ref="header">
       <i class="mint-toast-icon mintui mintui-back" @click="goOut()"></i>
       <span class="center">
         <a href="">
@@ -14,7 +14,6 @@
         <el-badge :value="false" class="item"  type="primary">
           <i class="el-icon-shopping-cart-full"></i>
         </el-badge>
-        <div class="qiu" ref="qiu">8</div>
       </span>
     </div>
     <div class="detail">
@@ -56,11 +55,11 @@
       </div>
       <div class="account">
         <div class="price">
-          <span>¥</span>
-          <span ref="product_price" v-if="product!=''">{{product[0].product_Oprice}}</span>
+          <span>¥</span><span ref="product_price" v-if="product!=''">{{product[0].product_Oprice}}</span>
         </div>
         <div class="joinC">
-          <button @click="get">加入购物车</button>
+          <button @click="get()">加入购物车</button>
+          <div class="qiu" ref="qiu" :style="{bottom:b_bottom+'rem',right:b_right+'rem'}">8</div>
           <div class="product_ln">
             <p>邮费:包邮</p>
             <p>发货时间:订单付款后1个工作日内</p>
@@ -121,27 +120,83 @@ export default {
       imgLists:[],
       product:[],
       relevancy_products:[],
+      product_arr:[],
       activeName:"1",
+      b_bottom:5,
+      b_right:10.8,
       num:0,
-      b_top:250,
-      timer:"",
-      b_right:250,
-      scrollTop:document.documentElement.scrollTop,
+      product_nb:0,
     }
   },
   methods:{
     get:function(){
-        this.b_top-=5;
-        this.b_right-=5;
-      this.timer=setInterval(this.get,function(){
-        if(this.b_right<=20){
-          clearInterval(this.timer)
-          this.$refs.qiu.style="display:none"
+      if(!(window.localStorage&&(window.localStorage.setItem('a',123),window.localStorage.getItem('a')==123))){
+        alert("您的电脑可能未开启本地存储")
+      }else{
+        // 父产品相关信息
+        var product_id=this.product[0].product_id;
+        var product_price=this.product[0].product_Oprice;
+        var product_img=this.product[0].product_img;
+        var product_ln=this.product[0].product_ify+" "+this.product[0].product_title
+        this.product_nb++
+        var product_obj={
+          product_id:product_id,
+          product_price:parseFloat(product_price).toFixed(2),
+          product_img:product_img,
+          product_ln:product_ln,
+          product_nb:this.product_nb
         }
-        console.log(this.$refs)
-      this.$refs.qiu.style.top=this.b_top+"px"
-      this.$refs.qiu.style.right=this.b_right+"px"
-      },25)
+        if(this.product_arr.length>0){
+          for(var i=0;i<this.product_arr.length;i++){
+            if(this.$route.query.goodId==this.product_arr[i].product_id){
+              this.product_arr[i].product_nb++;
+              product_obj.product_price=parseFloat(product_price*this.product_arr[i].product_nb).toFixed(2);
+              this.product_arr[i]=product_obj;
+            }
+          }
+        }else{
+          if(this.product_arr[0]==null){
+            this.product_arr[0]=product_obj;
+          }
+        }
+        console.log(this.product_arr)
+        // 子产品相关信息
+        if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
+          var relevancy_id=this.relevancy_products[0].product_id;
+          var relevancy_price=this.relevancy_products[0].product_Oprice
+          var relevancy_img=this.relevancy_products[0].product_img
+          var relevancy_nb=this.$refs.input[0].value
+          var relevancy_ln=this.relevancy_products[0].product_ify+" "+this.relevancy_products[0].product_title
+          var relevancy_obj={
+            relevancy_id:relevancy_id,
+            relevancy_price:parseFloat(relevancy_price).toFixed(2),
+            relevancy_img:relevancy_img,
+            relevancy_ln:relevancy_ln,
+            relevancy_nb:parseInt(relevancy_nb)
+          }
+          for(var i=0;i<this.product_arr.length;i++){
+            console.log(this.product_arr[i].relevancy_id)
+            if(this.product_arr[i].relevancy_id){
+              this.product_arr[i].relevancy_nb+=relevancy_nb
+              relevancy_obj.relevancy_price=parseFloat(relevancy_obj.relevancy_price*this.product_arr[i].relevancy_nb).toFixed(2);
+              this.product_arr[i]=relevancy_obj
+              console.log(111)
+              return;
+            }else{
+              this.product_arr[1]=relevancy_obj
+              console.log(222)
+              return;
+            }
+          }
+        }
+      }
+      // 小球移动到购物车图标并且消失
+      // this.$refs.qiu.style="display:block"
+      // this.b_bottom+=1.8;
+      // this.b_right-=0.5;
+      // if(this.b_right<=1.3){
+      //   this.$refs.qiu.style="display:none"
+      // }
     },
     Up:function(){
       this.num++
@@ -389,7 +444,8 @@ ul{
   text-align: center;
   padding: 0 1.5rem;
   font-size: 0.75rem;
-  line-height: 1.5;   
+  line-height: 1.5;  
+  position: relative; 
   outline: none; 
   border-radius: .25rem;
   color: #fff;
@@ -455,16 +511,16 @@ ul{
   font-size: 0.85rem;
   color:#3B3E40;
 }
-.cart>.qiu{
+.joinC>.qiu{
   border-radius: 0.89rem;
   position: absolute;
+  display: none;
   width:2rem;
   height:2rem;
   text-align: center;
   line-height: 2rem;
-  right:50%;
   color:#fff;
   background:#42b7ff;
-  top:26rem;
+  z-index: 999;
 }
 </style>

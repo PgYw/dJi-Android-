@@ -2,10 +2,6 @@
   <div id="test">
     <div class="test">
       <button @click="get()">加入</button>
-      <div class="yellow" ref="yellow">
-      </div>
-      <div class="green" ref="green">
-      </div>
     </div>
   </div>
 </template>
@@ -14,24 +10,21 @@ export default {
   name:"test",
   data(){
     return{
-      a_top:250,
-      timer:"",
-      a_right:250,
+      arr:[{product_id:1,product_price:3499.00},{relevancy_id:2,product_price:3499.00}],
     }
   },
   methods: {
     get:function(){
-      this.a_top-=5;
-      this.a_right-=5;
-      if(this.a_right<=20){
-        clearInterval(this.timer)
-      }
-      this.$refs.green.style.top=this.a_top+"px"
-      this.$refs.green.style.right=this.a_right+"px"
+      this.arr.find(item=>{
+        if(item.relevancy_id){
+          console.log(213124)
+        }else{
+          console.log(22324)
+        }
+      })
     }
   },
   mounted() {
-    this.timer=setInterval(this.get,25)
   },
 }
 </script>
