@@ -125,7 +125,6 @@ export default {
       b_bottom:5,
       b_right:10.8,
       num:0,
-      product_nb:0,
     }
   },
   methods:{
@@ -138,34 +137,44 @@ export default {
         var product_price=this.product[0].product_Oprice;
         var product_img=this.product[0].product_img;
         var product_ln=this.product[0].product_ify+" "+this.product[0].product_title
-        this.product_nb++
+        var product_bl=false;
         var product_obj={
           product_id:product_id,
           product_price:parseFloat(product_price).toFixed(2),
           product_img:product_img,
           product_ln:product_ln,
-          product_nb:this.product_nb
+          product_nb:0
         }
         if(this.product_arr.length>0){
           for(var i=0;i<this.product_arr.length;i++){
-            if(this.$route.query.goodId==this.product_arr[i].product_id){
-              this.product_arr[i].product_nb++;
+            if(this.product_arr[i].product_id==this.$route.query.goodId){
+              product_obj.product_nb=this.product_arr[i].product_nb
+              product_obj.product_nb++
               product_obj.product_price=parseFloat(product_price*this.product_arr[i].product_nb).toFixed(2);
               this.product_arr[i]=product_obj;
+              window.sessionStorage.setItem("product"+i,JSON.stringify(this.product_arr[i]));
+              product_bl=true;
             }
+          }
+          if(!product_bl){
+            product_obj.product_nb=1;
+            this.product_arr.push(product_obj)
+            window.sessionStorage.setItem("product"+i,JSON.stringify(this.product_arr[i]));
           }
         }else{
           if(this.product_arr[0]==null){
+            product_obj.product_nb=1;
             this.product_arr[0]=product_obj;
+            window.sessionStorage.setItem("product0",JSON.stringify(this.product_arr[0]));
           }
         }
-        console.log(this.product_arr)
         // 子产品相关信息
         if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
           var relevancy_id=this.relevancy_products[0].product_id;
           var relevancy_price=this.relevancy_products[0].product_Oprice
           var relevancy_img=this.relevancy_products[0].product_img
           var relevancy_nb=this.$refs.input[0].value
+          var relevancy_bl=false;
           var relevancy_ln=this.relevancy_products[0].product_ify+" "+this.relevancy_products[0].product_title
           var relevancy_obj={
             relevancy_id:relevancy_id,
@@ -175,18 +184,17 @@ export default {
             relevancy_nb:parseInt(relevancy_nb)
           }
           for(var i=0;i<this.product_arr.length;i++){
-            console.log(this.product_arr[i].relevancy_id)
             if(this.product_arr[i].relevancy_id){
-              this.product_arr[i].relevancy_nb+=relevancy_nb
-              relevancy_obj.relevancy_price=parseFloat(relevancy_obj.relevancy_price*this.product_arr[i].relevancy_nb).toFixed(2);
+              relevancy_bl=true;
+              relevancy_obj.relevancy_nb=parseInt(relevancy_nb)+this.product_arr[i].relevancy_nb
+              relevancy_obj.relevancy_price=parseFloat(relevancy_obj.relevancy_price*relevancy_obj.relevancy_nb).toFixed(2);
               this.product_arr[i]=relevancy_obj
-              console.log(111)
-              return;
-            }else{
-              this.product_arr[1]=relevancy_obj
-              console.log(222)
-              return;
+              window.sessionStorage.setItem("product"+i,JSON.stringify(this.product_arr[i]));
             }
+          }
+          if(!relevancy_bl){
+            this.product_arr[2]=relevancy_obj
+            window.sessionStorage.setItem("product2",JSON.stringify(this.product_arr[2]));
           }
         }
       }
@@ -230,6 +238,17 @@ export default {
     }
   },
   mounted() {
+    if(sessionStorage.length==0){
+      this.product_arr=[]
+    }
+    for(var i=0;i<sessionStorage.length;i++){
+      var getKey=sessionStorage.key(i);
+      var getVal=sessionStorage.getItem(getKey);
+      getVal=JSON.parse(getVal)
+      if(getVal!=null){
+        this.product_arr[i]=getVal
+      }
+    }
     window.onscroll=function(){
       if(document.documentElement.scrollTop<=250){
         document.getElementById("backTop").style.display="none";
@@ -249,8 +268,6 @@ export default {
         })
       }
     })
-  },
-  created() {
   },
 }
 </script>
