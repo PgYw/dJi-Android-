@@ -483,7 +483,7 @@ html,body,#reg,.reg{
 .reg{
   text-align: center;
   margin:0 auto;
-  max-width: 22.5rem;
+  max-width: 24rem;
   position: relative;
 }
 .reg>.reg{

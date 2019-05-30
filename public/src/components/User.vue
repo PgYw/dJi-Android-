@@ -21,8 +21,10 @@
           </a>
         </span>
         <span class="cart">
-          <el-badge :value="false" class="item"  type="primary">
-            <i class="el-icon-shopping-cart-full"></i>
+          <el-badge :value="Cartl" class="item"  type="primary">
+            <router-link to="/Cart">
+              <i class="el-icon-shopping-cart-full"></i>
+            </router-link>
           </el-badge>
         </span>
       </div>
@@ -97,7 +99,7 @@ export default {
   name:"user",
   data(){
     return{
-
+      Cartl:false,
     }
   },
   methods: {
@@ -123,6 +125,11 @@ export default {
       }
     }
   },
+  mounted() {
+    if(window.sessionStorage.length!=0){
+      this.Cart=window.sessionStorage.length;
+    }
+  },
 }
 </script>
 <style lang="css">
@@ -131,7 +138,7 @@ export default {
   margin:0;
 }
 </style>
-<style lang="css" scoped>
+<style scoped lang="css">
 a {
   text-decoration: none;
   color: #3B3E40;
@@ -260,7 +267,7 @@ html,body,#user,.user{
   line-height: 3.12rem;
 }
 .info{
-  max-width: 30rem;
+  max-width: 24rem;
   margin: 0 auto;
   background: #F7F8F9;
 }

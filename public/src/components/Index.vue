@@ -36,8 +36,10 @@
       </span>
       <span class="cart">
         <i class="el-icon-search search"></i>
-        <el-badge :value="false" class="item"  type="primary">
-          <i class="el-icon-shopping-cart-full"></i>
+        <el-badge :value="Cartl" class="item"  type="primary">
+          <router-link to="/Cart">
+            <i class="el-icon-shopping-cart-full"></i>
+          </router-link>
         </el-badge>
       </span>
     </div>
@@ -235,22 +237,30 @@ export default {
       items:[
         {id:1,href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
         {id:2,href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
-      ]
+      ],
+      Cartl:false,
     }
   },
   created(){
     this.Products();
   },
   mounted() {
-    window.onscroll=function(){
+    if(window.sessionStorage.length!=0){
+      this.Cartl=window.sessionStorage.length;
+    }
+    window.addEventListener('scroll', this.handleScroll, true);
+  },
+  methods:{
+    handleScroll:function(){
       if(document.documentElement.scrollTop<=500){
         document.getElementById("backTop").style.display="none";
       }else{
         document.getElementById("backTop").style.display="block";
       }
-    }
-  },
-  methods:{
+    },
+    destroyed(){
+      window.removeEventListener('scroll',this.handleScroll);
+    },
     menu:function(){
       this.$refs.hidden.style="display:inline-block";
       this.$refs.show.style="height:0;opacity:0;width:0";
@@ -509,7 +519,7 @@ ul{
   padding-right: 20px;
   height:100%;
 }
-.cart>.item>i{
+.cart>.item>a>i{
   font-size: 25px;
 }
 .el-badge{
@@ -527,6 +537,7 @@ ul{
 .mint-swipe img{
   width:100%;
   height:100%;
+  object-fit: cover;
 }
 .index_swipe>.mint-swipe a>.productLn{
   position: absolute;

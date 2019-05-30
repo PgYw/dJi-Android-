@@ -3,11 +3,11 @@ import App from './App'
 import ElementUI from 'element-ui';
 import {Swipe,SwipeItem} from 'mint-ui';
 import 'mint-ui/lib/style.css'
+import './components/common/common.css'
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import axios from 'axios'
 import VueLazyload from 'vue-lazyload'
-
 Vue.use(VueLazyload)
 Vue.use(VueLazyload,{
   preLoad: 1.3,
@@ -15,6 +15,7 @@ Vue.use(VueLazyload,{
   loading: 'dist/loading.gif',
   attempt: 1
 })
+Vue.prototype.bus = new Vue;
 Vue.prototype.$axios=axios;
 Vue.use(ElementUI);
 Vue.component(Swipe.name, Swipe);

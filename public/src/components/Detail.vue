@@ -11,8 +11,10 @@
       </span>
       <span class="cart">
         <i class="el-icon-search search"></i>
-        <el-badge :value="false" class="item"  type="primary">
-          <i class="el-icon-shopping-cart-full"></i>
+        <el-badge :value="Cartl" class="item"  type="primary">
+          <router-link to="/Cart">
+            <i class="el-icon-shopping-cart-full"></i>
+          </router-link>
         </el-badge>
       </span>
     </div>
@@ -125,6 +127,7 @@ export default {
       b_bottom:5,
       b_right:10.8,
       num:0,
+      Cartl:false,
     }
   },
   methods:{
@@ -205,6 +208,7 @@ export default {
       // if(this.b_right<=1.3){
       //   this.$refs.qiu.style="display:none"
       // }
+        this.Cartl=window.sessionStorage.length
     },
     Up:function(){
       this.num++
@@ -238,8 +242,9 @@ export default {
     }
   },
   mounted() {
-    if(sessionStorage.length==0){
+    if(window.sessionStorage.length!=0){
       this.product_arr=[]
+      this.Cartl=window.sessionStorage.length;
     }
     for(var i=0;i<sessionStorage.length;i++){
       var getKey=sessionStorage.key(i);
@@ -277,7 +282,10 @@ export default {
   padding:0;
 }
 </style>
-<style scoped lang="css">
+<style lang="css">
+.el-collapse-item__header, .el-collapse-item__wrap {
+    background-color: transparent;
+}
 html,body,#detail,.detail{
   width:100%;
   height:100%;
@@ -319,7 +327,6 @@ ul{
 }
 .header {
   height: 48px;
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -355,7 +362,7 @@ ul{
   vertical-align: inherit;
   cursor: pointer;
 }
-.cart>.item>i {
+.cart>.item>a>i {
   font-size: 25px;
 }
 .mint-toast-icon{
@@ -372,7 +379,7 @@ ul{
 .present,
 .present>.present_value,
 .product_xinxi>.xinxi_title,
-.el-collapse,
+/* .el-collapse, */
 .product_xinxi>.xinxi_title>.product_synopsis
 {
   line-height: 1.5;

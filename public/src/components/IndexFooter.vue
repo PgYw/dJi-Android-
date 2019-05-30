@@ -84,7 +84,7 @@ export default {
 </script>
 <style lang="css">
 *{
-  padding: 0;
+  padding:0;
   margin:0;
 }
 </style>
@@ -103,21 +103,18 @@ a{
   font-size: 14px;
 }
 .el-collapse {
-    padding: 0 16px;
-}
-.el-collapse-item__header, .el-collapse-item__wrap {
-    background: transparent;
+  padding: 0 16px;
 }
 .el-collapse-item__content {
-    padding: 0px;
+  padding: 0px;
 }
 .el-collapse-item__content>div>ul>li {
-    padding: 10px 0;
+  padding: 10px 0;
 }
 .el-collapse-item__content>div>ul>li>a {
-    font-size: 14px;
-    color: #3b3e40;
-    line-height: 30px;
+  font-size: 14px;
+  color: #3b3e40;
+  line-height: 30px;
 }
 .index_footer {
     padding: 8px 16px 16px 16px;

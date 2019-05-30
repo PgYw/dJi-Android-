@@ -20,15 +20,16 @@ CREATE TABLE dji_product(
   product_title VARCHAR(128) comment '商品的介绍',
   product_Oprice DECIMAL(8,2) comment '商品的本来的价格',
   product_Nprice DECIMAL(8,2) comment '商品的打折后的价格',
+  product_select BOOLEAN comment '商品的打折后的价格',
   relevancy_id INT comment '关联的主产品id'
 );
 INSERT INTO dji_product VALUES
-(NULL,'http://127.0.0.1:8080/static/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,0,1),
-(NULL,'http://127.0.0.1:8080/static/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,0,1),
-(NULL,'http://127.0.0.1:8080/static/images/Mavic1_one.jpg','"御" Mavic','2',9888,0,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/Mavic2_one.jpg','"御" Mavic','Air',4999,0,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/Mavic3_one.jpg','"御" Mavic','Pro 铂金版',6499,0,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/spark1_one.jpg','"晓" Spark','操控套装',3199,0,NULL);
+(NULL,'http://127.0.0.1:8080/static/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,FALSE,0,1),
+(NULL,'http://127.0.0.1:8080/static/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,TRUE,0,1),
+(NULL,'http://127.0.0.1:8080/static/images/Mavic1_one.jpg','"御" Mavic','2',9888,TRUE,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Mavic2_one.jpg','"御" Mavic','Air',4999,FALSE,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/Mavic3_one.jpg','"御" Mavic','Pro 铂金版',6499,FALSE,0,NULL),
+(NULL,'http://127.0.0.1:8080/static/images/spark1_one.jpg','"晓" Spark','操控套装',3199,TRUE,0,NULL);
 
 CREATE TABLE dji_img(
   img_id INT  PRIMARY KEY AUTO_INCREMENT comment '图片的id',

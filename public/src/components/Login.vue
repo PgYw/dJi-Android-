@@ -176,7 +176,7 @@ html,body,#user,.user{
 .user{
   text-align: center;
   margin:0 auto;
-  max-width: 22.5rem;
+  max-width: 24rem;
   position: relative;
 }
 .goOut{
