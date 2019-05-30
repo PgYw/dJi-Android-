@@ -49,11 +49,21 @@ export default {
     }
   },
   mounted() {
-    this.getLogin();
+    if(this.getAdmin.length>=1){
+      this.$refs.clearInput.style="display:block"
+    }
+    if(this.getUpwd.length>=1){
+      this.$refs.upwdHidden.style="display:block"
+    }
   },
   methods: {
-    goOut:function(){
-      this.$router.go(-1);
+    goOut(){
+      if (window.history.length<=1) {
+        this.$router.push({path:'/'})
+        return false
+      }else{
+        this.$router.go(-1)
+      }
     },
     Bg(){
       if(this.bg){
@@ -64,14 +74,6 @@ export default {
         this.$refs.upwdHidden.style.backgroundImage="url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTYgMTYiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNNy45NjQgMTEuOTg0bC45MDUgMS4zNjNhOC44IDguOCAwIDAgMS0uODY5LjA0NGMtMy4zMjggMC02LjI1LTEuODc0LTcuODE1LTQuNjc3YTEuNDczIDEuNDczIDAgMCAxIDAtMS40MjggOS4yOTMgOS4yOTMgMCAwIDEgMi42NjctMy4wMDRsMS41ODUgMi4zODlBNC4xOCA0LjE4IDAgMCAwIDQuMjIyIDhjMCAyLjE5IDEuNjcgMy45NjMgMy43NDIgMy45ODR6bTcuODUxLTMuMjdhOS4yMTggOS4yMTggMCAwIDEtMy43NTQgMy42NzZsMS4xNTIgMS43MzVhLjcyOC43MjggMCAwIDEtLjE2NC45NzlsLS4zNjQuMjY5YS42NDUuNjQ1IDAgMCAxLS45MjktLjE3M0wyLjc4NyAxLjg3NWEuNzI4LjcyOCAwIDAgMSAuMTY0LS45NzlsLjM2NC0uMjY5QS42NDUuNjQ1IDAgMCAxIDQuMjQ0LjhMNS42NiAyLjkyN0E4LjcyIDguNzIgMCAwIDEgOCAyLjYxYzMuMzI4IDAgNi4yNSAxLjg3NCA3LjgxNSA0LjY3Ny4yNDcuNDQuMjQ3Ljk4NyAwIDEuNDI4ek0xMS43NzggOGMwLTIuMjAyLTEuNjktMy45ODQtMy43NzgtMy45ODRhMy42IDMuNiAwIDAgMC0xLjQxLjI4NmwuNTM3Ljc5M2EyLjc2IDIuNzYgMCAwIDEgMi4yMzMuMjE3Yy0uNjU3IDAtMS4xOS41NjEtMS4xOSAxLjI1NCAwIC42OTIuNTMyIDEuMjU1IDEuMTkgMS4yNTUuNjU2IDAgMS4xODktLjU2MiAxLjE4OS0xLjI1NWEzLjE4NSAzLjE4NSAwIDAgMS0uMjMgMy4yNWwuNTM3Ljc5M2MuNTc0LS42OTkuOTIyLTEuNjEuOTIyLTIuNjA5em0tNC41IDIuOTUxTDUuMTI1IDcuNzA2Yy0uMTQgMS41MzUuODE0IDIuODgyIDIuMTUzIDMuMjQ1eiIvPjwvZGVmcz48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxtYXNrIGlkPSJiIiBmaWxsPSIjZmZmIj48dXNlIHhsaW5rOmhyZWY9IiNhIi8+PC9tYXNrPjx1c2UgZmlsbD0iIzAwMCIgZmlsbC1ydWxlPSJub256ZXJvIiB4bGluazpocmVmPSIjYSIvPjxnIGZpbGw9IiM5RkEzQTYiIG1hc2s9InVybCgjYikiPjxwYXRoIGQ9Ik0wIDBoMTZ2MTZIMHoiLz48L2c+PC9nPjwvc3ZnPg==)";
         this.bg=true;
         this.$refs.upwd.type="password";
-      }
-    },
-    getLogin(){
-      if(this.getAdmin.length>=1){
-        this.$refs.clearInput.style="display:block"
-      }
-      if(this.getUpwd.length>=1){
-        this.$refs.upwdHidden.style="display:block"
       }
     },
     Login(){

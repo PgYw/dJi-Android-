@@ -64,7 +64,7 @@
         <div class="products">
           <ul>
             <li v-for="one_product in one_products" :key="one_product.product_id">
-              <router-link :to="{path:'/Detail',query:{goodId:one_product.product_id}}" class="products">
+              <router-link :to="{path:'/Detail',query:{productId:one_product.product_id}}" class="products">
                 <div class="product_img">
                   <img :src="one_product.product_img" :alt="one_product.product_title">
                 </div>
@@ -85,7 +85,7 @@
         <div class="products">
           <ul>
             <li v-for="two_product in two_products" :key="two_product.product_id">
-              <router-link :to="{path:'/Detail',query: {goodId: two_product.product_id}}" class="products">
+              <router-link :to="{path:'/Detail',query: {productId: two_product.product_id}}" class="products">
                 <div class="product_img">
                   <img :src="two_product.product_img" :alt="two_product.product_title">
                 </div>
@@ -112,7 +112,7 @@
         <div class="products">
           <ul>
             <li v-for="three_product in three_products" :key="three_product.product_id">
-              <router-link :to="{path:'/Detail',query: {goodId: three_product.product_id}}" class="products">
+              <router-link :to="{path:'/Detail',query: {productId: three_product.product_id}}" class="products">
                 <div class="product_img">
                   <img :src="three_product.product_img" :alt="three_product.product_title">
                 </div>
@@ -243,12 +243,10 @@ export default {
   },
   created(){
     this.Products();
-  },
-  mounted() {
     if(window.sessionStorage.length!=0){
       this.Cartl=window.sessionStorage.length;
     }
-    window.addEventListener('scroll', this.handleScroll, true);
+    window.addEventListener('scroll',this.handleScroll);
   },
   methods:{
     handleScroll:function(){
@@ -257,9 +255,6 @@ export default {
       }else{
         document.getElementById("backTop").style.display="block";
       }
-    },
-    destroyed(){
-      window.removeEventListener('scroll',this.handleScroll);
     },
     menu:function(){
       this.$refs.hidden.style="display:inline-block";
@@ -307,6 +302,9 @@ export default {
       },30)
     }
   },
+  destroyed(){
+    window.removeEventListener('scroll',this.handleScroll);
+  },
 }
 </script>
 
@@ -314,9 +312,6 @@ export default {
 *{
   padding:0;
   margin:0;
-}
-.el-collapse-item__header,.el-collapse-item__wrap{
-  background-color: transparent;
 }
 .el-collapse-item__content{
   padding:0px;

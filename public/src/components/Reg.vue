@@ -118,33 +118,35 @@ export default {
     }
   },
   mounted() {
-    this.getTel();
+    if(this.getPhone.length>=1){
+      this.$refs.clearInput.style="display:block"
+    }
+    if(this.getYzm.length>=1){
+      this.$refs.clearYzm.style="display:block"
+    }
+    if(this.getPsword.length>=1){
+      this.$refs.clearPsword.style="display:block"
+    }
+    if(this.getEmail.length>=1){
+      this.$refs.clearEmail.style="display:block"
+    }
+    if(this.getYzmd.length>=1){
+      this.$refs.clearYzmd.style="display:block"
+    }
+    if(this.getUpwd.length>=1){
+      this.$refs.clearUpwd.style="display:block"
+    }
+    if(this.getCpwd.length>=1){
+      this.$refs.clearCpwd.style="display:block"
+    }
   },
   methods: {
-    goOut:function(){
-      this.$router.go(-1);
-    },
-    getTel(){
-      if(this.getPhone.length>=1){
-        this.$refs.clearInput.style="display:block"
-      }
-      if(this.getYzm.length>=1){
-        this.$refs.clearYzm.style="display:block"
-      }
-      if(this.getPsword.length>=1){
-        this.$refs.clearPsword.style="display:block"
-      }
-      if(this.getEmail.length>=1){
-        this.$refs.clearEmail.style="display:block"
-      }
-      if(this.getYzmd.length>=1){
-        this.$refs.clearYzmd.style="display:block"
-      }
-      if(this.getUpwd.length>=1){
-        this.$refs.clearUpwd.style="display:block"
-      }
-      if(this.getCpwd.length>=1){
-        this.$refs.clearCpwd.style="display:block"
+    goOut(){
+      if (window.history.length<=1) {
+        this.$router.push({path:'/'})
+        return false
+      }else{
+        this.$router.go(-1)
       }
     },
     // this.$options.methods.函数名字();在methods一个函数调用另外一个函数
@@ -264,14 +266,14 @@ export default {
     },
   },
   watch: {
-    change:function(){
+    change(){
       if(this.change[0]&&this.change[1]){
         this.$refs.emailReg.style="opacity:1;-webkit-appearance:button;cursor: pointer;"
       }else{
         this.$refs.emailReg.style="opacity:0.6;cursor:not-allowed"
       }
     },
-    getPhone:function(){
+    getPhone(){
       if(this.getPhone.length>=1){
       var num=new Number(this.getPhone);
       this.$refs.clearInput.style="display:block";
@@ -297,7 +299,7 @@ export default {
         this.$refs.phone.style="border: 1px solid #f04848;"
       }
     },
-    getYzm:function(){
+    getYzm(){
       if(this.getYzm.length>=1){
       this.$refs.clearYzm.style="display:block";
       // (/^[0-9a-zA-Z]{4}$/).test(this.getYzm)
@@ -316,7 +318,7 @@ export default {
         this.$refs.yzm.style="border: 1px solid #f04848;"
       }
     },
-    getPsword:function(){
+    getPsword(){
       if(this.getPsword.length>=1){
       this.$refs.clearPsword.style="display:block";
         if(!this.isReg[1]){
@@ -338,7 +340,7 @@ export default {
         this.$refs.psword.style="border: 1px solid #f04848;"
       }
     },
-    getEmail:function(){
+    getEmail(){
       if(this.getEmail.length>=1){
       this.$refs.clearEmail.style="display:block";
         if((/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getEmail)){
@@ -363,7 +365,7 @@ export default {
         this.$refs.email.style="border: 1px solid #f04848;"
       }
     },
-    getPhoned:function(){
+    getPhoned(){
       if(this.getPhoned.length>=1){
       var num=new Number(this.getPhoned);
       this.$refs.clearPhoned.style="display:block";
@@ -389,7 +391,7 @@ export default {
         this.$refs.phoned.style="border: 1px solid #f04848;"
       }
     },
-    getYzmd:function(){
+    getYzmd(){
       if(this.getYzmd.length>=1){
       this.$refs.clearYzmd.style="display:block";
       // (/^[0-9a-zA-Z]{4}$/).test(this.getYzmd)
@@ -408,7 +410,7 @@ export default {
         this.$refs.yzmd.style="border: 1px solid #f04848;"
       }
     },
-    getUpwd:function(){
+    getUpwd(){
       if(this.getUpwd.length>=1){
       this.$refs.clearUpwd.style="display:block";
         if(this.getCpwd!=this.getUpwd&&this.getCpwd!=""){
@@ -433,7 +435,7 @@ export default {
         this.$refs.upwd.style="border: 1px solid #f04848;"
       }
     },
-    getCpwd:function(){
+    getCpwd(){
       if(this.getCpwd.length>=1){
       this.$refs.clearCpwd.style="display:block";
         if((/^[0-9a-zA-Z]{6,20}$/).test(this.getCpwd)&&this.getCpwd==this.getUpwd){

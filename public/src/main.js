@@ -29,7 +29,7 @@ new Vue({
   template: '<App/>'
 })
 // 跳转其它组件或者页面时显示顶部
-router.beforeEach((to, from, next) => {
+router.beforeEach((to,from,next) => {
   // chrome
   document.body.scrollTop = 0
   // firefox

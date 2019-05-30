@@ -1,7 +1,7 @@
 const express=require("express");
 const pool=require("../pool.js");
 const router=express.Router();
-router.get("/goodList",(req,res)=>{
+router.get("/product",(req,res)=>{
   var $product_id=req.query.product_id;
   pool.query("SELECT * FROM dji_product WHERE product_id=?",$product_id,(err,result)=>{
     if(err) throw err;
@@ -12,23 +12,12 @@ router.get("/goodList",(req,res)=>{
     }
   });
 });
-router.get("/imgList",(req,res)=>{
+router.get("/productImg",(req,res)=>{
   var $product_id=req.query.product_id;
   pool.query("SELECT * FROM dji_img WHERE relevancy_id=?",$product_id,(err,result)=>{
     if(err) throw err;
     if(result.length>0){
-      res.send({code:1,imgList:result})
-    }else{
-      res.send({code:0})
-    }
-  });
-});
-router.get("/relevancyList",(req,res)=>{
-  var $product_id=req.query.product_id;
-  pool.query("SELECT * FROM dji_relevancy WHERE product_id=?",$product_id,(err,result)=>{
-    if(err) throw err;
-    if(result.length>0){
-      res.send({code:1,relevancyList:result})
+      res.send({code:1,productImg:result})
     }else{
       res.send({code:0})
     }

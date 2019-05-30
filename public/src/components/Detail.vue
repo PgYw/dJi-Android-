@@ -22,8 +22,8 @@
       <div class="product_swipe">
         <div class="swipe_item">
           <mt-swipe :auto="0">
-            <mt-swipe-item v-for="imgList in imgLists" :key="imgList.img_id">
-              <img :src="imgList.img_url" alt=""/>
+            <mt-swipe-item v-for="img in product[1]" :key="img.img_id">
+              <img :src="img.img_url" alt=""/>
             </mt-swipe-item>
           </mt-swipe>
         </div>
@@ -31,21 +31,21 @@
       </div>
       <div class="mast_but" ref="mast_but">
         <div class="but_title">选择必备组件</div>
-        <div class="product_child" v-for="relevancy_product in relevancy_products" :key="relevancy_product.id">
+        <div class="product_child" v-for="relevancy in relevancys" :key="relevancy.product_id">
           <div class="child_img">
-            <a href="">
-              <img :src="relevancy_product.product_img" alt=""/>
-            </a>
+            <router-link :to="{path:'/Detail',query:{relevancyId:relevancy.product_id}}" target="_blank">
+              <img :src="relevancy.product_img" alt=""/>
+            </router-link>
           </div>
           <div class="child_value">
             <div class="value_title">
-              <a href="">
-                <h6>{{relevancy_product.product_ify+" "+relevancy_product.product_title}}</h6>
-              </a>
+              <router-link :to="{path:'/Detail',query:{relevancyId:relevancy.product_id}}" target="_blank">
+                <h6>{{relevancy.product_ify+" "+relevancy.product_title}}</h6>
+              </router-link>
             </div>
             <div class="price">
               <span>¥</span>
-              <span ref="relevany_price">{{relevancy_product.product_Oprice}}</span>
+              <span ref="relevany_price">{{relevancy.product_Oprice}}</span>
               <div class="Upprice">
                 <button @click="Ep()" ref="ep">-</button>
                 <input readonly type="text" ref="input">
@@ -58,10 +58,11 @@
       <div class="account">
         <div class="price">
           <span>¥</span><span ref="product_price" v-if="product!=''">{{product[0].product_Oprice}}</span>
+          <span ref="product_price" v-else-if="relevancys!=''">{{relevancys[0].product_Oprice}}</span>
         </div>
         <div class="joinC">
           <button @click="get()">加入购物车</button>
-          <div class="qiu" ref="qiu" :style="{bottom:b_bottom+'rem',right:b_right+'rem'}">8</div>
+          <!-- <div class="qiu" ref="qiu" :style="{bottom:b_bottom+'rem',right:b_right+'rem'}">8</div> -->
           <div class="product_ln">
             <p>邮费:包邮</p>
             <p>发货时间:订单付款后1个工作日内</p>
@@ -119,105 +120,157 @@ export default {
   components:{"child":foter},
   data(){
     return{
-      imgLists:[],
       product:[],
-      relevancy_products:[],
+      relevancys:[],
       product_arr:[],
       activeName:"1",
-      b_bottom:5,
-      b_right:10.8,
+      // b_bottom:5,
+      // b_right:10.8,
       num:0,
       Cartl:false,
     }
   },
+  created() {
+    this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then(res=>{
+      this.product.push(res.data.product[0])
+      if(res.data.product[0].relevancy_id!=null){
+        this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+res.data.product[0].relevancy_id).then(res=>{
+          this.relevancys.push(res.data.product[0]);
+          this.$refs.mast_but.style="display:block;"
+        })
+      }
+    })
+    this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then(res=>{
+      this.product.push(res.data.productImg);
+    })
+    // addEventListener("storage",function(value){
+    //   var getVal=window.localStorage.getItem("product")
+    // })
+    // window.addEventListener('scroll',this.BackTop)
+    if(!window.localStorage.getItem("product")){
+      this.product_arr=[]
+      this.Cartl=false;
+    }else{
+      var getVal=localStorage.getItem("product");
+      getVal=JSON.parse(getVal)
+      if(getVal!=null){
+        this.product_arr=getVal
+      }
+      this.Cartl=this.product_arr.length
+    }
+    // if(this.$route.query.relevancyId){
+    //   this.$axios.get("http://127.0.0.1:3000/detail/relevancy?relevancy_id="+this.$route.query.relevancyId).then(res=>{
+    //     this.relevancy=res.data.relevancy
+    //   })
+    //   this.$axios.get("http://127.0.0.1:3000/detail/relevancyImg?relevancy_id="+this.$route.query.relevancyId).then(res=>{
+    //     this.imgLists=res.data.relevancyImg
+    //   })
+    // }else{
+    //   this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then((res) => {
+    //     this.imgLists=res.data.productImg;
+    //   })
+    //   this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then((res) => {
+    //     this.product=res.data.product;
+    //     if(res.data.product[0].relevancy_id!=null){
+    //       this.$axios.get("http://127.0.0.1:3000/detail/relevancy?relevancy_id="+res.data.product[0].relevancy_id).then((ress) => {
+    //         this.relevancy=ress.data.relevancy;
+    //       })
+    //     }
+    //   })
+    // }
+  },
   methods:{
-    get:function(){
+    BackTop(){
+      var scrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+      if(document.documentElement.scrollTop<=250){
+        document.getElementById("backTop").style.display="none";
+      }else{
+        document.getElementById("backTop").style.display="block";
+      }
+    },
+    get(){
       if(!(window.localStorage&&(window.localStorage.setItem('a',123),window.localStorage.getItem('a')==123))){
         alert("您的电脑可能未开启本地存储")
       }else{
-        // 父产品相关信息
-        var product_id=this.product[0].product_id;
-        var product_price=this.product[0].product_Oprice;
-        var product_img=this.product[0].product_img;
-        var product_ln=this.product[0].product_ify+" "+this.product[0].product_title
-        var product_bl=false;
-        var product_obj={
-          product_id:product_id,
-          product_price:parseFloat(product_price).toFixed(2),
-          product_img:product_img,
-          product_ln:product_ln,
-          product_nb:0
-        }
-        if(this.product_arr.length>0){
-          for(var i=0;i<this.product_arr.length;i++){
-            if(this.product_arr[i].product_id==this.$route.query.goodId){
-              product_obj.product_nb=this.product_arr[i].product_nb
-              product_obj.product_nb++
-              product_obj.product_price=parseFloat(product_price*this.product_arr[i].product_nb).toFixed(2);
-              this.product_arr[i]=product_obj;
-              window.sessionStorage.setItem("product"+i,JSON.stringify(this.product_arr[i]));
-              product_bl=true;
+        if(this.product!=""){
+          var isPr=false
+          var product_obj={
+            product_id:this.product[0].product_id,
+            product_count:0,
+            product_total:0,
+          }
+          if(this.product_arr.length>0){
+            for(var i=0;i<this.product_arr.length;i++){
+              if(this.product_arr[i].product_id==this.$route.query.productId){
+                this.product_arr[i].product_count++;
+                this.product_arr[i].product_total=this.product[0].product_Oprice*this.product_arr[i].product_count
+                isPr=true;
+              }
+            }
+            if(!isPr){
+              product_obj.product_count=1;
+              product_obj.product_total=this.product[0].product_Oprice*product_obj.product_count
+              this.product_arr.push(product_obj);
+            }
+          }else if(this.product_arr[0]==undefined){
+            product_obj.product_count=1;
+            product_obj.product_total=this.product[0].product_Oprice*product_obj.product_count
+            this.product_arr.push(product_obj)
+          }
+          if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
+            var isRe=false;
+            var product_count=this.$refs.input[0].value
+            var product_obj={
+              product_id:this.product[0].relevancy_id,
+              product_count:parseInt(product_count),
+              product_total:0
+            }
+            for(var i=0;i<this.product_arr.length;i++){
+              if(this.product[0].relevancy_id==this.product_arr[i].relevancy_id){
+                product_obj.product_count+=this.product_arr[i].product_count
+                product_obj.product_total=this.relevancys[0].product_Oprice*product_obj.product_count
+                this.product_arr[i]=product_obj
+                isRe=true;
+              }
+            }
+            if(!isRe){
+              product_obj.product_total=this.relevancys[0].product_Oprice*product_obj.product_count
+              this.product_arr.push(product_obj)
+              console.log(this.product_arr)
             }
           }
-          if(!product_bl){
-            product_obj.product_nb=1;
-            this.product_arr.push(product_obj)
-            window.sessionStorage.setItem("product"+i,JSON.stringify(this.product_arr[i]));
-          }
+          this.Cartl=this.product_arr.length
+          console.log(this.product_arr)
+          window.localStorage.setItem("product",JSON.stringify(this.product_arr))
         }else{
-          if(this.product_arr[0]==null){
-            product_obj.product_nb=1;
-            this.product_arr[0]=product_obj;
-            window.sessionStorage.setItem("product0",JSON.stringify(this.product_arr[0]));
-          }
-        }
-        // 子产品相关信息
-        if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
-          var relevancy_id=this.relevancy_products[0].product_id;
-          var relevancy_price=this.relevancy_products[0].product_Oprice
-          var relevancy_img=this.relevancy_products[0].product_img
-          var relevancy_nb=this.$refs.input[0].value
-          var relevancy_bl=false;
-          var relevancy_ln=this.relevancy_products[0].product_ify+" "+this.relevancy_products[0].product_title
+          var relevancy_id=this.relevancy[0].relevancy_id
           var relevancy_obj={
             relevancy_id:relevancy_id,
-            relevancy_price:parseFloat(relevancy_price).toFixed(2),
-            relevancy_img:relevancy_img,
-            relevancy_ln:relevancy_ln,
-            relevancy_nb:parseInt(relevancy_nb)
+            relevancy_count:0,
+            relevancy_total:0
           }
           for(var i=0;i<this.product_arr.length;i++){
             if(this.product_arr[i].relevancy_id){
-              relevancy_bl=true;
-              relevancy_obj.relevancy_nb=parseInt(relevancy_nb)+this.product_arr[i].relevancy_nb
-              relevancy_obj.relevancy_price=parseFloat(relevancy_obj.relevancy_price*relevancy_obj.relevancy_nb).toFixed(2);
-              this.product_arr[i]=relevancy_obj
-              window.sessionStorage.setItem("product"+i,JSON.stringify(this.product_arr[i]));
+              this.product_arr[i].relevancy_count++;
+              this.product_arr[i].relevancy_total=this.relevancy[0].relevancy_Oprice*this.product_arr[i].relevancy_count
+            }else{
+              relevancy_obj.relevancy_count=1;
+              relevancy_obj.relevancy_total=this.relevancy[0].relevancy_Oprice*relevancy_obj.relevancy_count
+              this.product_arr.push(relevancy_obj)
+              return;
             }
-          }
-          if(!relevancy_bl){
-            this.product_arr[2]=relevancy_obj
-            window.sessionStorage.setItem("product2",JSON.stringify(this.product_arr[2]));
           }
         }
       }
-      // 小球移动到购物车图标并且消失
-      // this.$refs.qiu.style="display:block"
-      // this.b_bottom+=1.8;
-      // this.b_right-=0.5;
-      // if(this.b_right<=1.3){
-      //   this.$refs.qiu.style="display:none"
-      // }
-        this.Cartl=window.sessionStorage.length
     },
-    Up:function(){
+    Up(){
       this.num++
       this.$refs.ep[0].style="display:inline-block"
       this.$refs.input[0].value=this.num
       var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product[0].product_Oprice)
       this.$refs.product_price.innerHTML=price;
     },
-    Ep:function(){
+    Ep(){
       this.num--
       var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product[0].product_Oprice)
       this.$refs.product_price.innerHTML=price;
@@ -229,7 +282,7 @@ export default {
       this.$refs.ep[0].style="display:inline-block"
       this.$refs.input[0].value=this.num
     },
-    backTop:function(){
+    backTop(){
       var top=setInterval(function(){
         document.documentElement.scrollTop-=50;
         if(document.documentElement.scrollTop==0){
@@ -237,44 +290,27 @@ export default {
         }
       },30)
     },
-    goOut:function(){
-      this.$router.go(-1);
+    goOut(){
+      if (window.history.length<=1) {
+        this.$router.push({path:'/'})
+        return false
+      }else{
+        this.$router.go(-1)
+      }
     }
   },
-  mounted() {
-    if(window.sessionStorage.length!=0){
-      this.product_arr=[]
-      this.Cartl=window.sessionStorage.length;
-    }
-    for(var i=0;i<sessionStorage.length;i++){
-      var getKey=sessionStorage.key(i);
-      var getVal=sessionStorage.getItem(getKey);
-      getVal=JSON.parse(getVal)
-      if(getVal!=null){
-        this.product_arr[i]=getVal
-      }
-    }
-    window.onscroll=function(){
-      if(document.documentElement.scrollTop<=250){
-        document.getElementById("backTop").style.display="none";
-      }else{
-        document.getElementById("backTop").style.display="block";
-      }
-    }
-    this.$axios.get("http://127.0.0.1:3000/detail/imgList?product_id="+this.$route.query.goodId).then((res) => {
-      this.imgLists=res.data.imgList;
-    })
-    this.$axios.get("http://127.0.0.1:3000/detail/goodList?product_id="+this.$route.query.goodId).then((res) => {
-      this.product=res.data.product;
-      if(res.data.product[0].relevancy_id!=null){
-        this.$axios.get("http://127.0.0.1:3000/detail/relevancyList?product_id="+res.data.product[0].relevancy_id).then((ress) => {
-          this.relevancy_products=ress.data.relevancyList;
-          this.$refs.mast_but.style="display:block;"
-        })
-      }
-    })
+  destroyed(){
+    window.removeEventListener('scroll',this.BackTop)
   },
 }
+  // 小球移动到购物车图标并且消失
+  // this.$refs.qiu.style="display:block"
+  // this.b_bottom+=1.8;
+  // this.b_right-=0.5;
+  // if(this.b_right<=1.3){
+  //   this.$refs.qiu.style="display:none"
+  // }
+  // 点击加入购物车存储数据
 </script>
 <style lang="css">
 *{
@@ -283,9 +319,6 @@ export default {
 }
 </style>
 <style lang="css">
-.el-collapse-item__header, .el-collapse-item__wrap {
-    background-color: transparent;
-}
 html,body,#detail,.detail{
   width:100%;
   height:100%;
@@ -366,6 +399,7 @@ ul{
   font-size: 25px;
 }
 .mint-toast-icon{
+  font-size: 23px;
   line-height:3.12rem;
   display:inline-block;
   padding-left: 20px;
@@ -401,7 +435,7 @@ ul{
 .mast_but>.product_child>.child_img{
   width: 48px;
   height: 48px;
-  margin-right: 16px;
+  margin-right: 10px;
   margin-left:10px;
   float: left;
   line-height: 4.1rem;

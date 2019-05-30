@@ -70,15 +70,10 @@ export default {
       products_ify:[],
     }
   },
-  mounted() {
-    this.nav_pr();
-  },
-  methods:{
-    nav_pr:function(){
-      this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
-        this.products_ify=res.data
-      })
-    },
+  created() {
+    this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
+      this.products_ify=res.data
+    })
   }
 }
 </script>
@@ -86,6 +81,9 @@ export default {
 *{
   padding:0;
   margin:0;
+}
+.el-collapse-item__header,.el-collapse-item__wrap {
+  background-color: transparent;
 }
 </style>
 <style scoped lang="css">
@@ -117,27 +115,27 @@ a{
   line-height: 30px;
 }
 .index_footer {
-    padding: 8px 16px 16px 16px;
+  padding: 8px 16px 16px 16px;
 }
 .copyRight {
-    font-size: 12px;
-    line-height: 32px;
-    color: #9fa3a6;
+  font-size: 12px;
+  line-height: 32px;
+  color: #9fa3a6;
 }
 .index_footer>div:first-child>a {
-    font-size: 12px;
-    margin-right: 16px;
-    color: #3b3e40;
-    height: 32px;
-    line-height: 32px;
-    display: inline-block;
+  font-size: 12px;
+  margin-right: 16px;
+  color: #3b3e40;
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
 }
 .lang>a {
-    width: 100%;
-    font-size: 12px;
-    color: #3b3e40;
-    height: 32px;
-    line-height: 32px;
-    display: inline-block;
+  width: 100%;
+  font-size: 12px;
+  color: #3b3e40;
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
 }
 </style>
