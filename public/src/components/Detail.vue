@@ -27,7 +27,7 @@
             </mt-swipe-item>
           </mt-swipe>
         </div>
-        <div class="product_title" v-if="product!=''">{{product[0].product_ify+" "+product[0].product_title}}</div>
+        <div class="product_title" v-if="product[0]!=undefined">{{product[0].product_ify+" "+product[0].product_title}}</div>
       </div>
       <div class="mast_but" ref="mast_but">
         <div class="but_title">选择必备组件</div>
@@ -131,22 +131,27 @@ export default {
     }
   },
   created() {
-    this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then(res=>{
-      this.product.push(res.data.product[0])
-      if(res.data.product[0].relevancy_id!=null){
-        this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+res.data.product[0].relevancy_id).then(res=>{
-          this.relevancys.push(res.data.product[0]);
-          this.$refs.mast_but.style="display:block;"
-        })
-      }
-    })
-    this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then(res=>{
-      this.product.push(res.data.productImg);
-    })
-    // addEventListener("storage",function(value){
-    //   var getVal=window.localStorage.getItem("product")
-    // })
-    // window.addEventListener('scroll',this.BackTop)
+    if(this.$route.query.productId){
+      this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then(res=>{
+        this.product.push(res.data.product[0])
+        if(res.data.product[0].relevancy_id!=null){
+          this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+res.data.product[0].relevancy_id).then(res=>{
+            this.relevancys.push(res.data.product[0]);
+            this.$refs.mast_but.style="display:block;"
+          })
+        }
+      })
+      this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then(res=>{
+        this.product.push(res.data.productImg);
+      })
+    }else{
+      this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.relevancyId).then(res=>{
+        this.product.push(res.data.product[0])
+      })
+      this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.relevancyId).then(res=>{
+        this.product.push(res.data.productImg);
+      })
+    }
     if(!window.localStorage.getItem("product")){
       this.product_arr=[]
       this.Cartl=false;
@@ -158,26 +163,6 @@ export default {
       }
       this.Cartl=this.product_arr.length
     }
-    // if(this.$route.query.relevancyId){
-    //   this.$axios.get("http://127.0.0.1:3000/detail/relevancy?relevancy_id="+this.$route.query.relevancyId).then(res=>{
-    //     this.relevancy=res.data.relevancy
-    //   })
-    //   this.$axios.get("http://127.0.0.1:3000/detail/relevancyImg?relevancy_id="+this.$route.query.relevancyId).then(res=>{
-    //     this.imgLists=res.data.relevancyImg
-    //   })
-    // }else{
-    //   this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then((res) => {
-    //     this.imgLists=res.data.productImg;
-    //   })
-    //   this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then((res) => {
-    //     this.product=res.data.product;
-    //     if(res.data.product[0].relevancy_id!=null){
-    //       this.$axios.get("http://127.0.0.1:3000/detail/relevancy?relevancy_id="+res.data.product[0].relevancy_id).then((ress) => {
-    //         this.relevancy=ress.data.relevancy;
-    //       })
-    //     }
-    //   })
-    // }
   },
   methods:{
     BackTop(){
@@ -192,75 +177,53 @@ export default {
       if(!(window.localStorage&&(window.localStorage.setItem('a',123),window.localStorage.getItem('a')==123))){
         alert("您的电脑可能未开启本地存储")
       }else{
-        if(this.product!=""){
-          var isPr=false
-          var product_obj={
-            product_id:this.product[0].product_id,
-            product_count:0,
-            product_total:0,
+        var isPr=false
+        var product_obj={
+          product_id:this.product[0].product_id,
+          product_count:0,
+          product_total:0,
+        }
+        if(this.product_arr.length>0){
+          for(var i=0;i<this.product_arr.length;i++){
+            if(this.product_arr[i].product_id==this.$route.query.productId||this.product_arr[i].product_id==this.$route.query.relevancyId){
+              this.product_arr[i].product_count++;
+              this.product_arr[i].product_total=this.product[0].product_Oprice*this.product_arr[i].product_count
+              isPr=true;
+            }
           }
-          if(this.product_arr.length>0){
-            for(var i=0;i<this.product_arr.length;i++){
-              if(this.product_arr[i].product_id==this.$route.query.productId){
-                this.product_arr[i].product_count++;
-                this.product_arr[i].product_total=this.product[0].product_Oprice*this.product_arr[i].product_count
-                isPr=true;
-              }
-            }
-            if(!isPr){
-              product_obj.product_count=1;
-              product_obj.product_total=this.product[0].product_Oprice*product_obj.product_count
-              this.product_arr.push(product_obj);
-            }
-          }else if(this.product_arr[0]==undefined){
+          if(!isPr){
             product_obj.product_count=1;
             product_obj.product_total=this.product[0].product_Oprice*product_obj.product_count
-            this.product_arr.push(product_obj)
+            this.product_arr.push(product_obj);
           }
-          if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
-            var isRe=false;
-            var product_count=this.$refs.input[0].value
-            var product_obj={
-              product_id:this.product[0].relevancy_id,
-              product_count:parseInt(product_count),
-              product_total:0
-            }
-            for(var i=0;i<this.product_arr.length;i++){
-              if(this.product[0].relevancy_id==this.product_arr[i].relevancy_id){
-                product_obj.product_count+=this.product_arr[i].product_count
-                product_obj.product_total=this.relevancys[0].product_Oprice*product_obj.product_count
-                this.product_arr[i]=product_obj
-                isRe=true;
-              }
-            }
-            if(!isRe){
-              product_obj.product_total=this.relevancys[0].product_Oprice*product_obj.product_count
-              this.product_arr.push(product_obj)
-              console.log(this.product_arr)
-            }
-          }
-          this.Cartl=this.product_arr.length
-          console.log(this.product_arr)
-          window.localStorage.setItem("product",JSON.stringify(this.product_arr))
-        }else{
-          var relevancy_id=this.relevancy[0].relevancy_id
-          var relevancy_obj={
-            relevancy_id:relevancy_id,
-            relevancy_count:0,
-            relevancy_total:0
+        }else if(this.product_arr[0]==undefined){
+          product_obj.product_count=1;
+          product_obj.product_total=this.product[0].product_Oprice*product_obj.product_count
+          this.product_arr.push(product_obj)
+        }
+        if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
+          var isRe=false;
+          var product_count=this.$refs.input[0].value
+          var product_obj={
+            product_id:this.product[0].relevancy_id,
+            product_count:parseInt(product_count),
+            product_total:0
           }
           for(var i=0;i<this.product_arr.length;i++){
-            if(this.product_arr[i].relevancy_id){
-              this.product_arr[i].relevancy_count++;
-              this.product_arr[i].relevancy_total=this.relevancy[0].relevancy_Oprice*this.product_arr[i].relevancy_count
-            }else{
-              relevancy_obj.relevancy_count=1;
-              relevancy_obj.relevancy_total=this.relevancy[0].relevancy_Oprice*relevancy_obj.relevancy_count
-              this.product_arr.push(relevancy_obj)
-              return;
+            if(this.product[0].relevancy_id==this.product_arr[i].product_id){
+              product_obj.product_count+=this.product_arr[i].product_count
+              product_obj.product_total=this.relevancys[0].product_Oprice*product_obj.product_count
+              this.product_arr[i]=product_obj
+              isRe=true;
             }
           }
+          if(!isRe){
+            product_obj.product_total=this.relevancys[0].product_Oprice*product_obj.product_count
+            this.product_arr.push(product_obj)
+          }
         }
+        this.Cartl=this.product_arr.length
+        window.localStorage.setItem("product",JSON.stringify(this.product_arr))
       }
     },
     Up(){
@@ -318,7 +281,7 @@ export default {
   padding:0;
 }
 </style>
-<style lang="css">
+<style scoped lang="css">
 html,body,#detail,.detail{
   width:100%;
   height:100%;

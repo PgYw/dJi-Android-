@@ -13,51 +13,56 @@
         </a>
         <i class="el-icon-search search"></i>
       </div>
+      <div style="height:48px;"></div>
       <div class="myCart">
-        <h2>我的购物车</h2>
+        <h2 v-if="product_arr.length<=0">购物车为空</h2>
+        <h2 v-else-if="product_arr.length>0">我的购物车</h2>
         <div class="no-login">
           <p>登录之后将显示您之前加入的商品。
             <router-link to="/Login">立即登录></router-link>
           </p>
         </div>
-        <div class="goDt">
-          <span ref="length">商品总金额({{product_arr.length}}):</span>
+        <div class="goDt" v-show="show">
+          <span>商品总金额({{products.length}}):</span>
           <h4>¥</h4>
-          <h4 ref="product_price">43999</h4>
+          <h4 id="product_price"></h4>
           <button @click="goDt()">去结算</button>
         </div>
+        <div class="goSp" v-show="!show">
+          <router-link to="/Index" class="goSp">继续购物></router-link>
+        </div>
       </div>
-      <div class="detail" v-for="(product,index) in product_arr" :key="product.product_id">
+      <div class="detail" v-for="(product,index) in products" :key="product.product_id">
         <div class="input">
           <input type="checkbox" checked>
         </div>
         <div class="img">
-          <img :src="product.product_img||product.relevancy_img" alt="">
+          <img :src="product.product_img" alt="">
         </div>
         <div class="nc">
           <p>
-          <a href="">{{product.relevancy_ify+product.relevancy_title||product.product_ify+product.product_title}}</a>
+          <a href="">{{product.product_ify+product.product_title}}</a>
           </p>
           <p class="pTime">发货时间:1个工作日内</p>
           <p>
-            <span>¥</span><span>{{product.product_Oprice||product.relevancy_Oprice}}</span>
+            <span>¥</span><span>{{product.product_Oprice}}</span>
           </p>
           <div class="et">
-            <button>移除</button>
+            <button @click="Dt(index)">移除</button>
             <div class="Cell">
-              <button @click="Ep(index)" ref="ep" :disabled="products[index].product_count==1||products[index].relevancy_count==1?true:false">-</button>
-              <input ref="input" type="text" readonly :value="products[index].product_count||products[index].relevancy_count"/>
+              <button @click="Ep(index)" ref="ep" :disabled="product_arr[index].product_count==1?true:false">-</button>
+              <input ref="input" type="text" readonly :value="product_arr[index].product_count"/>
               <button @click="Up(index)">+</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="price_count">
+      <div class="price_count" v-show="show">
         <div class="price">
-          <span>商品总金额(长度):</span>
+          <span>商品总金额({{products.length}}):</span>
           <p>
             <span>¥</span>
-            <span ref="product_price">4399</span>
+            <span id="product_price"></span>
           </p>
         </div>
         <div class="postage">
@@ -67,10 +72,10 @@
           </p>
         </div>
       </div>
-      <div class="button">
+      <div class="button" v-show="show">
         <button>去结算</button>
       </div>
-      <div class="product_ln">
+      <div class="product_ln" v-show="show">
         <p>支持支付宝、微信、银联、顺丰到付、花呗和招行分期。</p>
         <p>
           <i class="el-icon-truck"></i>
@@ -116,18 +121,21 @@
 <script>
 import Loading from "@/components/common/Loading";
 import foter from "@/components/IndexFooter";
+import Vue from "vue";
 export default {
   name:"cart",
   components:{Loading,foter},
   data() {
     return {
       isLoading:true,
-      clear:"",
       Cartl:false,
-      product_arr:[],
-      products:[],
+      show:false,
+      clear:"",
       num:1,
       nb:0,
+      product_arr:[],
+      products:[],
+      product_select:[],
     }
   },
   created() {
@@ -135,28 +143,52 @@ export default {
       var getVal=localStorage.getItem("product");
       getVal=JSON.parse(getVal)
       if(getVal!=null){
-        this.products=getVal
+        this.product_arr=getVal
       }
-    for(var i=0;i<this.products.length;i++){
-      if(this.products[i].product_id){
-        this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.products[i].product_id).then(res=>{
-          this.product_arr.push(res.data.product[0])
-        })
-      }
-      if(this.products[i].relevancy_id){
-        this.$axios.get("http://127.0.0.1:3000/detail/relevancy?relevancy_id="+this.products[i].relevancy_id).then(res=>{
-          this.product_arr.push(res.data.relevancy[0])
-        })
-      }
+    for(var i=0;i<this.product_arr.length;i++){
+      this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.product_arr[i].product_id).then(res=>{
+        this.products.push(res.data.product[0])
+      })
     }
   },
   methods: {
     Up(index){
-      this.products[index].product_count++||this.products[index].relevancy_count++
-      this.products[index].product_total=this.product_arr[index].product_price*this.products[index].product_count
-      window.localStorage.setItem("product",JSON.stringify(this.products))
+      this.product_arr[index].product_count++
+      this.product_arr[index].product_total=this.products[index].product_Oprice*this.product_arr[index].product_count
+      var sum=0;
+      for(var i=0;i<this.product_arr.length;i++){
+        sum+=this.product_arr[i].product_total
+      }
+      var price=document.querySelectorAll("#product_price")
+      for(var i=0;i<price.length;i++){
+        price[i].innerHTML=sum
+      }
+      window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
     Ep(index){
+      if(this.product_arr[index].product_count==1){
+        return;
+      }
+      this.product_arr[index].product_count--
+      this.product_arr[index].product_total=this.products[index].product_Oprice*this.product_arr[index].product_count
+      var sum=0;
+      for(var i=0;i<this.product_arr.length;i++){
+        sum+=this.product_arr[i].product_total
+      }
+      var price=document.querySelectorAll("#product_price")
+      for(var i=0;i<price.length;i++){
+        price[i].innerHTML=sum
+      }
+      window.localStorage.setItem("product",JSON.stringify(this.product_arr))
+    },
+    Dt(index){
+      for(var i=0;i<this.product_arr.length;i++){
+        if(this.product_arr[i].product_id==this.products[index].product_id){
+          this.product_arr.splice(i,1)
+        }
+      }
+      this.products.splice(index,1)
+      window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
     loading(){
       this.nb++;
@@ -172,24 +204,27 @@ export default {
       }else{
         this.$router.go(-1)
       }
+    },
+    goDt(){
+      console.log("结算中")
     }
   },
   mounted() {
-    for(var i=0;i<this.products.length;i++){
-      if(this.products[i].product_count==1||this.products[i].relevancy_count==1){
-        console.log(111)
-      }
+    var sum=0;
+    for(var i=0;i<this.product_arr.length;i++){
+      sum+=this.product_arr[i].product_total
+    }
+    var price=document.querySelectorAll("#product_price")
+    for(var i=0;i<price.length;i++){
+      price[i].innerHTML=sum
     }
   },
   watch: {
-    products(){
-      for(var i=0;i<this.products.length;i++){
-        if(this.products[i].product_count==1||this.products[i].relevancy_count==1){
-          // console.log(this.$refs.ep)
-        }else{
-          // console.log(this.$refs)
-          // this.$refs.ep.disabled=false;
-        }
+    product_arr(){
+      if(this.product_arr.length>0){
+        this.show=true;
+      }else{
+        this.show=false;
       }
     }
   },
@@ -289,14 +324,29 @@ body,#cart,.cart{
   display: inline!important;
   margin-left: 4px;
 }
-.goDt{
+.myCart>.goDt{
   height:2rem;
   font-size: 14px;
   font-weight: 400;
-  color: #6c7073;;
+  color: #6c7073;
   line-height: 2rem;
 }
-.goDt>button{
+.myCart>.goSp{
+  margin-top:24px;
+  background:transparent;
+  width:100%;
+  text-align: center;
+}
+.myCart>.goSp>a{
+  display: block;
+  height:40px;
+  border: 1px solid #d4d7d9;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  line-height: 40px;
+  font-size: 14px;
+}
+.myCart>.goDt>button{
   float: right;
   height:2rem;
   width:4rem;
@@ -306,10 +356,10 @@ body,#cart,.cart{
   border:1px solid #1897f2;
   outline: none;
 }
-.goDt>span:last-child{
+.myCart>.goDt>span:last-child{
   font-weight: 500;
 }
-.goDt>h4{
+.myCart>.goDt>h4{
   display:inline-block;
 }
 .detail{
