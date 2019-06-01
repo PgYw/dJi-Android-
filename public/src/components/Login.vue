@@ -1,7 +1,7 @@
 <template>
   <div id="user">
     <div class="user">
-      <div class="goOut" @click="goOut()">←返回</div>
+      <div class="goOut" @click="goOut()">返回</div>
       <div class="login">
         <div class="from">
           <div class="login_title">登录</div>

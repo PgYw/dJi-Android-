@@ -34,14 +34,14 @@
       </div>
       <div class="detail" v-for="(product,index) in products" :key="product.product_id">
         <div class="input">
-          <input type="checkbox" checked>
+          <input type="checkbox" id="checked" checked @click="count(index,$event)">
         </div>
         <div class="img">
-          <img :src="product.product_img" alt="">
+          <img v-lazy="product.product_img" alt="">
         </div>
         <div class="nc">
           <p>
-          <a href="">{{product.product_ify+product.product_title}}</a>
+          <router-link :to="{path:'/Detail',query:{productId:product.product_id}}">{{product.product_ify+product.product_title}}</router-link>
           </p>
           <p class="pTime">发货时间:1个工作日内</p>
           <p>
@@ -190,6 +190,30 @@ export default {
       this.products.splice(index,1)
       window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
+    count(index,e){
+      var sum=0;
+      var price=document.querySelectorAll("#product_price")
+      if(e.target.checked){
+        for(var i=0;i<this.product_arr.length;i++){
+          if(i==index){
+            continue;
+          }
+          sum+=this.product_arr[i].product_total
+        }
+        for(var i=0;i<price.length;i++){
+          price[i].innerHTML=sum
+        }
+      }
+      for(var i=0;i<this.product_arr.length;i++){
+        if(i==index){
+          continue;
+        }
+        sum+=this.product_arr[i].product_total
+      }
+      for(var i=0;i<price.length;i++){
+        price[i].innerHTML=sum
+      }
+    },
     loading(){
       this.nb++;
       if(this.nb==3){
@@ -206,7 +230,7 @@ export default {
       }
     },
     goDt(){
-      console.log("结算中")
+      console.log("结算中.....")
     }
   },
   mounted() {
@@ -422,11 +446,12 @@ body,#cart,.cart{
   position: relative;
 }
 .img{
-  width:3rem;
+  width:6rem;
   margin-right:1rem;
 }
 .img>img{
   width:100%;
+  height:50%;
 }
 .nc{
   font-size: 14px;

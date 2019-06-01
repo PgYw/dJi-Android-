@@ -1,7 +1,7 @@
 <template>
   <div id="reg">
     <div class="reg">
-      <div class="goOut" @click="goOut()">←返回</div>
+      <div class="goOut" @click="goOut()">返回</div>
       <div class="reg">
         <div class="padding">
           <div class="reg_way">

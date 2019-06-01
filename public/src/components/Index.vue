@@ -3,7 +3,7 @@
     <transition name="fade">
       <div class="downloadApp" v-if="show">
         <button>
-          <i class="shanchu" v-on:click="show = !show"></i>
+          <i class="shanchu" @click="show=!show"></i>
         </button>
         <span class="logo">
           <img src="http://localhost:8080/static/images/djiapp.png" alt="">
@@ -17,15 +17,23 @@
     </transition>
     <div class="header">
       <span class="menu">
-        <button ref="show" class="menuButton" @click=" menu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <button ref="hidden" class="hiddenButton" @click="hidden()">
-          <span></span>
-          <span></span>
-        </button>
+        <transition name="fade" mode="out-in">
+          <button ref="show" class="menuButton"
+          v-if="isShow"
+          @click.stop="menu()"
+          key="one">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <button ref="hidden" class="hiddenButton"
+          v-else-if="!isShow"
+          @click.stop="hidden()"
+          key="two">
+            <span></span>
+            <span></span>
+          </button>
+        </transition>
       </span>
       <span class="center">
         <a href="">
@@ -36,23 +44,25 @@
       </span>
       <span class="cart">
         <i class="el-icon-search search"></i>
-        <el-badge :value="Cartl" class="item"  type="primary">
-          <router-link to="/Cart">
-            <i class="el-icon-shopping-cart-full"></i>
-          </router-link>
-        </el-badge>
+        <transition name="fade">
+          <el-badge :value="Cartl" class="item"  type="primary" v-if="isShow">
+            <router-link to="/Cart">
+              <i class="el-icon-shopping-cart-full"></i>
+            </router-link>
+          </el-badge>
+        </transition>
       </span>
     </div>
-    <div class="body" ref="body">
+    <div class="body" v-show="isShow">
       <div class="index_swipe">
         <mt-swipe :auto="5500">
-          <mt-swipe-item v-for="item in items" :key="item.id">
-            <a :href="item.href">
+          <mt-swipe-item v-for="banner in banners" :key="banner.banner_id">
+            <a :href="banner.banner_href">
               <div class="productLn">
-                <h2>{{item.productLnTop}}</h2>
-                <span>{{item.productLnButton}}</span>
+                <h2>{{banner.banner_productLnTop}}</h2>
+                <span>{{banner.banner_productLnBottom}}</span>
               </div>
-              <img :src="item.url" alt=""/>
+              <img v-lazy="banner.banner_img" alt=""/>
             </a>
           </mt-swipe-item>
         </mt-swipe>
@@ -66,7 +76,7 @@
             <li v-for="one_product in one_products" :key="one_product.product_id">
               <router-link :to="{path:'/Detail',query:{productId:one_product.product_id}}" class="products">
                 <div class="product_img">
-                  <img :src="one_product.product_img" :alt="one_product.product_title">
+                  <img v-lazy="one_product.product_img" :alt="one_product.product_title">
                 </div>
                 <div class="product_ln">
                   <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
@@ -87,7 +97,7 @@
             <li v-for="two_product in two_products" :key="two_product.product_id">
               <router-link :to="{path:'/Detail',query: {productId: two_product.product_id}}" class="products">
                 <div class="product_img">
-                  <img :src="two_product.product_img" :alt="two_product.product_title">
+                  <img v-lazy="two_product.product_img" :alt="two_product.product_title">
                 </div>
                 <div class="product_ln">
                   <div class="ln_notice">{{two_product.product_ify+" "+two_product.product_title}}</div>
@@ -102,7 +112,7 @@
       <div class="index_shaky" v-for="shaky in shakys" :key="shaky.shaky_id">
         <a href="" >
           <div class="shaky_title">{{shaky.shaky_title}}</div>
-          <img :src="shaky.shaky_imgUrl" style="width:100%;height:100%;" alt=""/>
+          <img v-lazy="shaky.shaky_imgUrl" style="width:100%;height:100%;" alt=""/>
         </a>
       </div>
       <div class="index_three">
@@ -114,7 +124,7 @@
             <li v-for="three_product in three_products" :key="three_product.product_id">
               <router-link :to="{path:'/Detail',query: {productId: three_product.product_id}}" class="products">
                 <div class="product_img">
-                  <img :src="three_product.product_img" :alt="three_product.product_title">
+                  <img v-lazy="three_product.product_img" :alt="three_product.product_title">
                 </div>
                 <div class="product_ln">
                   <div class="ln_notice">{{three_product.product_ify+" "+three_product.product_title}}</div>
@@ -132,7 +142,7 @@
         </div>
         <a href="" v-for="favourable in favourables" :key="favourable.favourable_id">
           <div class="favourable_title">{{favourable.favourable_title}}</div>
-          <img :src="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
+          <img v-lazy="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
         </a>
       </div>
     <div id="backTop" @click="backTop()">
@@ -140,81 +150,83 @@
     </div>
     <foter></foter>
     </div>
-    <div class="reclassify" ref="reclassify">
-      <div class="padding">
-        <div class="user">
-          <router-link to="/Login" ref="login">登录</router-link>
+    <transition name="fade" model="out-in" :duration="{enter:1500,leave:1500}">
+      <div class="reclassify" ref="reclassify" v-if="!isShow">
+        <div class="padding">
+          <div class="user">
+            <router-link :to="loginR" ref="login">{{isLogin}}</router-link>
+          </div>
+          <div class="product_ify">
+            <div class="ify_title">商品分类</div>
+            <ul>
+              <li v-for="product in products" :key="product.product_id">
+                <a href="">
+                  <img v-lazy="product.product_img" class="product_img" alt="">
+                  <p>{{product.product_ify}}</p>
+                </a>
+              </li>
+              <el-collapse v-model="activeName" accordion>
+                <el-collapse-item title="其他" name="1">
+                  <ul>
+                    <li v-for="product in products" :key="product.product_id">
+                      <a href="">
+                        <img v-lazy="product.product_img" class="product_img" alt="">
+                        <p>{{product.product_ify}}</p>
+                      </a>
+                    </li>
+                  </ul>
+                </el-collapse-item>
+              </el-collapse>
+            </ul>
+          </div>
+          <div>
+          <div class="ify_title">优惠</div>
+            <ul>
+              <li v-for="product in products" :key="product.product_id">
+                <a href="">
+                  <p>{{product.product_ify}}</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+          <div class="ify_title">指南</div>
+            <ul>
+              <li>
+                <a href="">
+                  <p>购机指南</p>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="product_ify">
-          <div class="ify_title">商品分类</div>
-          <ul>
-            <li v-for="product in products" :key="product.id">
-              <a href="">
-                <img :src="product.product_img" class="product_img" alt="">
-                <p>{{product.product_ify}}</p>
-              </a>
-            </li>
-            <el-collapse v-model="activeName" accordion>
-              <el-collapse-item title="其他" name="1">
-                <ul>
-                  <li v-for="product in products" :key="product.product_id">
-                    <a href="">
-                      <img v-lazy="product.product_img" class="product_img" alt="">
-                      <p>{{product.product_ify}}</p>
-                    </a>
-                  </li>
-                </ul>
-              </el-collapse-item>
-            </el-collapse>
-          </ul>
-        </div>
-        <div>
-        <div class="ify_title">优惠</div>
-          <ul>
-            <li v-for="product in products" :key="product.product_id">
-              <a href="">
-                <p>{{product.product_ify}}</p>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-        <div class="ify_title">指南</div>
-          <ul>
+        <footer class="nav_footer">
+          <div class="footer_title">服务与支持</div>
+          <div class="footer_ln">
+            <h3>中国大陆</h3>
+            <a href="tel:4007000303" class="tel">4007000303</a>
+            <p>周一至周日 9:00-21:00 (北京时间)</p>
+          </div>
+          <ul class="help_list">
             <li>
-              <a href="">
-                <p>购机指南</p>
-              </a>
+              <img src="http://localhost:8080/static/images/email.png" alt="">
+              <p>邮箱</p>
+            </li>
+            <li>
+              <img src="http://localhost:8080/static/images/chat.png" alt="">
+              <p>在线交谈</p>
+            </li>
+            <li>
+              <img src="http://localhost:8080/static/images/phone.png" alt="">
+              <p>电话</p>
             </li>
           </ul>
+        </footer>
+        <div class="Uparea">
+        <a href="">更改国家或者地区</a>
         </div>
       </div>
-      <footer class="nav_footer">
-        <div class="footer_title">服务与支持</div>
-        <div class="footer_ln">
-          <h3>中国大陆</h3>
-          <a href="tel:4007000303" class="tel">4007000303</a>
-          <p>周一至周日 9:00-21:00 (北京时间)</p>
-        </div>
-        <ul class="help_list">
-          <li>
-            <img src="http://localhost:8080/static/images/email.png" alt="">
-            <p>邮箱</p>
-          </li>
-          <li>
-            <img src="http://localhost:8080/static/images/chat.png" alt="">
-            <p>在线交谈</p>
-          </li>
-          <li>
-            <img src="http://localhost:8080/static/images/phone.png" alt="">
-            <p>电话</p>
-          </li>
-        </ul>
-      </footer>
-      <div class="Uparea">
-       <a href="">更改国家或者地区</a>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -225,73 +237,86 @@ export default {
   data(){
     return{
       show:true,
-      show1:true,
-      one_products:[],
+      isShow:true,
+      banners:[],
       two_products:[],
       three_products:[],
-      product_ifys:[],
       shakys:[],
       favourables:[],
+      product_ifys:[],
       products:[],
+      product_arr:[],
       activeName:"0",
-      items:[
-        {id:1,href:"",url:"http://localhost:8080/static/images/swipe1.png",productLnTop:"御 MAVIC 2",productLnButton:"画质旗舰，变焦先锋"},
-        {id:2,href:"",url:"http://localhost:8080/static/images/swipe2.png",productLnTop:"灵眸 OSMO 口袋云台相机",productLnButton:"转动随心，灵感不停"}
-      ],
       Cartl:false,
+      one_products:[],
     }
   },
   created(){
-    this.Products();
+    this.$axios.all([
+      this.$axios.get("http://127.0.0.1:3000/index/banner"),
+      this.$axios.get('http://127.0.0.1:3000/index/one_product'),
+      this.$axios.get('http://127.0.0.1:3000/index/two_product'),
+      this.$axios.get('http://127.0.0.1:3000/index/shaky'),
+      this.$axios.get("http://127.0.0.1:3000/index/three_product"),
+      this.$axios.get("http://127.0.0.1:3000/index/favourable")
+    ])
+    .then(this.$axios.spread((
+      banner,one_products,
+      two_products,shakys,
+      three_products,
+      favourable)=>{
+      this.banners=banner.data;
+      this.one_products=one_products.data;
+      this.product_ifys.push(one_products.data[0].product_ify)
+      this.two_products=two_products.data;
+      this.product_ifys.push(two_products.data[0].product_ify)
+      this.shakys=shakys.data;
+      this.three_products=three_products.data;
+      this.product_ifys.push(three_products.data[0].product_ify)
+      this.favourables=favourable.data;
+    }));
+    this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
+      for(var i=0;i<res.data.length;i++){
+        if(res.data[i].relevancy_id!=null){
+          var relevancy_id=res.data[i].relevancy_id
+          for(var i=0;i<res.data.length;i++){
+            if(res.data[i].product_id==relevancy_id){
+              res.data.splice(i,1)
+              this.products=res.data
+            }
+          }
+        }
+      }
+    })
+    if(!window.localStorage.getItem("product")){
+      this.product_arr=[]
+      this.Cartl=false;
+    }else{
+      var getVal=localStorage.getItem("product");
+      getVal=JSON.parse(getVal)
+      if(getVal!=null){
+        this.product_arr=getVal
+        this.Cartl=this.product_arr.length;
+      }
+    }
     if(window.sessionStorage.length!=0){
       this.Cartl=window.sessionStorage.length;
     }
     window.addEventListener('scroll',this.handleScroll);
   },
   methods:{
-    handleScroll:function(){
+    handleScroll(){
       if(document.documentElement.scrollTop<=500){
         document.getElementById("backTop").style.display="none";
       }else{
         document.getElementById("backTop").style.display="block";
       }
     },
-    menu:function(){
-      this.$refs.hidden.style="display:inline-block";
-      this.$refs.show.style="height:0;opacity:0;width:0";
-      this.$refs.body.style="display:none";
-      this.$refs.reclassify.style="display:block";
-      this.$el.children[1].children[2].style="display:none";
+    menu(){
+      this.isShow=false;
     },
-    hidden:function(){
-      this.$refs.hidden.style="height:0;opacity:0;width:0";
-      this.$refs.show.style="display:inline-block";
-      this.$refs.body.style="display:block";
-      this.$refs.reclassify.style="display:none";
-      this.$el.children[1].children[2].style="display:block";
-    },
-    Products:function(){
-      this.$axios.get("http://127.0.0.1:3000/index/one_product").then(res=>{
-        this.one_products=res.data;
-        this.product_ifys[0]=res.data[0].product_ify;
-      })
-      this.$axios.get("http://127.0.0.1:3000/index/two_product").then(res=>{
-        this.two_products=res.data;
-        this.product_ifys[1]=res.data[0].product_ify;
-      })
-      this.$axios.get("http://127.0.0.1:3000/index/shaky").then(res=>{
-        this.shakys=res.data;
-      })
-      this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
-        this.products=res.data;
-      })
-      this.$axios.get("http://127.0.0.1:3000/index/three_product").then(res=>{
-        this.three_products=res.data;
-        this.product_ifys[2]=res.data[0].product_ify;
-      })
-      this.$axios.get("http://127.0.0.1:3000/index/favourable").then(res=>{
-        this.favourables=res.data;
-      })
+    hidden(){
+      this.isShow=true;
     },
     backTop(){
       var top=setInterval(function(){
@@ -304,6 +329,22 @@ export default {
   },
   destroyed(){
     window.removeEventListener('scroll',this.handleScroll);
+  },
+  computed:{
+    isLogin(){
+      if(window.sessionStorage.getItem("user_id")){
+        return '我的账户'
+      }else{
+        return '登录'
+      }
+    },
+    loginR(){
+      if(window.sessionStorage.getItem("user_id")){
+        return '/User'
+      }else{
+        return '/Login'
+      }
+    }
   },
 }
 </script>
@@ -319,6 +360,14 @@ export default {
 </style>
 
 <style scoped lang="css">
+/* 动画 */
+.none{
+  opacity: 0;
+  padding: 0;
+  margin:0;
+  height:0 !important;
+  transition: all 1.5s linear;
+}
 a{
   text-decoration: none;
   color:#3B3E40;
@@ -326,11 +375,19 @@ a{
 ul{
   list-style: none;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,.fade-leave-active{
+  transition: opacity 1s;
 }
-.fade-enter, .fade-leave-to{
-  opacity: 0;
+.el-collapse{
+  padding: 0 16px;
+}
+.el-collapse-item__content>div>ul>li>a{
+  font-size: 14px;
+  color:#3b3e40;
+  line-height: 30px;
+}
+.el-collapse-item__header,.el-collapse-item__wrap{
+  background: transparent;
 }
 .main{
   position: relative;
@@ -445,10 +502,11 @@ ul{
   transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
   transform: translateY(-5px);
   width: 20px;
-}.menu .hiddenButton{
+}
+.menu .hiddenButton{
   width: 40px;
   position: relative;
-  display:none;
+  /* display:none; */
   z-index:3;
   vertical-align: super;
   border: 0;
@@ -604,8 +662,8 @@ ul{
   overflow: hidden;
 }
 .products li>a>.product_ln>.ln_price{
-    margin: 16px 0 0;
-    font-size: 14px;
+  margin: 16px 0 0;
+  font-size: 14px;
 }
 .products>.Osmo{
   display:block;
@@ -648,23 +706,6 @@ ul{
   transform: rotate(90deg);
   transition: all 2s linear;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to{
-  opacity: 0;
-}
-.el-collapse{
-  padding: 0 16px;
-}
-.el-collapse-item__content>div>ul>li>a{
-  font-size: 14px;
-  color:#3b3e40;
-  line-height: 30px;
-}
-.el-collapse-item__header,.el-collapse-item__wrap{
-  background: transparent;
-}
 .index_footer{
   padding:8px 16px 16px 16px;
 }
@@ -696,22 +737,19 @@ ul{
 .el-collapse-item__content>div>ul>li{
   padding: 10px 0;
 }
-.reclassify{
-  display:none;
-}
 .padding{
   padding: 0 20px 20px;
   background-color: #fff;
 }
 .reclassify>.padding a{
-    position: relative;
-    display: block;
-    opacity: 1;
-    line-height: 44px;
-    color: #333;
-    border-bottom: 1px solid #eee;
-    overflow: hidden;
-    font-size: 14px;
+  position: relative;
+  display: block;
+  opacity: 1;
+  line-height: 44px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+  font-size: 14px;
 }
 .reclassify>.padding a::after{
   content: "";

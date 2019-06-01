@@ -22,8 +22,8 @@
       <div class="product_swipe">
         <div class="swipe_item">
           <mt-swipe :auto="0">
-            <mt-swipe-item v-for="img in product[1]" :key="img.img_id">
-              <img :src="img.img_url" alt=""/>
+            <mt-swipe-item :v-if="product[1]!=undefined" v-for="img in product[1]" :key="img.img_id">
+              <img v-lazy="img.img_url" alt=""/>
             </mt-swipe-item>
           </mt-swipe>
         </div>
@@ -34,7 +34,7 @@
         <div class="product_child" v-for="relevancy in relevancys" :key="relevancy.product_id">
           <div class="child_img">
             <router-link :to="{path:'/Detail',query:{relevancyId:relevancy.product_id}}" target="_blank">
-              <img :src="relevancy.product_img" alt=""/>
+              <img v-lazy="relevancy.product_img" alt=""/>
             </router-link>
           </div>
           <div class="child_value">
@@ -143,15 +143,30 @@ export default {
       })
       this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then(res=>{
         this.product.push(res.data.productImg);
+        console.log(this.product)
       })
     }else{
-      this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.relevancyId).then(res=>{
-        this.product.push(res.data.product[0])
-      })
-      this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.relevancyId).then(res=>{
-        this.product.push(res.data.productImg);
-      })
+      this.$axios.all([
+        this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.relevancyId),
+        this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.relevancyId)
+      ])
+      .then(this.$axios.spread((product,productImg)=>{
+        this.product.push(product.data.product[0])
+        this.product.push(productIm.data.productImg)
+      }))
     }
+    window.addEventListener("storage",function(){
+      if(!window.localStorage.getItem("product")){
+        this.product_arr=[]
+        this.Cartl=false;
+      }else{
+        var getVal=localStorage.getItem("product");
+        getVal=JSON.parse(getVal)
+        if(getVal!=null){
+          this.product_arr=getVal
+        }
+      }
+    })
     if(!window.localStorage.getItem("product")){
       this.product_arr=[]
       this.Cartl=false;
@@ -160,8 +175,8 @@ export default {
       getVal=JSON.parse(getVal)
       if(getVal!=null){
         this.product_arr=getVal
+        this.Cartl=this.product_arr.length;
       }
-      this.Cartl=this.product_arr.length
     }
   },
   methods:{

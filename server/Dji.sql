@@ -60,12 +60,24 @@ INSERT INTO dji_img VALUES
 (NULL,"7","http://127.0.0.1:8080/static/images/mobile2_relevancy.jpg"),
 (NULL,"7","http://127.0.0.1:8080/static/images/mobile3_relevancy.jpg");
 
+CREATE TABLE dji_banner(
+  banner_id INT PRIMARY KEY AUTO_INCREMENT comment '轮播图的id',
+  banner_href VARCHAR(128) comment '轮播图的超链接',
+  banner_img VARCHAR(128) comment '轮播图的地址',
+  banner_productLnTop VARCHAR(128) comment '轮播图的简介(上)',
+  banner_productLnBottom VARCHAR(128) comment '轮播图的简介(上)'
+);
+INSERT INTO dji_banner VALUES
+(NULL,null,"http://localhost:8080/static/images/swipe1.png","御 MAVIC 2","画质旗舰，变焦先锋"),
+(NULL,null,"http://localhost:8080/static/images/swipe2.png","灵眸 OSMO 口袋云台相机","转动随心，灵感不停");
+
 CREATE TABLE dji_shaky(
   shaky_id INT PRIMARY KEY AUTO_INCREMENT comment '活动的id',
   shaky_title VARCHAR(128) comment '活动的介绍',
   shaky_a VARCHAR(128) comment '活动的链接',
   shaky_imgUrl VARCHAR(128) comment '活动的图片地址'
 );
+
 INSERT INTO dji_shaky VALUES
 (NULL,"DJI Select 会员计划 7项会员权益｜最高5折优惠",NULL,"http://127.0.0.1:8080/static/images/select.png");
 
