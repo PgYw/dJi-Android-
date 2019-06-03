@@ -5,93 +5,95 @@
       <div class="reg">
         <div class="padding">
           <div class="reg_way">
-            <span class="active" v-on:click="phone($event)">手机注册</span>
-            <span class="no_active" v-on:click="email($event)">邮箱注册</span>
+            <span :class="!show?'active':''" v-on:click="phone()">手机注册</span>
+            <span :class="show?'active':''" v-on:click="email()">邮箱注册</span>
           </div>
-          <div class="phone" ref="Phone">
-            <div class="phone_tel">
-              <button disabled class="btn">+86</button>
-              <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
-              <i class="clearInput" ref="clearInput" @click="clearPhone()"></i>
-              <div class="msg_err">
-                <span ref="phone_err"></span>
+          <transition name="fade" mode="out-in">
+            <div class="phone" ref="Phone" v-if="!show" key="one">
+              <div class="phone_tel">
+                <button disabled class="btn">+86</button>
+                <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
+                <i class="clearInput" ref="clearInput" @click="clearPhone()"></i>
+                <div class="msg_err">
+                  <span ref="phone_err"></span>
+                </div>
+              </div>
+              <div class="phone_yzm">
+                <input type="text" placeholder="请输入验证码*" ref="yzm" v-model="getYzm">
+                <i class="clearYzm" ref="clearYzm" @click="clearYzm()"></i>
+                <button class="goCode" ref="goCode" @click="goCode()">发送验证码</button>
+                <div class="msg_err">
+                  <span ref="yzm_err"></span>
+                </div>
+              </div>
+              <div class="phone_psword">
+                <input type="text" placeholder="请输入密码*" ref="psword" v-model="getPsword">
+                <i class="clearPsword" ref="clearPsword" @click="clearPsword()"></i>
+                <div class="msg_err">
+                  <span ref="psword_err"></span>
+                </div>
+              </div>
+              <div class="next_button">
+                <button class="goNext" to="/nextPhone">下一步</button>
+              </div>
+              <div class="login">
+                <router-link to="/Login">立即登录</router-link>
               </div>
             </div>
-            <div class="phone_yzm">
-              <input type="text" placeholder="请输入验证码*" ref="yzm" v-model="getYzm">
-              <i class="clearYzm" ref="clearYzm" @click="clearYzm()"></i>
-              <button class="goCode" ref="goCode" @click="goCode()">发送验证码</button>
-              <div class="msg_err">
-                <span ref="yzm_err"></span>
+            <div class="email" ref="Email" v-if="show" key="two">
+              <div class="one_email">
+                <input type="text" placeholder="邮箱*" ref="email" v-model="getEmail">
+                <i class="clearEmail" ref="clearEmail" @click="clearEmail()"></i>
+                <div class="msg_err">
+                  <span ref="email_err"></span>
+                </div>
+              </div>
+              <div class="two_phone">
+                <button disabled class="btn">+86</button>
+                <input type="text" placeholder="请输入手机号*" ref="phoned" v-model="getPhoned">
+                <i class="clearPhoned" ref="clearPhoned" @click="clearPhoned()"></i>
+                <div class="msg_err">
+                  <span ref="phoned_err"></span>
+                </div>
+              </div>
+              <div class="three_yzm">
+                <input type="text" placeholder="请输入验证码*" ref="yzmd" v-model="getYzmd">
+                <i class="clearYzmd" ref="clearYzmd" @click="clearYzmd()"></i>
+                <button class="goCode" ref="goCoded" @click="goCoded()">发送验证码</button>
+                <div class="msg_err">
+                  <span ref="yzmd_err"></span>
+                </div>
+              </div>
+              <div class="four_upwd">
+                <input type="password" placeholder="密码*" ref="upwd" v-model="getUpwd">
+                <i class="clearUpwd" ref="clearUpwd" @click="clearUpwd()"></i>
+                <div class="msg_err">
+                  <span ref="upwd_err"></span>
+                </div>
+              </div>
+              <div class="five_cpwd">
+                <input type="password" placeholder="请再次输入密码*" ref="cpwd" v-model="getCpwd">
+                <i class="clearCpwd" ref="clearCpwd" @click="clearCpwd()"></i>
+                <div class="msg_err">
+                  <span ref="cpwd_err"></span>
+                </div>
+              </div>
+              <div class="follow">
+                <div class="one_text">
+                  <input type="checkbox" ref="checkOne" v-model="change[0]">
+                  <span>获取大疆最新产品、服务、软件升级等信息</span>
+                </div>
+                <div class="two_text">
+                  <input type="checkbox" ref="checkTwo" v-model="change[1]">
+                  <span>同意并愿意遵守大疆创新
+                    <a href="">使用条款</a> 和 
+                    <a href="">隐私政策</a>
+                  </span>
+                </div>
+                <button id="emailReg" ref="emailReg" disabled>注册</button>
               </div>
             </div>
-            <div class="phone_psword">
-              <input type="text" placeholder="请输入密码*" ref="psword" v-model="getPsword">
-              <i class="clearPsword" ref="clearPsword" @click="clearPsword()"></i>
-              <div class="msg_err">
-                <span ref="psword_err"></span>
-              </div>
-            </div>
-            <div class="next_button">
-              <button class="goNext" to="/nextPhone">下一步</button>
-            </div>
-            <div class="login">
-              <router-link to="/Login">立即登录</router-link>
-            </div>
-          </div>
-          <div class="email" ref="Email">
-            <div class="one_email">
-              <input type="text" placeholder="邮箱*" ref="email" v-model="getEmail">
-              <i class="clearEmail" ref="clearEmail" @click="clearEmail()"></i>
-              <div class="msg_err">
-                <span ref="email_err"></span>
-              </div>
-            </div>
-            <div class="two_phone">
-              <button disabled class="btn">+86</button>
-              <input type="text" placeholder="请输入手机号*" ref="phoned" v-model="getPhoned">
-              <i class="clearPhoned" ref="clearPhoned" @click="clearPhoned()"></i>
-              <div class="msg_err">
-                <span ref="phoned_err"></span>
-              </div>
-            </div>
-            <div class="three_yzm">
-              <input type="text" placeholder="请输入验证码*" ref="yzmd" v-model="getYzmd">
-              <i class="clearYzmd" ref="clearYzmd" @click="clearYzmd()"></i>
-              <button class="goCode" ref="goCoded" @click="goCoded()">发送验证码</button>
-              <div class="msg_err">
-                <span ref="yzmd_err"></span>
-              </div>
-            </div>
-            <div class="four_upwd">
-              <input type="password" placeholder="密码*" ref="upwd" v-model="getUpwd">
-              <i class="clearUpwd" ref="clearUpwd" @click="clearUpwd()"></i>
-              <div class="msg_err">
-                <span ref="upwd_err"></span>
-              </div>
-            </div>
-            <div class="five_cpwd">
-              <input type="password" placeholder="请再次输入密码*" ref="cpwd" v-model="getCpwd">
-              <i class="clearCpwd" ref="clearCpwd" @click="clearCpwd()"></i>
-              <div class="msg_err">
-                <span ref="cpwd_err"></span>
-              </div>
-            </div>
-            <div class="follow">
-              <div class="one_text">
-                <input type="checkbox" ref="checkOne" v-model="change[0]">
-                <span>获取大疆最新产品、服务、软件升级等信息</span>
-              </div>
-              <div class="two_text">
-                <input type="checkbox" ref="checkTwo" v-model="change[1]">
-                <span>同意并愿意遵守大疆创新
-                  <a href="">使用条款</a> 和 
-                  <a href="">隐私政策</a>
-                </span>
-              </div>
-              <button id="emailReg" ref="emailReg" disabled>注册</button>
-            </div>
-          </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -109,6 +111,7 @@ export default {
       getPhoned:"",
       getYzm:"",
       getPsword:"",
+      show:false,
       getEmail:"",
       getYzmd:"",
       getUpwd:"",
@@ -242,27 +245,11 @@ export default {
         }
       },1000)
     },
-    phone(event){
-      event.preventDefault();
-      var el=event.currentTarget.parentNode.children;
-      this.$refs.Phone.className="phone"
-      this.$refs.Email.className="phone none"
-      this.$refs.Email.style="opacity:0;height:0;"
-      for(var i=0;i<el.length;i++){
-        el[i].className="no_active"
-      }
-      event.currentTarget.className="active"
+    phone(){
+      this.show=false;
     },
-    email(event){
-      event.preventDefault();
-      var el=event.currentTarget.parentNode.children;
-      this.$refs.Email.className="email"
-      this.$refs.Phone.className="email none"
-      this.$refs.Email.style="opacity:1;height:auto;"
-      for(var i=0;i<el.length;i++){
-        el[i].className="no_active"
-      }
-      event.currentTarget.className="active"
+    email(){
+      this.show=true;
     },
   },
   watch: {
@@ -534,10 +521,6 @@ html,body,#reg,.reg{
 }
 .reg .padding{
   padding: 0 20px;
-}
-.reg .email{
-  opacity:0;
-  height:0;
 }
 .reg .phone,.reg .email{
   margin-top:1.4rem;

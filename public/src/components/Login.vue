@@ -45,7 +45,7 @@ export default {
       bg:true,
       getAdmin:"",
       getUpwd:"",
-      isLogin:[],
+      isLogin:0,
     }
   },
   mounted() {
@@ -77,11 +77,12 @@ export default {
       }
     },
     Login(){
-      if(this.isLogin[0]&&this.isLogin[1]){
+      if(this.isLogin==2){
         this.$axios.get("http://127.0.0.1:3000/login/user?admin="+this.getAdmin+"&upwd="+this.getUpwd).then(res=>{
           if(res.data.code==1){
             this.$refs.err.innerHTML="";
             this.$router.push({path:'/Index'});
+            window.sessionStorage.setItem("userId",res.data.userId)
           }else{
             var num=5;
             this.$refs.err.innerHTML="账号或密码错误("+num+"s)"
@@ -116,31 +117,26 @@ export default {
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该邮箱未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"
-              this.isLogin[0]=false;
             }
           })
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
-          this.isLogin[0]=true;
         }else if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getAdmin)){
            this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getAdmin).then(res=>{ 
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该手机号未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"
-              this.isLogin[0]=false;
             }
           })
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
-          this.isLogin[0]=true;
+          this.isLogin=1;
         }else if(num.toString()=="NaN"&&!((/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getAdmin))){
           this.$refs.admin_err.innerHTML="邮箱格式错误"
           this.$refs.admin.style="border: 1px solid #f04848;"
-          this.isLogin[0]=false;
         }else if(num.toString()!="NaN"&&!((/^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$/).test(this.getAdmin))){
           this.$refs.admin_err.innerHTML="手机号格式错误"
           this.$refs.admin.style="border: 1px solid #f04848;"
-          this.isLogin[0]=false;
         }
       }else{
         this.$refs.clearInput.style="display:none"
@@ -153,12 +149,11 @@ export default {
         this.$refs.upwdHidden.style="display:block"
         this.$refs.upwd_err.innerHTML=""
         this.$refs.upwd.style="border: 1px solid #e6e6e6;"
-        this.isLogin[1]=true;
+        this.isLogin=2;
       }else{
         this.$refs.upwdHidden.style="display:none"
         this.$refs.upwd_err.innerHTML="密码不允许为空"
         this.$refs.upwd.style="border: 1px solid #f04848;"
-        this.isLogin[1]=false;
       }
     },
   },

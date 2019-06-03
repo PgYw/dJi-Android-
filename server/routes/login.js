@@ -9,7 +9,7 @@ router.get("/user",(req,res)=>{
     pool.query("SELECT * FROM dji_user WHERE user_email=? and user_pwd=?",[$admin,$upwd],(err,result)=>{
       if(err) throw err;
     if(result.length>0){
-      res.send({code:1});
+      res.send({code:1,userId:result[0].user_id});
     }else{
       res.send({code:0});
     }
@@ -18,7 +18,7 @@ router.get("/user",(req,res)=>{
     pool.query("SELECT * FROM dji_user WHERE user_phone=? and user_pwd=?",[$admin,$upwd],(err,result)=>{
       if(err) throw err;
     if(result.length>0){
-      res.send({code:1});
+      res.send({code:1,userId:result[0].user_id});
     }else{
       res.send({code:0});
     }

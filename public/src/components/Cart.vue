@@ -2,7 +2,7 @@
   <div id="Cart">
     <div class="Cart">
       <transition name="fade">
-        <loading v-if="isLoading"></loading>
+        <loading v-if="!isLoading"></loading>
       </transition>
       <div class="header" ref="header">
         <i class="mint-toast-icon mintui mintui-back" @click="goOut()"></i>
@@ -23,34 +23,36 @@
           </p>
         </div>
         <div class="goDt" v-show="show">
-          <span>商品总金额({{products.length}}):</span>
+          <span>商品总金额({{sum.length}}):</span>
           <h4>¥</h4>
-          <h4 id="product_price"></h4>
+          <h4>{{sum.sum}}</h4>
           <button @click="goDt()">去结算</button>
         </div>
         <div class="goSp" v-show="!show">
           <router-link to="/Index" class="goSp">继续购物></router-link>
         </div>
       </div>
-      <div class="detail" v-for="(product,index) in products" :key="product.product_id">
+      <div class="detail" v-for="(product,index) in product_arr" :key="product.product_id">
         <div class="input">
-          <input type="checkbox" id="checked" checked @click="count(index,$event)">
+          <input type="checkbox" 
+          :checked="product.product_isSelect"
+          @click="count(index,$event)" id="check">
         </div>
         <div class="img">
           <img v-lazy="product.product_img" alt="">
         </div>
         <div class="nc">
           <p>
-          <router-link :to="{path:'/Detail',query:{productId:product.product_id}}">{{product.product_ify+product.product_title}}</router-link>
+          <router-link :to="{path:'/Detail',query:{productId:product.product_id}}">{{product.product_title}}</router-link>
           </p>
           <p class="pTime">发货时间:1个工作日内</p>
           <p>
-            <span>¥</span><span>{{product.product_Oprice}}</span>
+            <span>¥</span><span>{{product.product_price}}</span>
           </p>
           <div class="et">
             <button @click="Dt(index)">移除</button>
             <div class="Cell">
-              <button @click="Ep(index)" ref="ep" :disabled="product_arr[index].product_count==1?true:false">-</button>
+              <button @click="Ep(index)" ref="ep" :disabled="product_arr[index].product_count<=1">-</button>
               <input ref="input" type="text" readonly :value="product_arr[index].product_count"/>
               <button @click="Up(index)">+</button>
             </div>
@@ -59,10 +61,10 @@
       </div>
       <div class="price_count" v-show="show">
         <div class="price">
-          <span>商品总金额({{products.length}}):</span>
+          <span>商品总金额({{sum.length}}):</span>
           <p>
             <span>¥</span>
-            <span id="product_price"></span>
+            <span id="product_price">{{sum.sum}}</span>
           </p>
         </div>
         <div class="postage">
@@ -127,97 +129,55 @@ export default {
   components:{Loading,foter},
   data() {
     return {
-      isLoading:true,
+      isLoading:false,
       Cartl:false,
       show:false,
       clear:"",
       num:1,
       nb:0,
       product_arr:[],
-      products:[],
-      product_select:[],
+      total:0,
     }
   },
   created() {
     this.clear=setInterval(this.loading,1000)
-      var getVal=localStorage.getItem("product");
-      getVal=JSON.parse(getVal)
-      if(getVal!=null){
-        this.product_arr=getVal
-      }
-    for(var i=0;i<this.product_arr.length;i++){
-      this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.product_arr[i].product_id).then(res=>{
-        this.products.push(res.data.product[0])
-      })
+    var getVal=localStorage.getItem("product");
+    getVal=JSON.parse(getVal)
+    if(getVal!=null){
+      this.product_arr=getVal
     }
   },
   methods: {
     Up(index){
       this.product_arr[index].product_count++
-      this.product_arr[index].product_total=this.products[index].product_Oprice*this.product_arr[index].product_count
-      var sum=0;
-      for(var i=0;i<this.product_arr.length;i++){
-        sum+=this.product_arr[i].product_total
-      }
-      var price=document.querySelectorAll("#product_price")
-      for(var i=0;i<price.length;i++){
-        price[i].innerHTML=sum
-      }
       window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
     Ep(index){
-      if(this.product_arr[index].product_count==1){
+      if(this.product_arr[index].product_count<=1){
         return;
       }
       this.product_arr[index].product_count--
-      this.product_arr[index].product_total=this.products[index].product_Oprice*this.product_arr[index].product_count
-      var sum=0;
-      for(var i=0;i<this.product_arr.length;i++){
-        sum+=this.product_arr[i].product_total
-      }
-      var price=document.querySelectorAll("#product_price")
-      for(var i=0;i<price.length;i++){
-        price[i].innerHTML=sum
-      }
       window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
     Dt(index){
+      var e=index;
       for(var i=0;i<this.product_arr.length;i++){
-        if(this.product_arr[i].product_id==this.products[index].product_id){
-          this.product_arr.splice(i,1)
+        if(this.product_arr[i].product_id==this.product_arr[index].product_id){
+          this.product_arr.splice(e,1)
+          return;
         }
       }
       this.products.splice(index,1)
       window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
     count(index,e){
-      var sum=0;
-      var price=document.querySelectorAll("#product_price")
-      if(e.target.checked){
-        for(var i=0;i<this.product_arr.length;i++){
-          if(i==index){
-            continue;
-          }
-          sum+=this.product_arr[i].product_total
-        }
-        for(var i=0;i<price.length;i++){
-          price[i].innerHTML=sum
-        }
-      }
-      for(var i=0;i<this.product_arr.length;i++){
-        if(i==index){
-          continue;
-        }
-        sum+=this.product_arr[i].product_total
-      }
-      for(var i=0;i<price.length;i++){
-        price[i].innerHTML=sum
-      }
+      e.target.checked?this.product_arr[index].product_isSelect=true:this.product_arr[index].product_isSelect=false
+      window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
     loading(){
       this.nb++;
       if(this.nb==3){
-        this.isLoading=false
+        this.isLoading=true
         clearInterval(this.clear);
       }
     },
@@ -233,16 +193,6 @@ export default {
       console.log("结算中.....")
     }
   },
-  mounted() {
-    var sum=0;
-    for(var i=0;i<this.product_arr.length;i++){
-      sum+=this.product_arr[i].product_total
-    }
-    var price=document.querySelectorAll("#product_price")
-    for(var i=0;i<price.length;i++){
-      price[i].innerHTML=sum
-    }
-  },
   watch: {
     product_arr(){
       if(this.product_arr.length>0){
@@ -252,8 +202,18 @@ export default {
       }
     }
   },
-  // 注册与登录页的切换按钮动画
-  // 登录之后保存用户id更改首页二级页面的字
+  computed: {
+    sum(){
+      let sum=0,length=0;
+      for(var i=0;i<this.product_arr.length;i++){
+        if(this.product_arr[i].product_isSelect){
+          length++;
+          sum+=this.product_arr[i].product_price*this.product_arr[i].product_count
+        }
+      }
+      return {sum,length};
+    },
+  },
   // 登录之后购物车数据保存到数据库，清空localstorage
   // 第一个项目的响应式解决
   // 商品详情商品加入购物车动画

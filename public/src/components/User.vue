@@ -2,17 +2,19 @@
   <div id="user">
     <div class="user">
       <div class="header">
-          <span class="menu">
-            <button ref="menu" class="menuButton" @click="menu()">
+        <span class="menu">
+          <transition name="fade" mode="out-in">
+            <button ref="menu" class="menuButton" @click.stop="menu()" v-if="!isShow1" key="one">
               <span></span>
               <span></span>
               <span></span>
             </button>
-            <button ref="hidden" class="hiddenButton" @click="hidden()">
+            <button ref="hidden" class="hiddenButton" @click.stop="hidden()" v-else-if="isShow1" key="two">
               <span></span>
               <span></span>
             </button>
-          </span>
+          </transition>
+        </span>
         <span class="center">
           <a href="">
             <svg xmlns="http://www.w3.org/2000/svg" width="102" height="24" viewBox="0 0 102 24">
@@ -36,26 +38,28 @@
             </div>
             <div class="login_name">258535***91@qq.com</div>
           </div>
-          <div ref="login_main" class="login_main">
-            <ul>
-              <li><a href="" class="main_a">我的账户</a></li>
-              <li><a href="" class="main_a">我的订单</a></li>
-              <li><a href="" class="main_a">我的Dji币</a></li>
-              <li><a href="" class="main_a">我的优惠券</a></li>
-            </ul>
-              <button class="loginOut">退出</button>
-          </div>
-          <div ref="nav_main" class="nav_main">
-            <ul>
-              <li><router-link  to="/Index" class="nav_a">首页</router-link></li>
-              <li><a href="" class="nav_a">Phantom</a></li>
-              <li><a href="" class="nav_a">Inspire</a></li>
-              <li><a href="" class="nav_a">Osmo</a></li>
-              <li><a href="" class="nav_a">Ronin</a></li>
-              <li><a href="" class="nav_a">行业应用</a></li>
-              <li><a href="" class="nav_a">开发者类套件</a></li>
-            </ul>
-          </div>
+          <transition name="fade" mode="out-in">
+            <div ref="login_main" class="login_main" v-if="!isShow1" key="one">
+              <ul>
+                <li><a href="" class="main_a">我的账户</a></li>
+                <li><a href="" class="main_a">我的订单</a></li>
+                <li><a href="" class="main_a">我的Dji币</a></li>
+                <li><a href="" class="main_a">我的优惠券</a></li>
+              </ul>
+                <button class="loginOut" @click="Out()">退出</button>
+            </div>
+            <div ref="nav_main" class="nav_main" v-else-if="isShow1" key="two">
+              <ul>
+                <li><router-link  to="/Index" class="nav_a">首页</router-link></li>
+                <li><a href="" class="nav_a">Phantom</a></li>
+                <li><a href="" class="nav_a">Inspire</a></li>
+                <li><a href="" class="nav_a">Osmo</a></li>
+                <li><a href="" class="nav_a">Ronin</a></li>
+                <li><a href="" class="nav_a">行业应用</a></li>
+                <li><a href="" class="nav_a">开发者类套件</a></li>
+              </ul>
+            </div>
+          </transition>
           <footer ref="Cell" class="Cell">
             <h2>我们在此为您服务</h2>
             <div class="Cell_phone" ref="Cell_phone">
@@ -100,34 +104,38 @@ export default {
   data(){
     return{
       Cartl:false,
+      product_arr:[],
+      isShow1:false,
+      isShow2:false,
     }
   },
   methods: {
-    menu:function(){
-      this.$refs.login_main.style="display:none;"
-      this.$refs.nav_main.style="display:block;"
-      this.$refs.menu.style="display:none;"
-      this.$refs.hidden.style="display:inline-block;"
-      this.$refs.Cell.style="display:block;"
+    menu(){
+      this.isShow1=true;
     },
-    hidden:function(){
-      this.$refs.login_main.style="display:block;"
-      this.$refs.nav_main.style="display:none;"
-      this.$refs.menu.style="display:inline-block;"
-      this.$refs.hidden.style="display:none;"
-      this.$refs.Cell.style="display:none;"
+    hidden(){
+      this.isShow1=false;
     },
-    help_phone:function(){
+    help_phone(){
       if(this.$refs.Cell_phone.style.display=="none"){
       this.$refs.Cell_phone.style="display:block";
       }else{
       this.$refs.Cell_phone.style="display:none";
       }
+    },
+    Out(){
+      sessionStorage.removeItem("userId");
+      this.$router.push("/Index")
     }
   },
   mounted() {
-    if(window.sessionStorage.length!=0){
-      this.Cart=window.sessionStorage.length;
+    if(window.localStorage.getItem("product")!=undefined){
+      var getVal=localStorage.getItem("product");
+      getVal=JSON.parse(getVal)
+      if(getVal!=null){
+        this.product_arr=getVal
+        this.Cartl=this.product_arr.length
+      }
     }
   },
 }
@@ -139,6 +147,15 @@ export default {
 }
 </style>
 <style scoped lang="css">
+.el-badge__content{
+  top:10px !important;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 a {
   text-decoration: none;
   color: #3B3E40;
@@ -190,9 +207,6 @@ html,body,#user,.user{
 }
 .menu .menuButton{
   display: inline-block;
-}
-.menu .hiddenButton{
-  display: none;
 }
 .menu .menuButton>span {
   display: block;
@@ -254,7 +268,6 @@ html,body,#user,.user{
   padding: 0.32rem 0;
 }
 .cart {
-  float: right;
   padding-right: 1.3rem;
   height: 100%;
 }
@@ -262,7 +275,7 @@ html,body,#user,.user{
   vertical-align: inherit;
   cursor: pointer;
 }
-.cart>.item>i {
+.cart>.item>a>i {
   font-size: 25px;
   line-height: 3.12rem;
 }
@@ -316,6 +329,7 @@ html,body,#user,.user{
   width: 100%;
   background: #fff;
   text-align: center;
+  outline: none;
   margin-top: 2.12rem;
   border: 1px solid #4a4a4a;
   border-radius: 1.12rem;
@@ -324,8 +338,8 @@ html,body,#user,.user{
   color: #7F8084;
   font-size: 0.92rem;
 }
-.info_text>.nav_main{
-  display:none;
+.login_main .loginOut:active{
+  background: #ebeef5;
 }
 .info_text>.nav_main>ul{
   margin-bottom: 1.2rem;

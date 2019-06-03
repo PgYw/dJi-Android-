@@ -42,119 +42,121 @@
           </svg>
         </a>
       </span>
-      <span class="cart">
-        <i class="el-icon-search search"></i>
-        <transition name="fade">
-          <el-badge :value="Cartl" class="item"  type="primary" v-if="isShow">
+      <transition name="fade" mode="out-in">
+        <span class="cart" v-if="isShow">
+          <i class="el-icon-search search"></i>
+          <el-badge :value="Cartl" class="item" type="primary">
             <router-link to="/Cart">
               <i class="el-icon-shopping-cart-full"></i>
             </router-link>
           </el-badge>
-        </transition>
-      </span>
+        </span>
+      </transition>
     </div>
-    <div class="body" v-show="isShow">
-      <div class="index_swipe">
-        <mt-swipe :auto="5500">
-          <mt-swipe-item v-for="banner in banners" :key="banner.banner_id">
-            <a :href="banner.banner_href">
-              <div class="productLn">
-                <h2>{{banner.banner_productLnTop}}</h2>
-                <span>{{banner.banner_productLnBottom}}</span>
-              </div>
-              <img v-lazy="banner.banner_img" alt=""/>
-            </a>
-          </mt-swipe-item>
-        </mt-swipe>
-      </div>
-      <div class="index_one">
-        <div class="productTe">
-          <h3>{{product_ifys[0]}}</h3>
-        </div>
-        <div class="products">
-          <ul>
-            <li v-for="one_product in one_products" :key="one_product.product_id">
-              <router-link :to="{path:'/Detail',query:{productId:one_product.product_id}}" class="products">
-                <div class="product_img">
-                  <img v-lazy="one_product.product_img" :alt="one_product.product_title">
+    <transition name="fade" model="out-in">
+      <div class="body" v-show="isShow">
+        <div class="index_swipe">
+          <mt-swipe :auto="5500">
+            <mt-swipe-item v-for="banner in banners" :key="banner.banner_id">
+              <a :href="banner.banner_href">
+                <div class="productLn">
+                  <h2>{{banner.banner_productLnTop}}</h2>
+                  <span>{{banner.banner_productLnBottom}}</span>
                 </div>
-                <div class="product_ln">
-                  <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
-                  <div class="ln_price">{{"¥"+one_product.product_Oprice}}</div>
-                </div>
-              </router-link>
-            </li>
-          </ul>
-          <a href="" class="Osmo">更多 {{product_ifys[0]}} 产品></a>
+                <img v-lazy="banner.banner_img" alt=""/>
+              </a>
+            </mt-swipe-item>
+          </mt-swipe>
         </div>
+        <div class="index_one">
+          <div class="productTe">
+            <h3>{{product_ifys[0]}}</h3>
+          </div>
+          <div class="products">
+            <ul>
+              <li v-for="one_product in one_products" :key="one_product.product_id">
+                <router-link :to="{path:'/Detail',query:{productId:one_product.product_id}}" class="products">
+                  <div class="product_img">
+                    <img v-lazy="one_product.product_img" :alt="one_product.product_title">
+                  </div>
+                  <div class="product_ln">
+                    <div class="ln_notice">{{one_product.product_ify+" "+one_product.product_title}}</div>
+                    <div class="ln_price">{{"¥"+one_product.product_Oprice}}</div>
+                  </div>
+                </router-link>
+              </li>
+            </ul>
+            <a href="" class="Osmo">更多 {{product_ifys[0]}} 产品></a>
+          </div>
+        </div>
+        <div class="index_two">
+          <div class="productTe">
+            <h3>{{product_ifys[1]}}</h3>
+          </div>
+          <div class="products">
+            <ul>
+              <li v-for="two_product in two_products" :key="two_product.product_id">
+                <router-link :to="{path:'/Detail',query: {productId: two_product.product_id}}" class="products">
+                  <div class="product_img">
+                    <img v-lazy="two_product.product_img" :alt="two_product.product_title">
+                  </div>
+                  <div class="product_ln">
+                    <div class="ln_notice">{{two_product.product_ify+" "+two_product.product_title}}</div>
+                    <div class="ln_price">{{"¥"+two_product.product_Oprice}}</div>
+                  </div>
+                </router-link>
+              </li>
+            </ul>
+            <a href="" class="Osmo">更多 {{product_ifys[1]}} 产品></a>
+          </div>
+        </div>
+        <div class="index_shaky" v-for="shaky in shakys" :key="shaky.shaky_id">
+          <a href="" >
+            <div class="shaky_title">{{shaky.shaky_title}}</div>
+            <img v-lazy="shaky.shaky_imgUrl" style="width:100%;height:100%;" alt=""/>
+          </a>
+        </div>
+        <div class="index_three">
+          <div class="productTe">
+            <h3>{{product_ifys[2]}}</h3>
+          </div>
+          <div class="products">
+            <ul>
+              <li v-for="three_product in three_products" :key="three_product.product_id">
+                <router-link :to="{path:'/Detail',query: {productId: three_product.product_id}}" class="products">
+                  <div class="product_img">
+                    <img v-lazy="three_product.product_img" :alt="three_product.product_title">
+                  </div>
+                  <div class="product_ln">
+                    <div class="ln_notice">{{three_product.product_ify+" "+three_product.product_title}}</div>
+                    <div class="ln_price">{{"¥"+three_product.product_Oprice}}</div>
+                  </div>
+                </router-link>
+              </li>
+            </ul>
+            <a href="" class="Osmo">更多 {{product_ifys[2]}} 产品></a>
+          </div>
+        </div>
+        <div class="index_favourable">
+          <div class="productTe">
+            <h3>优惠</h3>
+          </div>
+          <a href="" v-for="favourable in favourables" :key="favourable.favourable_id">
+            <div class="favourable_title">{{favourable.favourable_title}}</div>
+            <img v-lazy="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
+          </a>
+        </div>
+      <div id="backTop" @click="backTop()">
+        <i class="mint-toast-icon mintui mintui-back"></i>
       </div>
-      <div class="index_two">
-        <div class="productTe">
-          <h3>{{product_ifys[1]}}</h3>
-        </div>
-        <div class="products">
-          <ul>
-            <li v-for="two_product in two_products" :key="two_product.product_id">
-              <router-link :to="{path:'/Detail',query: {productId: two_product.product_id}}" class="products">
-                <div class="product_img">
-                  <img v-lazy="two_product.product_img" :alt="two_product.product_title">
-                </div>
-                <div class="product_ln">
-                  <div class="ln_notice">{{two_product.product_ify+" "+two_product.product_title}}</div>
-                  <div class="ln_price">{{"¥"+two_product.product_Oprice}}</div>
-                </div>
-              </router-link>
-            </li>
-          </ul>
-          <a href="" class="Osmo">更多 {{product_ifys[1]}} 产品></a>
-        </div>
+      <foter></foter>
       </div>
-      <div class="index_shaky" v-for="shaky in shakys" :key="shaky.shaky_id">
-        <a href="" >
-          <div class="shaky_title">{{shaky.shaky_title}}</div>
-          <img v-lazy="shaky.shaky_imgUrl" style="width:100%;height:100%;" alt=""/>
-        </a>
-      </div>
-      <div class="index_three">
-        <div class="productTe">
-          <h3>{{product_ifys[2]}}</h3>
-        </div>
-        <div class="products">
-          <ul>
-            <li v-for="three_product in three_products" :key="three_product.product_id">
-              <router-link :to="{path:'/Detail',query: {productId: three_product.product_id}}" class="products">
-                <div class="product_img">
-                  <img v-lazy="three_product.product_img" :alt="three_product.product_title">
-                </div>
-                <div class="product_ln">
-                  <div class="ln_notice">{{three_product.product_ify+" "+three_product.product_title}}</div>
-                  <div class="ln_price">{{"¥"+three_product.product_Oprice}}</div>
-                </div>
-              </router-link>
-            </li>
-          </ul>
-          <a href="" class="Osmo">更多 {{product_ifys[2]}} 产品></a>
-        </div>
-      </div>
-      <div class="index_favourable">
-        <div class="productTe">
-          <h3>优惠</h3>
-        </div>
-        <a href="" v-for="favourable in favourables" :key="favourable.favourable_id">
-          <div class="favourable_title">{{favourable.favourable_title}}</div>
-          <img v-lazy="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt=""/>
-        </a>
-      </div>
-    <div id="backTop" @click="backTop()">
-      <i class="mint-toast-icon mintui mintui-back"></i>
-    </div>
-    <foter></foter>
-    </div>
-    <transition name="fade" model="out-in" :duration="{enter:1500,leave:1500}">
+    </transition>
+    <transition name="fade" model="out-in">
       <div class="reclassify" ref="reclassify" v-if="!isShow">
         <div class="padding">
           <div class="user">
-            <router-link :to="loginR" ref="login">{{isLogin}}</router-link>
+            <router-link :to="isLogin.route" ref="login">{{isLogin.text}}</router-link>
           </div>
           <div class="product_ify">
             <div class="ify_title">商品分类</div>
@@ -314,9 +316,11 @@ export default {
     },
     menu(){
       this.isShow=false;
+      this.show=false;
     },
     hidden(){
       this.isShow=true;
+      this.show=true;
     },
     backTop(){
       var top=setInterval(function(){
@@ -332,19 +336,12 @@ export default {
   },
   computed:{
     isLogin(){
-      if(window.sessionStorage.getItem("user_id")){
-        return '我的账户'
+      if(sessionStorage.getItem("userId")!=undefined){
+        return {text:'我的账户',route:'/User'}
       }else{
-        return '登录'
+        return {text:'登录',route:'/Login'}
       }
     },
-    loginR(){
-      if(window.sessionStorage.getItem("user_id")){
-        return '/User'
-      }else{
-        return '/Login'
-      }
-    }
   },
 }
 </script>
@@ -434,6 +431,7 @@ ul{
   position: absolute;
   overflow: hidden;
   margin: 0 auto;
+  margin-left:5px;
 }
 .text div:first-child{
   font-size: 14px;
@@ -688,6 +686,7 @@ ul{
   color:#3B3E40;
   display:block;
   margin-top:10px;
+  position: relative;
 }
 #backTop{
   display: none;
