@@ -17,4 +17,5 @@ app.use(cors({
 }))
 app.use("/index",index);
 app.use("/login",login);
+app.use("/detail",detail);
 app.use("/cart",cart);
