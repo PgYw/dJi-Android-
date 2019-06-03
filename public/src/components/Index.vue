@@ -1,9 +1,9 @@
 <template>
   <div class="main">
     <transition name="fade">
-      <div class="downloadApp" v-if="show">
+      <div class="downloadApp" v-if="!show">
         <button>
-          <i class="shanchu" @click="show=!show"></i>
+          <i class="shanchu" @click="show=true,dwShow=1"></i>
         </button>
         <span class="logo">
           <img src="http://localhost:8080/static/images/djiapp.png" alt="">
@@ -19,7 +19,7 @@
       <span class="menu">
         <transition name="fade" mode="out-in">
           <button ref="show" class="menuButton"
-          v-if="isShow"
+          v-if="!isShow"
           @click.stop="menu()"
           key="one">
             <span></span>
@@ -27,8 +27,8 @@
             <span></span>
           </button>
           <button ref="hidden" class="hiddenButton"
-          v-else-if="!isShow"
-          @click.stop="hidden()"
+          v-else-if="isShow"
+          @click.stop="menu()"
           key="two">
             <span></span>
             <span></span>
@@ -43,7 +43,7 @@
         </a>
       </span>
       <transition name="fade" mode="out-in">
-        <span class="cart" v-if="isShow">
+        <span class="cart" v-if="!isShow">
           <i class="el-icon-search search"></i>
           <el-badge :value="Cartl" class="item" type="primary">
             <router-link to="/Cart">
@@ -54,7 +54,7 @@
       </transition>
     </div>
     <transition name="fade" model="out-in">
-      <div class="body" v-show="isShow">
+      <div class="body" v-show="!isShow">
         <div class="index_swipe">
           <mt-swipe :auto="5500">
             <mt-swipe-item v-for="banner in banners" :key="banner.banner_id">
@@ -153,7 +153,7 @@
       </div>
     </transition>
     <transition name="fade" model="out-in">
-      <div class="reclassify" ref="reclassify" v-if="!isShow">
+      <div class="reclassify" ref="reclassify" v-if="isShow">
         <div class="padding">
           <div class="user">
             <router-link :to="isLogin.route" ref="login">{{isLogin.text}}</router-link>
@@ -238,8 +238,9 @@ export default {
   components:{"foter":foter},
   data(){
     return{
-      show:true,
-      isShow:true,
+      show:false,
+      isShow:false,
+      dwShow:0,
       banners:[],
       two_products:[],
       three_products:[],
@@ -290,7 +291,7 @@ export default {
         }
       }
     })
-    if(!window.localStorage.getItem("product")){
+    if(window.localStorage.getItem("product")==null||undefined){
       this.product_arr=[]
       this.Cartl=false;
     }else{
@@ -315,12 +316,17 @@ export default {
       }
     },
     menu(){
-      this.isShow=false;
-      this.show=false;
-    },
-    hidden(){
-      this.isShow=true;
-      this.show=true;
+      if(!this.isShow&&this.show&&this.dwShow==1){
+        this.isShow=true;
+      }else if(this.isShow&&this.show&&this.dwShow==0){
+        this.isShow=false;
+        this.show=false;
+      }else if(this.isShow&&this.show&&this.dwShow==1){
+        this.isShow=false;
+      }else{
+        this.isShow=true;
+        this.show=true;
+      }
     },
     backTop(){
       var top=setInterval(function(){
@@ -353,6 +359,11 @@ export default {
 }
 .el-collapse-item__content{
   padding:0px;
+}
+.el-badge{
+  vertical-align: inherit;
+  cursor: pointer;
+  margin:0 8px;
 }
 </style>
 
@@ -459,52 +470,67 @@ ul{
   right: 18px;
   cursor: pointer;
 }
+
 .header{
-  height:48px;
-  position: sticky;
-  top:0;
-  z-index: 1;
-  background: #fff;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
+    height: 48px;
+    width: 100%;
+    z-index: 999;
+    position: sticky;
+    top:0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
+    box-sizing: border-box;
 }
-.menu{
-  line-height: 48px;
+.header>.center{
+  width:100%;
+  text-align: center;
+  position: absolute;
+  padding: 0 80px;
+  box-sizing:border-box;
 }
-.menu .menuButton{
-  width: 40px;
-  position: relative;
-  z-index:3;
-  display: inline-block;
-  vertical-align: super;
-  border: 0;
-  background: transparent;
-  outline: none;
-  -webkit-appearance: none;
-  transition: 1s all linear;
+.header>.cart{
+  font-size: 23px;
+  width:4.8rem;
 }
-.menu .menuButton>span{
-  display: block;
-  line-height: 0;
-  font-size: 0;
+.menu .menuButton {
+    width: 40px;
+    position: relative;
+    z-index: 3;
+    display: inline-block;
+    vertical-align: super;
+    border: 0;
+    background: transparent;
+    outline: none;
+    -webkit-appearance: none;
+    -webkit-transition: 1s all linear;
+    transition: 1s all linear;
 }
-.menu .menuButton>span:nth-child(2){
-  padding:5px 0;
+.menu .menuButton>span {
+    display: block;
+    line-height: 0;
+    font-size: 0;
 }
-.menu .menuButton>span::after{
-  background-color: #303233;
-  border-bottom-left-radius: 2px;
-  border-top-right-radius: 2px;
-  content: "";
-  display: inline-block;
-  height: 2px;
-  transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
-  transform: translateY(-5px);
-  width: 20px;
+.menu .menuButton>span:nth-child(2) {
+    padding: 5px 0;
+}
+.menu .menuButton>span::after {
+    background-color: #303233;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    content: "";
+    display: inline-block;
+    height: 2px;
+    transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px);
+    width: 20px;
 }
 .menu .hiddenButton{
   width: 40px;
   position: relative;
-  /* display:none; */
   z-index:3;
   vertical-align: super;
   border: 0;
@@ -547,35 +573,6 @@ ul{
   transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
   transform: rotate(-45deg);
   width: 20px;
-}
-.header>.center{
-  position: absolute;
-  height:48px;
-  line-height: 55px;
-  width: 100%;
-  left: 0;
-  padding: 0 42px;
-  text-align: center;
-  box-sizing: border-box;
-  max-width: 100%;
-}
-.header .cart>.search{
-  font-size: 25px;
-  line-height: 48px;
-  padding:0 20px;
-  cursor: pointer;
-}
-.cart{
-  float: right;
-  padding-right: 20px;
-  height:100%;
-}
-.cart>.item>a>i{
-  font-size: 25px;
-}
-.el-badge{
-  vertical-align: inherit;
-  cursor: pointer;
 }
 .body{
   max-width:24rem;

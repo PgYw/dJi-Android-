@@ -103,16 +103,16 @@
           <span>为您推荐</span>
         </div>
         <ul>
-          <li>
+          <li v-for="(product_select,index) in product_selects" :key="product_select.id">
             <div class="product_img">
-              <img src="http://localhost:8080/static/images/test.jpg" alt="">
+              <img :src="product_select.product_img" alt="">
             </div>
-            <p class="product_nt">Osmo Pocket 拓展配件包</p>
+            <p class="product_nt">{{product_select.product_ify+" "+product_select.product_title}}</p>
             <p class="product_price">
               <span>¥</span>
-              <span>4399</span>
+              <span>{{product_select.product_Oprice}}</span>
             </p>
-            <button>加入购物车</button>
+            <button @click="addCart(index)">加入购物车</button>
           </li>
         </ul>
       </div>
@@ -136,6 +136,7 @@ export default {
       num:1,
       nb:0,
       product_arr:[],
+      product_selects:[],
       total:0,
     }
   },
@@ -146,6 +147,9 @@ export default {
     if(getVal!=null){
       this.product_arr=getVal
     }
+    this.$axios.get("http://127.0.0.1:3000/cart/productSelect").then(res=>{
+      this.product_selects=res.data.productSelect;
+    })
   },
   methods: {
     Up(index){
@@ -174,9 +178,32 @@ export default {
       e.target.checked?this.product_arr[index].product_isSelect=true:this.product_arr[index].product_isSelect=false
       window.localStorage.setItem("product",JSON.stringify(this.product_arr))
     },
+    addCart(index){
+      var isAdd=false;
+      var product_obj={
+        product_isSelect:true,
+        product_id:this.product_selects[index].product_id,
+        product_img:this.product_selects[index].product_img,
+        product_title:this.product_selects[index].product_ify+" "+this.product_selects[index].product_title,
+        product_price:this.product_selects[index].product_Oprice,
+        product_count:1
+      }
+      for(var i=0;i<this.product_arr.length;i++){
+        if(this.product_arr[i].product_id==product_obj.product_id){
+          this.product_arr[i].product_count++;
+          this.product_arr[i].product_total*=this.product_arr[i].product_count
+          isAdd=true;
+        }
+      }
+      if(!isAdd){
+        this.product_arr.push(product_obj)
+        console.log(this.product_arr)
+      }
+      window.localStorage.setItem("product",JSON.stringify(this.product_arr))
+    },
     loading(){
       this.nb++;
-      if(this.nb==3){
+      if(this.nb==2){
         this.isLoading=true
         clearInterval(this.clear);
       }
@@ -264,12 +291,6 @@ body,#cart,.cart{
   line-height: 48px;
   text-align: left;
   padding-left: 20px;
-}
-.header>a{
-  width:30%;
-}
-.header>a>svg{
-  width:100%;
 }
 .header>.search{
   font-size: 23px;
