@@ -22,12 +22,12 @@
       <div class="product_swipe">
         <div class="swipe_item">
           <mt-swipe :auto="0">
-            <mt-swipe-item :v-if="product[1]!=undefined" v-for="img in product[1]" :key="img.img_id">
+            <mt-swipe-item :v-if="productImg!=undefined" v-for="img in productImg" :key="img.img_id">
               <img v-lazy="img.img_url" alt=""/>
             </mt-swipe-item>
           </mt-swipe>
         </div>
-        <div class="product_title" v-if="product[0]!=undefined">{{product[0].product_ify+" "+product[0].product_title}}</div>
+        <div class="product_title" v-if="product!=undefined">{{product.product_ify+" "+product.product_title}}</div>
       </div>
       <div class="mast_but" ref="mast_but">
         <div class="but_title">选择必备组件</div>
@@ -57,12 +57,14 @@
       </div>
       <div class="account">
         <div class="price">
-          <span>¥</span><span ref="product_price" v-if="product!=''">{{product[0].product_Oprice}}</span>
+          <span>¥</span><span ref="product_price" v-if="product!=''">{{product.product_Oprice}}</span>
           <span ref="product_price" v-else-if="relevancys!=''">{{relevancys[0].product_Oprice}}</span>
         </div>
         <div class="joinC">
+          <transition name="ball" @after-enter="afterEnter()">
+            <div class="qiu" ref="qiu" v-show="isExist"></div>
+          </transition>
           <button @click="get()">加入购物车</button>
-          <!-- <div class="qiu" ref="qiu" :style="{bottom:b_bottom+'rem',right:b_right+'rem'}">8</div> -->
           <div class="product_ln">
             <p>邮费:包邮</p>
             <p>发货时间:订单付款后1个工作日内</p>
@@ -120,12 +122,12 @@ export default {
   components:{"child":foter},
   data(){
     return{
-      product:[],
+      product:{},
+      productImg:[],
       relevancys:[],
       product_arr:[],
       activeName:"1",
-      // b_bottom:5,
-      // b_right:10.8,
+      isExist:false,
       num:0,
       Cartl:false,
     }
@@ -133,16 +135,16 @@ export default {
   created() {
     if(this.$route.query.productId){
       this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then(res=>{
-        this.product.push(res.data.product[0])
-        if(res.data.product[0].relevancy_id!=null){
-          this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+res.data.product[0].relevancy_id).then(res=>{
+        this.product=res.data.product[0]
+        if(this.product.relevancy_id!=null){
+          this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.product.relevancy_id).then(res=>{
             this.relevancys.push(res.data.product[0]);
             this.$refs.mast_but.style="display:block;"
           })
         }
       })
       this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.productId).then(res=>{
-        this.product.push(res.data.productImg);
+        this.productImg=res.data.productImg;
       })
     }else{
       this.$axios.all([
@@ -150,35 +152,21 @@ export default {
         this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.relevancyId)
       ])
       .then(this.$axios.spread((product,productImg)=>{
-        this.product.push(product.data.product[0])
-        this.product.push(productIm.data.productImg)
+        this.product=product.data.product[0]
+        this.productImg=productImg.data.productImg
       }))
     }
-    window.addEventListener("storage",function(){
-      if(!window.localStorage.getItem("product")){
-        this.product_arr=[]
-        this.Cartl=false;
-      }else{
-        var getVal=localStorage.getItem("product");
-        getVal=JSON.parse(getVal)
-        if(getVal!=null){
-          this.product_arr=getVal
-        }
-      }
+    window.addEventListener("storage",()=>{
+    this.Cartl=this.getStorage().Cartl;
+    this.product_arr=this.getStorage().product_arr
     })
-    if(!window.localStorage.getItem("product")){
-      this.product_arr=[]
-      this.Cartl=false;
-    }else{
-      var getVal=localStorage.getItem("product");
-      getVal=JSON.parse(getVal)
-      if(getVal!=null){
-        this.product_arr=getVal
-        this.Cartl=this.product_arr.length;
-      }
-    }
+    this.Cartl=this.getStorage().Cartl;
+    this.product_arr=this.getStorage().product_arr
   },
   methods:{
+    afterEnter(){
+      this.isExist=false;
+    },
     BackTop(){
       var scrollTop=document.documentElement.scrollTop||document.body.scrollTop;
       if(document.documentElement.scrollTop<=250){
@@ -194,10 +182,10 @@ export default {
         var isPr=false
         var product_obj={
           product_isSelect:true,
-          product_id:this.product[0].product_id,
-          product_img:this.product[0].product_img,
-          product_title:this.product[0].product_ify+" "+this.product[0].product_title,
-          product_price:this.product[0].product_Oprice,
+          product_id:this.product.product_id,
+          product_img:this.product.product_img,
+          product_title:this.product.product_ify+" "+this.product.product_title,
+          product_price:this.product.product_Oprice,
           product_count:0
         }
         if(this.product_arr.length>0){
@@ -215,42 +203,45 @@ export default {
           product_obj.product_count=1;
           this.product_arr.push(product_obj)
         }
-        if(this.product[0].relevancy_id!=null&&this.$refs.input[0].value!=0){
+        if(this.product.relevancy_id!=null&&this.$refs.input[0].value!=0){
           var isRe=false;
           var product_count=this.$refs.input[0].value
           var product_obj={
             product_isSelect:true,
-            product_id:this.product[0].relevancy_id,
+            product_id:this.product.relevancy_id,
             product_img:this.relevancys[0].product_img,
             product_title:this.relevancys[0].product_ify+" "+this.relevancys[0].product_title,
             product_price:this.relevancys[0].product_Oprice,
             product_count:parseInt(product_count)
           }
           for(var i=0;i<this.product_arr.length;i++){
-            if(this.product[0].relevancy_id==this.product_arr[i].product_id){
+            if(this.product.relevancy_id==this.product_arr[i].product_id){
               product_obj.product_count+=this.product_arr[i].product_count
               this.product_arr[i]=product_obj
               isRe=true;
+              this.count+=product_obj.product_count
             }
           }
           if(!isRe){
+            this.count+=product_obj.product_count
             this.product_arr.push(product_obj)
           }
         }
         this.Cartl=this.product_arr.length
-        window.localStorage.setItem("product",JSON.stringify(this.product_arr))
+        this.isExist=true;
+        this.setStorage(this.product_arr)
       }
     },
     Up(){
       this.num++
       this.$refs.ep[0].style="display:inline-block"
       this.$refs.input[0].value=this.num
-      var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product[0].product_Oprice)
+      var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product.product_Oprice)
       this.$refs.product_price.innerHTML=price;
     },
     Ep(){
       this.num--
-      var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product[0].product_Oprice)
+      var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product.product_Oprice)
       this.$refs.product_price.innerHTML=price;
       if(this.num==0){
         this.$refs.ep[0].style="display:none"
@@ -281,14 +272,6 @@ export default {
     window.removeEventListener('scroll',this.BackTop)
   },
 }
-  // 小球移动到购物车图标并且消失
-  // this.$refs.qiu.style="display:block"
-  // this.b_bottom+=1.8;
-  // this.b_right-=0.5;
-  // if(this.b_right<=1.3){
-  //   this.$refs.qiu.style="display:none"
-  // }
-  // 点击加入购物车存储数据
 </script>
 <style lang="css">
 *{
@@ -297,6 +280,23 @@ export default {
 }
 </style>
 <style scoped lang="css">
+.ball-enter-active {
+  animation: ball-in 2.5s;
+}
+/* .ball-leave-active {
+  animation: ball-in 0.5s reverse;
+} */
+@keyframes ball-in {
+  0% {
+    transform:translate3d(0,0,0,0);
+  }
+  50% {
+    transform:translate3d(320px,-490px,0);
+  }
+  100% {
+    transform:translate3d(300px,0,0);
+  }
+}
 html,body,#detail,.detail{
   width:100%;
   height:100%;
@@ -336,51 +336,52 @@ ul{
   font-weight: 500;
   margin:7px 0;
 }
-.header {
+.header{
   height: 48px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: #fff;
-  -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
-}
-.header>.center {
-  position: absolute;
-  height: 48px;
-  line-height: 55px;
   width: 100%;
-  left: 0;
-  padding: 0 42px;
-  text-align: center;
-  -webkit-box-sizing: border-box;
+  z-index: 999;
+  position: sticky;
+  top:0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
   box-sizing: border-box;
-  max-width: 100%;
-  z-index: -999;
 }
-.cart {
-  float: right;
-  padding-right: 20px;
-  height: 100%;
+.header>.center{
+  width:100%;
+  text-align: center;
+  position: absolute;
+  padding: 0 80px;
+  box-sizing:border-box;
+}
+.header>.cart{
+  font-size: 23px;
+  width:5.6rem;
+}
+.header>.cart>i{
+  margin:0 8px;
 }
 .header .cart>.search {
-  font-size: 25px;
-  line-height: 48px;
-  padding: 0 20px;
+  font-size: 23px;
+  margin:0 8px;
   cursor: pointer;
 }
 .el-badge {
   vertical-align: inherit;
   cursor: pointer;
+  margin:0 8px;
 }
 .cart>.item>a>i {
-  font-size: 25px;
+  font-size: 23px;
 }
 .mint-toast-icon{
+  z-index: 999;
   font-size: 23px;
   line-height:3.12rem;
   display:inline-block;
-  padding-left: 20px;
+  width:40px;
 }
 .mast_but{
   display:none;
@@ -480,8 +481,7 @@ ul{
   text-align: center;
   padding: 0 1.5rem;
   font-size: 0.75rem;
-  line-height: 1.5;  
-  position: relative; 
+  line-height: 1.5;
   outline: none; 
   border-radius: .25rem;
   color: #fff;
@@ -550,11 +550,11 @@ ul{
 .joinC>.qiu{
   border-radius: 0.89rem;
   position: absolute;
-  display: none;
   width:2rem;
   height:2rem;
   text-align: center;
   line-height: 2rem;
+  left:50%;
   color:#fff;
   background:#42b7ff;
   z-index: 999;

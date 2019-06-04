@@ -232,7 +232,7 @@
   </div>
 </template>
 <script>
-import foter from "@/components/IndexFooter.vue"
+import foter from "@/components/IndexFooter"
 export default {
   name:"app",
   components:{"foter":foter},
@@ -255,6 +255,7 @@ export default {
     }
   },
   created(){
+    var getStorage=this.getStorage();
     this.$axios.all([
       this.$axios.get("http://127.0.0.1:3000/index/banner"),
       this.$axios.get('http://127.0.0.1:3000/index/one_product'),
@@ -291,20 +292,8 @@ export default {
         }
       }
     })
-    if(window.localStorage.getItem("product")==null||undefined){
-      this.product_arr=[]
-      this.Cartl=false;
-    }else{
-      var getVal=localStorage.getItem("product");
-      getVal=JSON.parse(getVal)
-      if(getVal!=null){
-        this.product_arr=getVal
-        this.Cartl=this.product_arr.length;
-      }
-    }
-    if(window.sessionStorage.length!=0){
-      this.Cartl=window.sessionStorage.length;
-    }
+    this.Cartl=getStorage.Cartl;
+    this.product_arr=getStorage.product_arr
     window.addEventListener('scroll',this.handleScroll);
   },
   methods:{
@@ -357,17 +346,12 @@ export default {
   padding:0;
   margin:0;
 }
-.el-collapse-item__content{
-  padding:0px;
-}
-.el-badge{
-  vertical-align: inherit;
-  cursor: pointer;
-  margin:0 8px;
-}
 </style>
 
 <style scoped lang="css">
+.el-collapse-item__content{
+  padding:0px;
+}
 /* 动画 */
 .none{
   opacity: 0;
@@ -470,19 +454,18 @@ ul{
   right: 18px;
   cursor: pointer;
 }
-
 .header{
-    height: 48px;
-    width: 100%;
-    z-index: 999;
-    position: sticky;
-    top:0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #fff;
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
-    box-sizing: border-box;
+  height: 48px;
+  width: 100%;
+  z-index: 999;
+  position: sticky;
+  top:0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
+  box-sizing: border-box;
 }
 .header>.center{
   width:100%;
@@ -493,7 +476,15 @@ ul{
 }
 .header>.cart{
   font-size: 23px;
-  width:4.8rem;
+  width:5.6rem;
+}
+.header>.cart>i{
+  margin:0 8px;
+}
+.el-badge{
+  vertical-align: inherit;
+  cursor: pointer;
+  margin:0 8px;
 }
 .menu .menuButton {
     width: 40px;

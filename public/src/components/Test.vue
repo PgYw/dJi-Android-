@@ -21,12 +21,4 @@ export default {
 }
 </style>
 <style lang="css">
-.my_all{
-  margin:0 auto;
-  width:200px;
-  height:200px;
-  overflow: hidden;
-  background: red;
-  z-index: 2;
-}
 </style>

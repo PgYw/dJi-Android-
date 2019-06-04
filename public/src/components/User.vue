@@ -129,14 +129,8 @@ export default {
     }
   },
   mounted() {
-    if(window.localStorage.getItem("product")!=undefined){
-      var getVal=localStorage.getItem("product");
-      getVal=JSON.parse(getVal)
-      if(getVal!=null){
-        this.product_arr=getVal
-        this.Cartl=this.product_arr.length
-      }
-    }
+    this.Cartl=this.getStorages().Cartl;
+    this.product_arr=this.getStorages().product_arr
   },
 }
 </script>
@@ -167,67 +161,83 @@ html,body,#user,.user{
   height:100%;
 }
 .header{
-  height: 3.02rem;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: #fff;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
+    height: 48px;
+    width: 100%;
+    z-index: 999;
+    position: sticky;
+    top:0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.4);
+    box-sizing: border-box;
 }
-.menu {
-  line-height: 3.02rem;
-}
-.header>.center {
-  position: absolute;
-  height: 3.02rem;
-  line-height: 3.72rem;
-  width: 100%;
-  left: 0;
-  padding: 0 2.88rem;
+.header>.center{
+  width:100%;
   text-align: center;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  max-width: 100%;
+  position: absolute;
+  padding: 0 80px;
+  box-sizing:border-box;
 }
-.cart {
-  float: right;
-  padding-right: 20px;
-  height: 100%;
+.header>.cart{
+  font-size: 23px;
+  width:2.6rem;
 }
-.menu button{
-  width: 2.5rem;
+.menu .menuButton {
+    width: 40px;
+    position: relative;
+    z-index: 3;
+    display: inline-block;
+    vertical-align: super;
+    border: 0;
+    background: transparent;
+    outline: none;
+    -webkit-appearance: none;
+    -webkit-transition: 1s all linear;
+    transition: 1s all linear;
+}
+.menu .menuButton>span {
+    display: block;
+    line-height: 0;
+    font-size: 0;
+}
+.menu .menuButton>span:nth-child(2) {
+    padding: 5px 0;
+}
+.menu .menuButton>span::after {
+    background-color: #303233;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    content: "";
+    display: inline-block;
+    height: 2px;
+    transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px);
+    width: 20px;
+}
+.menu .hiddenButton{
+  width: 40px;
   position: relative;
-  z-index: 3;
+  z-index:3;
   vertical-align: super;
   border: 0;
   background: transparent;
   outline: none;
   -webkit-appearance: none;
+  transition: 1s all linear;
 }
-.menu .menuButton{
-  display: inline-block;
-}
-.menu .menuButton>span {
+.menu .hiddenButton>span{
   display: block;
-  -webkit-transition: all .4s ease;
   transition: all .4s ease;
   line-height: 0;
   font-size: 0;
 }
-.menu .menuButton>span:after {
-  background-color: #303233;
-  border-bottom-left-radius: 2px;
-  border-top-right-radius: 2px;
-  content: "";
-  height:2px;
-  display: inline-block;
-  transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
-  -webkit-transform: translateY(-5px);
-  transform: translateY(-5px);
-  width: 1.3rem;
+.menu .hiddenButton>span:first-child{
+  transform: translateY(2px);
 }
-.menu .hiddenButton>span:first-child::after {
+.menu .hiddenButton>span:first-child::after{
   background-color: #303233;
   border-bottom-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -235,24 +245,14 @@ html,body,#user,.user{
   display: inline-block;
   height: 2px;
   transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
-  -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
   width: 20px;
 }
-.menu .hiddenButton>span:first-child {
-  transform: translateY(2px);
-}
-.menu .hiddenButton>span:nth-child(2) {
+.menu .hiddenButton>span:nth-child(2){
   transform: translateY(-5px);
-  padding: 5px 0;
+  padding:5px 0;
 }
-.menu .hiddenButton>span {
-  display: block;
-  transition: all .4s ease;
-  line-height: 0;
-  font-size: 0;
-}
-.menu .hiddenButton>span:nth-child(2)::after {
+.menu .hiddenButton>span:nth-child(2)::after{
   background-color: #303233;
   border-bottom-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -260,24 +260,8 @@ html,body,#user,.user{
   display: inline-block;
   height: 2px;
   transition: transform .4s ease .2s,-webkit-transform .4s ease .2s;
-  -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
   width: 20px;
-}
-.menu .menuButton>span:nth-child(2) {
-  padding: 0.32rem 0;
-}
-.cart {
-  padding-right: 1.3rem;
-  height: 100%;
-}
-.el-badge {
-  vertical-align: inherit;
-  cursor: pointer;
-}
-.cart>.item>a>i {
-  font-size: 25px;
-  line-height: 3.12rem;
 }
 .info{
   max-width: 24rem;

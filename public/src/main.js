@@ -3,7 +3,8 @@ import App from './App'
 import ElementUI from 'element-ui';
 import {Swipe,SwipeItem} from 'mint-ui';
 import 'mint-ui/lib/style.css'
-import './components/common/common.css'
+import '@/components/common/common.css'
+import {getStorage,setStorage} from './components/common/getStorage'
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import axios from 'axios'
@@ -17,6 +18,8 @@ Vue.use(VueLazyload,{
 })
 Vue.prototype.bus = new Vue;
 Vue.prototype.$axios=axios;
+Vue.prototype.getStorage=getStorage
+Vue.prototype.setStorage=setStorage
 Vue.use(ElementUI);
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
