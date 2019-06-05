@@ -244,9 +244,6 @@ export default {
       return {sum,length};
     },
   },
-  // 登录之后购物车数据保存到数据库，清空localstorage
-  // 第一个项目的响应式解决
-  // 商品详情商品加入购物车动画
 }
 </script>
 <style lang="css">

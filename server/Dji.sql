@@ -91,3 +91,8 @@ INSERT INTO dji_favourable VALUES
 (NULL,"翻新机 实惠价格 | 质量保证 | 同等保修",NULL,"http://127.0.0.1:8080/static/images/refurbished.png"),
 (NULL,"教育折扣 最高九折",NULL,"http://127.0.0.1:8080/static/images/edu_discount.png");
 
+CREATE TABLE dji_cart(
+  cart_id INT PRIMARY KEY AUTO_INCREMENT comment '购物车的id',
+  product_id VARCHAR(128) comment '商品的id',
+  product_count VARCHAR(128) comment '商品的数量'
+);

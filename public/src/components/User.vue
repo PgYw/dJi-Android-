@@ -129,8 +129,8 @@ export default {
     }
   },
   mounted() {
-    this.Cartl=this.getStorages().Cartl;
-    this.product_arr=this.getStorages().product_arr
+    this.Cartl=this.getStorage().Cartl;
+    this.product_arr=this.getStorage().product_arr
   },
 }
 </script>
@@ -334,6 +334,7 @@ html,body,#user,.user{
   border-bottom: 1px solid #f7f8f9;
 }
 .info_text>.nav_main li>a{
+  display: block;
   font-size: 14px;
   color: #999;
   text-transform: uppercase;

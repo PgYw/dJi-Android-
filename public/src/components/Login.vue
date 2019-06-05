@@ -46,9 +46,23 @@ export default {
       getAdmin:"",
       getUpwd:"",
       isLogin:0,
+      product_arr:[],
     }
   },
   mounted() {
+    if(localStorage.getItem("product")!=undefined||null){
+      var getVal=localStorage.getItem("product");
+      getVal=JSON.parse(getVal)
+      for(var i=0;i<getVal.length;i++){
+        var product_obj={
+          product_id:getVal.product_id,
+          product_count:getVal.product_count
+        }
+        product_obj.product_id=getVal[i].product_id
+        product_obj.product_count=getVal[i].product_count
+        this.product_arr.push(product_obj)
+      }
+    }
     if(this.getAdmin.length>=1){
       this.$refs.clearInput.style="display:block"
     }
@@ -78,11 +92,30 @@ export default {
     },
     Login(){
       if(this.isLogin==2){
-        this.$axios.get("http://127.0.0.1:3000/login/user?admin="+this.getAdmin+"&upwd="+this.getUpwd).then(res=>{
+        this.$axios.post("http://127.0.0.1:3000/login/user",this.qs.stringify({
+          admin:this.getAdmin,
+          upwd:this.getUpwd,
+          }))
+          .then(res=>{
           if(res.data.code==1){
-            this.$refs.err.innerHTML="";
-            this.$router.push({path:'/Index'});
+            var product_arr=JSON.stringify(this.product_arr)
             window.sessionStorage.setItem("userId",res.data.userId)
+            this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+            this.qs.stringify({product_arr:product_arr}))
+            .then(res=>{
+              if(res.data.code==1){
+                localStorage.clear();
+              }
+            })
+            // 登录之后获取购物车商品信息
+            // 商品详情页商品数量增加时判断购物车是否有,有相加，没有自建
+            // 创建查询查询购物车数据库并且返回到网页中来的公共js
+            // 登录local存入购物车数据库时，查看购物车是否已经拥有了当前的商品.
+            // 有了增加数量，没有自建
+            // 第一个项目的响应式解决
+            // 商品详情商品加入购物车动画
+            this.$refs.err.innerHTML="";
+            // this.$router.push({path:'/Index'});
           }else{
             var num=5;
             this.$refs.err.innerHTML="账号或密码错误("+num+"s)"
@@ -113,7 +146,7 @@ export default {
         var num=new Number(this.getAdmin);
         this.$refs.clearInput.style="display:block";
         if(num.toString()=="NaN"&&(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getAdmin)){
-          this.$axios.get("http://127.0.0.1:3000/login/email?email="+this.getAdmin).then(res=>{
+          this.$axios.post("http://127.0.0.1:3000/login/email",this.qs.stringify({email:this.getAdmin})).then(res=>{
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该邮箱未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"
@@ -122,7 +155,7 @@ export default {
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
         }else if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getAdmin)){
-           this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getAdmin).then(res=>{ 
+           this.$axios.post("http://127.0.0.1:3000/login/phone",this.qs.stringify({phone:this.getAdmin})).then(res=>{ 
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该手机号未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"

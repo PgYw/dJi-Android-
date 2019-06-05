@@ -4,10 +4,11 @@ import ElementUI from 'element-ui';
 import {Swipe,SwipeItem} from 'mint-ui';
 import 'mint-ui/lib/style.css'
 import '@/components/common/common.css'
-import {getStorage,setStorage} from './components/common/getStorage'
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import axios from 'axios'
+import qs from	'qs'
+import {getStorage,setStorage} from './components/common/getStorage'
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
 Vue.use(VueLazyload,{
@@ -16,8 +17,8 @@ Vue.use(VueLazyload,{
   loading: 'dist/loading.gif',
   attempt: 1
 })
-Vue.prototype.bus = new Vue;
 Vue.prototype.$axios=axios;
+Vue.prototype.qs=qs;
 Vue.prototype.getStorage=getStorage
 Vue.prototype.setStorage=setStorage
 Vue.use(ElementUI);

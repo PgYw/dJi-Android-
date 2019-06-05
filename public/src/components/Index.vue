@@ -149,7 +149,7 @@
       <div id="backTop" @click="backTop()">
         <i class="mint-toast-icon mintui mintui-back"></i>
       </div>
-      <foter></foter>
+      <foter :products_ify="products_ify"></foter>
       </div>
     </transition>
     <transition name="fade" model="out-in">
@@ -161,7 +161,7 @@
           <div class="product_ify">
             <div class="ify_title">商品分类</div>
             <ul>
-              <li v-for="product in products" :key="product.product_id">
+              <li v-for="product in products_ify" :key="product.product_id">
                 <a href="">
                   <img v-lazy="product.product_img" class="product_img" alt="">
                   <p>{{product.product_ify}}</p>
@@ -170,7 +170,7 @@
               <el-collapse v-model="activeName" accordion>
                 <el-collapse-item title="其他" name="1">
                   <ul>
-                    <li v-for="product in products" :key="product.product_id">
+                    <li v-for="product in products_ify" :key="product.product_id">
                       <a href="">
                         <img v-lazy="product.product_img" class="product_img" alt="">
                         <p>{{product.product_ify}}</p>
@@ -184,7 +184,7 @@
           <div>
           <div class="ify_title">优惠</div>
             <ul>
-              <li v-for="product in products" :key="product.product_id">
+              <li v-for="product in products_ify" :key="product.product_id">
                 <a href="">
                   <p>{{product.product_ify}}</p>
                 </a>
@@ -247,7 +247,7 @@ export default {
       shakys:[],
       favourables:[],
       product_ifys:[],
-      products:[],
+      products_ify:[],
       product_arr:[],
       activeName:"0",
       Cartl:false,
@@ -286,7 +286,7 @@ export default {
           for(var i=0;i<res.data.length;i++){
             if(res.data[i].product_id==relevancy_id){
               res.data.splice(i,1)
-              this.products=res.data
+              this.products_ify=res.data
             }
           }
         }

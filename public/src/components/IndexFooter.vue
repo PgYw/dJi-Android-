@@ -65,26 +65,13 @@
 <script>
 export default {
   name:"IndexFooter",
+  props:{
+    products_ify:"",
+  },
   data(){
     return{
-      products_ify:[],
     }
   },
-  created() {
-    this.$axios.get("http://127.0.0.1:3000/index/products").then(res=>{
-      for(var i=0;i<res.data.length;i++){
-        if(res.data[i].relevancy_id!=null){
-          var relevancy_id=res.data[i].relevancy_id
-          for(var i=0;i<res.data.length;i++){
-            if(res.data[i].product_id==relevancy_id){
-              res.data.splice(i,1)
-              this.products_ify=res.data
-            }
-          }
-        }
-      }
-    })
-  }
 }
 </script>
 <style lang="css">

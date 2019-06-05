@@ -64,7 +64,7 @@
           <transition name="ball" @after-enter="afterEnter()">
             <div class="qiu" ref="qiu" v-show="isExist"></div>
           </transition>
-          <button @click="get()">加入购物车</button>
+          <button @click="addCart($event)">加入购物车</button>
           <div class="product_ln">
             <p>邮费:包邮</p>
             <p>发货时间:订单付款后1个工作日内</p>
@@ -175,7 +175,7 @@ export default {
         document.getElementById("backTop").style.display="block";
       }
     },
-    get(){
+    addCart(){
       if(!(window.localStorage&&(window.localStorage.setItem('a',123),window.localStorage.getItem('a')==123))){
         alert("您的电脑可能未开启本地存储")
       }else{
@@ -297,7 +297,7 @@ export default {
     transform:translate3d(300px,0,0);
   }
 }
-html,body,#detail,.detail{
+html,body,#detail,.detail{ 
   width:100%;
   height:100%;
 }
