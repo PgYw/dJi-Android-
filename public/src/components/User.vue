@@ -109,6 +109,18 @@ export default {
       isShow2:false,
     }
   },
+  mounted() {
+    if(this.getStorage().product_arr.length==0&&sessionStorage.getItem("userId")!=(undefined||null)){
+      var getCart=setInterval(()=>{
+        this.getStorage()
+        if(this.getStorage().product_arr.length>0){
+          clearInterval(getCart)
+        }
+      },350)
+    }
+    this.Cartl=this.getStorage().Cartl;
+    this.product_arr=this.getStorage().product_arr
+  },
   methods: {
     menu(){
       this.isShow1=true;

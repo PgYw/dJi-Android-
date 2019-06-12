@@ -13,6 +13,13 @@ CREATE TABLE dji_user(
 INSERT INTO dji_user VALUES
 (NULL,"phone",17682819515,"2585351891@qq.com","yangwei123");
 
+CREATE TABLE dji_cart(
+  cart_id INT PRIMARY KEY AUTO_INCREMENT comment '购物车的id',
+  user_id INT comment '用户的id',
+  product_id INT comment '商品的id',
+  product_count INT comment '商品的数量'
+);
+
 CREATE TABLE dji_product(
   product_id INT PRIMARY KEY AUTO_INCREMENT comment '商品的id',
   product_img VARCHAR(128) comment '商品的图片',
@@ -65,7 +72,7 @@ CREATE TABLE dji_banner(
   banner_href VARCHAR(128) comment '轮播图的超链接',
   banner_img VARCHAR(128) comment '轮播图的地址',
   banner_productLnTop VARCHAR(128) comment '轮播图的简介(上)',
-  banner_productLnBottom VARCHAR(128) comment '轮播图的简介(上)'
+  banner_productLnBottom VARCHAR(128) comment '轮播图的简介(下)'
 );
 INSERT INTO dji_banner VALUES
 (NULL,null,"http://localhost:8080/static/images/swipe1.png","御 MAVIC 2","画质旗舰，变焦先锋"),
@@ -91,8 +98,3 @@ INSERT INTO dji_favourable VALUES
 (NULL,"翻新机 实惠价格 | 质量保证 | 同等保修",NULL,"http://127.0.0.1:8080/static/images/refurbished.png"),
 (NULL,"教育折扣 最高九折",NULL,"http://127.0.0.1:8080/static/images/edu_discount.png");
 
-CREATE TABLE dji_cart(
-  cart_id INT PRIMARY KEY AUTO_INCREMENT comment '购物车的id',
-  product_id VARCHAR(128) comment '商品的id',
-  product_count VARCHAR(128) comment '商品的数量'
-);

@@ -31,7 +31,7 @@
       </div>
       <div class="mast_but" ref="mast_but">
         <div class="but_title">选择必备组件</div>
-        <div class="product_child" v-for="relevancy in relevancys" :key="relevancy.product_id">
+        <div class="product_child" v-for="(relevancy,index) in relevancys" :key="relevancy.product_id">
           <div class="child_img">
             <router-link :to="{path:'/Detail',query:{relevancyId:relevancy.product_id}}" target="_blank">
               <img v-lazy="relevancy.product_img" alt=""/>
@@ -47,9 +47,9 @@
               <span>¥</span>
               <span ref="relevany_price">{{relevancy.product_Oprice}}</span>
               <div class="Upprice">
-                <button @click="Ep()" ref="ep">-</button>
-                <input readonly type="text" ref="input">
-                <button @click="Up()">+</button>
+                <button @click="Ep(index)" ref="ep">-</button>
+                <input readonly type="text" ref="input" v-if="num==0?'':num" :value="num">
+                <button @click="Up(index)">+</button>
               </div>
             </div>
           </div>
@@ -126,20 +126,40 @@ export default {
       productImg:[],
       relevancys:[],
       product_arr:[],
+      productIds_cart:[],
       activeName:"1",
       isExist:false,
       num:0,
       Cartl:false,
     }
   },
+  mounted() {
+    if(this.getStorage().product_arr.length==0&&sessionStorage.getItem("userId")!=(undefined||null)){
+      var getCart=setInterval(()=>{
+        this.getStorage()
+        if(this.getStorage().product_arr.length>0){
+          clearInterval(getCart)
+          this.Cartl=this.getStorage().Cartl;
+        }
+      },350)
+    }
+    this.Cartl=this.getStorage().Cartl;
+  },
   created() {
+    var user_id=sessionStorage.getItem("userId")
     if(this.$route.query.productId){
-      this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.productId).then(res=>{
+      this.$axios.post("http://127.0.0.1:3000/detail/product",
+      this.qs.stringify({product_id:this.$route.query.productId}))
+      .then(res=>{
         this.product=res.data.product[0]
+        this.productIds_cart.push({product_id:res.data.product[0].product_id,isCart:true})
         if(this.product.relevancy_id!=null){
-          this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.product.relevancy_id).then(res=>{
+          this.$axios.post("http://127.0.0.1:3000/detail/product",
+          this.qs.stringify({product_id:this.product.relevancy_id}))
+          .then(res=>{
             this.relevancys.push(res.data.product[0]);
             this.$refs.mast_but.style="display:block;"
+            this.productIds_cart.push({product_id:res.data.product[0].product_id,isCart:false})
           })
         }
       })
@@ -148,7 +168,7 @@ export default {
       })
     }else{
       this.$axios.all([
-        this.$axios.get("http://127.0.0.1:3000/detail/product?product_id="+this.$route.query.relevancyId),
+        this.$axios.post("http://127.0.0.1:3000/detail/product",this.qs.stringify({product_id:this.$route.query.relevancyId})),
         this.$axios.get("http://127.0.0.1:3000/detail/productImg?product_id="+this.$route.query.relevancyId)
       ])
       .then(this.$axios.spread((product,productImg)=>{
@@ -160,8 +180,6 @@ export default {
     this.Cartl=this.getStorage().Cartl;
     this.product_arr=this.getStorage().product_arr
     })
-    this.Cartl=this.getStorage().Cartl;
-    this.product_arr=this.getStorage().product_arr
   },
   methods:{
     afterEnter(){
@@ -176,9 +194,88 @@ export default {
       }
     },
     addCart(){
-      if(!(window.localStorage&&(window.localStorage.setItem('a',123),window.localStorage.getItem('a')==123))){
-        alert("您的电脑可能未开启本地存储")
+      if(sessionStorage.getItem("userId")!=(undefined||null)){
+        var user_id=sessionStorage.getItem("userId");
+        for(var i=0;i<this.productIds_cart.length;i++){
+          if(this.productIds_cart[i].isCart){
+            this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+            this.qs.stringify({user_id:user_id,product_id:this.productIds_cart[i].product_id}))
+            .then(res=>{
+              if(res.data.code==1){
+                // 因为用户只要点击了父商品都要添加购物车
+                // 所以只需要判断子商品是否存在就行
+                var product_arr=[];
+                product_arr=res.data.slCart
+                for(var i=0;i<product_arr.length;i++){
+                  // 判断是否有父商品
+                  if(product_arr[i].product_id==this.product.product_id){
+                    product_arr[i].product_count++;
+                    this.$axios.post("http://127.0.0.1:3000/cart/upCart",
+                    this.qs.stringify({user_id:user_id,product_id:this.product.product_id,product_count:product_arr[i].product_count}))
+                    .then(res=>{
+                      if(res.data.code!=1){
+                        alert("对不起，参数错误")
+                      }
+                    })
+                  }
+                  // 判断是否有子产品，并且购物车数据库有没有该子产品
+                  if(this.product.relevancy_id!=null&&product_arr[i].product_id==this.product.relevancy_id){
+                    product_arr[i].product_count+=this.num;
+                    this.$axios.post("http://127.0.0.1:3000/cart/upCart",
+                    this.qs.stringify({user_id:user_id,product_id:this.product.relevancy_id,product_count:product_arr[i].product_count}))
+                    .then(res=>{
+                      if(res.data.code!=1){
+                        alert("对不起，参数错误")
+                      }
+                    })
+                  }
+                }
+              }else{
+                var product_arr=[];
+                this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+                this.qs.stringify({user_id:user_id,product_id:this.product.product_id}))
+                .then(res=>{
+                  if(res.data.code==0){
+                    product_arr.push({user_id:user_id,product_id:this.product.product_id,product_count:1})
+                    this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+                    this.qs.stringify({product_arr:JSON.stringify(product_arr)}))
+                    .then(res=>{
+                      if(res.data.code!=1){
+                        alert("对不起，参数错误")
+                      }
+                    })
+                  }
+                })
+                // 说明购物车中没有该父子商品，那么就创建
+                  if(this.num>0){
+                  this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+                  this.qs.stringify({user_id:user_id,product_id:this.product.relevancy_id}))
+                  .then(res=>{
+                    if(res.data.code==0){
+                      product_arr.push({user_id:user_id,product_id:this.product.relevancy_id,product_count:this.num})
+                      this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+                      this.qs.stringify({product_arr:JSON.stringify(product_arr)}))
+                      .then(res=>{
+                        if(res.data.code!=1){
+                          alert("对不起，参数错误")
+                        }
+                      })
+                    }
+                  })
+                  }
+              }
+            })
+          }
+        }
+        this.$axios.post("http://127.0.0.1:3000/cart/cart",this.qs.stringify({user_id:user_id}))
+        .then(res=>{
+          this.Cartl=res.data.cart.length
+        })
       }else{
+        if(!(window.localStorage&&(window.localStorage.setItem('a',123),window.localStorage.getItem('a')==123))){
+          alert("您的电脑可能未开启本地存储")
+          return;
+        }
         var isPr=false
         var product_obj={
           product_isSelect:true,
@@ -203,16 +300,15 @@ export default {
           product_obj.product_count=1;
           this.product_arr.push(product_obj)
         }
-        if(this.product.relevancy_id!=null&&this.$refs.input[0].value!=0){
+        if(this.product.relevancy_id!=null&&this.num!=0){
           var isRe=false;
-          var product_count=this.$refs.input[0].value
           var product_obj={
             product_isSelect:true,
             product_id:this.product.relevancy_id,
             product_img:this.relevancys[0].product_img,
             product_title:this.relevancys[0].product_ify+" "+this.relevancys[0].product_title,
             product_price:this.relevancys[0].product_Oprice,
-            product_count:parseInt(product_count)
+            product_count:parseInt(this.num)
           }
           for(var i=0;i<this.product_arr.length;i++){
             if(this.product.relevancy_id==this.product_arr[i].product_id){
@@ -232,24 +328,24 @@ export default {
         this.setStorage(this.product_arr)
       }
     },
-    Up(){
+    Up(index){
+      // 因为第一位是父商品的位置，所以index要+1
+      this.productIds_cart[index+1].isCart=true
       this.num++
       this.$refs.ep[0].style="display:inline-block"
-      this.$refs.input[0].value=this.num
       var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product.product_Oprice)
       this.$refs.product_price.innerHTML=price;
     },
-    Ep(){
+    Ep(index){
       this.num--
       var price=parseInt(this.num*this.$refs.relevany_price[0].innerHTML)+parseInt(this.product.product_Oprice)
       this.$refs.product_price.innerHTML=price;
       if(this.num==0){
+        this.productIds_cart[index+1].isCart=false;
         this.$refs.ep[0].style="display:none"
-        this.$refs.input[0].value="";
         return;
       }
       this.$refs.ep[0].style="display:inline-block"
-      this.$refs.input[0].value=this.num
     },
     backTop(){
       var top=setInterval(function(){
@@ -485,6 +581,9 @@ ul{
   outline: none; 
   border-radius: .25rem;
   color: #fff;
+  background:#1897f2
+}
+.joinC>button:active{
   background-image: linear-gradient(0deg,#1897f2,#42b7ff);
 }
 .joinC p{

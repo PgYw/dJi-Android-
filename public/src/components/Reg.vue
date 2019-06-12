@@ -11,8 +11,10 @@
           <transition name="fade" mode="out-in">
             <div class="phone" ref="Phone" v-if="!show" key="one">
               <div class="phone_tel">
-                <button disabled class="btn">+86</button>
-                <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
+                <div>
+                  <button disabled class="btn">+86</button>
+                  <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
+                </div>
                 <i class="clearInput" ref="clearInput" @click="clearPhone()"></i>
                 <div class="msg_err">
                   <span ref="phone_err"></span>
@@ -152,7 +154,6 @@ export default {
         this.$router.go(-1)
       }
     },
-    // this.$options.methods.函数名字();在methods一个函数调用另外一个函数
     clearPhone(){
       if(this.getPhone!=""){
         this.getPhone=""
@@ -163,6 +164,7 @@ export default {
     },
     clearYzm(){
       if(this.getYzm!=""){
+        console.log(123)
         this.getYzm=""
         this.$refs.clearYzm.style="display:none"
         this.$refs.yzm_err.innerHTML="验证码不能为空"
@@ -250,6 +252,9 @@ export default {
     },
     email(){
       this.show=true;
+      this.getPhone="";
+      this.getYzm="";
+      this.getPsword="";
     },
   },
   watch: {
@@ -289,7 +294,6 @@ export default {
     getYzm(){
       if(this.getYzm.length>=1){
       this.$refs.clearYzm.style="display:block";
-      // (/^[0-9a-zA-Z]{4}$/).test(this.getYzm)
         if(this.getYzm=="ABCD"){
           this.$refs.yzm_err.innerHTML=""
           this.$refs.yzm.style="border: 1px solid #e6e6e6;"
@@ -381,7 +385,6 @@ export default {
     getYzmd(){
       if(this.getYzmd.length>=1){
       this.$refs.clearYzmd.style="display:block";
-      // (/^[0-9a-zA-Z]{4}$/).test(this.getYzmd)
         if(this.getYzmd=="ABCD"){
           this.$refs.yzmd_err.innerHTML=""
           this.$refs.yzmd.style="border: 1px solid #e6e6e6;"
@@ -465,7 +468,7 @@ export default {
   margin:0;
 }
 </style>
-<style scoped lang="css">
+<style lang="css">
 html,body,#reg,.reg{
   height:100%;
 }
@@ -478,6 +481,7 @@ html,body,#reg,.reg{
 .reg>.reg{
   position: relative;
   top:6.7rem;
+  min-width: 21rem;
 }
 .goOut{
   width:60px;
@@ -521,6 +525,7 @@ html,body,#reg,.reg{
 }
 .reg .padding{
   padding: 0 20px;
+  min-width: 21rem;
 }
 .reg .phone,.reg .email{
   margin-top:1.4rem;
@@ -605,10 +610,10 @@ html,body,#reg,.reg{
   padding: .1rem;
 }
 .reg .phone_tel>.clearInput{
-  right: 1.3rem;
+  right: 2.8rem;
 }
 .reg .phone_yzm>.clearYzm{
-  right: 9.2rem;
+  right: 10.7rem;
 }
 .reg .phone_psword>.clearPsword{
   right:1.3rem;
@@ -724,7 +729,7 @@ html,body,#reg,.reg{
   width:11.7rem;
 }
 .reg .email>.three_yzm>i{
-  right:9rem !important;
+  right:10.1rem !important;
 }
 .reg .email>.two_phone>.btn{
   width: 3.84rem;
@@ -741,6 +746,9 @@ html,body,#reg,.reg{
 }
 .reg .email>.two_phone>input{
   width:15.4rem;
+}
+.reg .email>.two_phone>.clearPhoned{
+  right:3rem;
 }
 /* 动画 */
 .none{

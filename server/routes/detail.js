@@ -1,8 +1,8 @@
 const express=require("express");
 const pool=require("../pool.js");
 const router=express.Router();
-router.get("/product",(req,res)=>{
-  var $product_id=req.query.product_id;
+router.post("/product",(req,res)=>{
+  var $product_id=req.body.product_id;
   pool.query("SELECT * FROM dji_product WHERE product_id=?",$product_id,(err,result)=>{
     if(err) throw err;
     if(result.length>0){

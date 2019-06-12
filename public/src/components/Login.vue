@@ -1,8 +1,9 @@
 <template>
   <div id="user">
     <div class="user">
-      <div class="goOut" @click="goOut()">返回</div>
-      <div class="login">
+      <div class="err_msg" v-if="err_msg!=''">{{err_msg}}</div>
+      <div class="goOut" @click="goOut()" v-show="err_msg==''">返回</div>
+      <div class="login" v-show="err_msg==''">
         <div class="from">
           <div class="login_title">登录</div>
           <div class="admin">
@@ -32,7 +33,7 @@
         </div>
       </div>
     </div>
-    <child></child>
+    <child v-if="err_msg==''"></child>
   </div>
 </template>
 <script>
@@ -47,11 +48,28 @@ export default {
       getUpwd:"",
       isLogin:0,
       product_arr:[],
+      err_msg:"",
+      isLogin:"",
     }
   },
   mounted() {
-    if(localStorage.getItem("product")!=undefined||null){
+    window.addEventListener("storage",function(){
+      console.log(11111)
+    })
+    if(sessionStorage.getItem("userId")!=(undefined||null)){
+      // var num=5;
+      // this.err_msg="对不起，请您退出后再进入本页面进行登录("+num+"s)"
+      // var isLogin=setInterval(()=>{
+      //   num--;
+      //   this.err_msg="对不起，请您退出后再进入本页面进行登录("+num+"s)"
+      //   if(num==0){
+      //     clearInterval(isLogin)
+      //     this.$router.push({path:'/Index'})
+      //   }
+      // },1000)
+    }else if(localStorage.getItem("product")!=(undefined||null)){
       var getVal=localStorage.getItem("product");
+      var userId=sessionStorage.getItem("userId")
       getVal=JSON.parse(getVal)
       for(var i=0;i<getVal.length;i++){
         var product_obj={
@@ -98,24 +116,53 @@ export default {
           }))
           .then(res=>{
           if(res.data.code==1){
-            var product_arr=JSON.stringify(this.product_arr)
-            window.sessionStorage.setItem("userId",res.data.userId)
-            this.$axios.post("http://127.0.0.1:3000/cart/addCart",
-            this.qs.stringify({product_arr:product_arr}))
-            .then(res=>{
-              if(res.data.code==1){
-                localStorage.clear();
-              }
-            })
-            // 登录之后获取购物车商品信息
-            // 商品详情页商品数量增加时判断购物车是否有,有相加，没有自建
-            // 创建查询查询购物车数据库并且返回到网页中来的公共js
-            // 登录local存入购物车数据库时，查看购物车是否已经拥有了当前的商品.
-            // 有了增加数量，没有自建
-            // 第一个项目的响应式解决
-            // 商品详情商品加入购物车动画
+            sessionStorage.setItem("userId",res.data.user_id)
+            var user_id=sessionStorage.getItem("userId")
+            for(var i=0;i<this.product_arr.length;i++){
+              this.product_arr[i].user_id=user_id;
+            }
+            for(var i=0;i<this.product_arr.length;i++){
+              this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+              this.qs.stringify({user_id:user_id,
+              product_id:this.product_arr[i].product_id}))
+              .then(res=>{
+              // 第一个项目的响应式解决
+              // 商品详情商品加入购物车动画
+              // 注册页的定时器问题和style问题
+              // 注册点击隐藏之后，监听出现冲突了
+              // 点击登录成功加入本地数据到购物车的问题
+                if(res.data.code==1){
+                  var product_arr="";
+                  product_arr=res.data.slCart[0]
+                  for(var i=0;i<this.product_arr.length;i++){
+                    if(this.product_arr[i].product_id==product_arr.product_id){
+                      product_arr.product_count+=this.product_arr[i].product_count;
+                      this.product_arr.splice(i,1)
+                      this.$axios.post("http://127.0.0.1:3000/cart/upCart",
+                      this.qs.stringify({user_id:user_id,
+                      product_id:product_arr.product_id,
+                      product_count:product_arr.product_count}))
+                      .then(res=>{
+                        if(res.data.code==1){
+                          localStorage.removeItem("product")
+                        }
+                      })
+                    }
+                  }
+                }else{
+                  this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+                  this.qs.stringify({product_arr:JSON.stringify(this.product_arr)}))
+                  .then(res=>{
+                    if(res.data.code==1){
+                      localStorage.removeItem("product")
+                    }
+                  })
+                  return;
+                }
+              })
+            }
             this.$refs.err.innerHTML="";
-            // this.$router.push({path:'/Index'});
+            this.$router.push({path:'/Index'});
           }else{
             var num=5;
             this.$refs.err.innerHTML="账号或密码错误("+num+"s)"

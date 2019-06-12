@@ -148,9 +148,19 @@ export default {
     }
   },
   created() {
+    if(sessionStorage.getItem("userId")!=(undefined||null)){
+      var getCart=setInterval(()=>{
+        if(this.getStorage().product_arr.length>0){
+          clearInterval(getCart)
+          for(var i=0;i<this.getStorage().product_arr.length;i++){
+            this.$axios.post("http://127.0.0.1:3000/detail/product")
+          }
+        }
+      },350)
+    }
+    this.product_arr=this.getStorage().product_arr;
     window.addEventListener("storage",()=>{
       this.product_arr=this.getStorage().product_arr
-      console.log(this.product_arr)
     })
     this.clear=setInterval(this.loading,1000)
     this.product_arr=this.getStorage().product_arr

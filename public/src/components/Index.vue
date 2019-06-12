@@ -242,20 +242,29 @@ export default {
       isShow:false,
       dwShow:0,
       banners:[],
+      one_products:[],
       two_products:[],
       three_products:[],
       shakys:[],
       favourables:[],
       product_ifys:[],
       products_ify:[],
-      product_arr:[],
       activeName:"0",
       Cartl:false,
-      one_products:[],
     }
   },
+  mounted() {
+    if(sessionStorage.getItem("userId")!=(undefined||null)){
+      var getCart=setInterval(()=>{
+        if(this.getStorage().product_arr.length>0){
+          clearInterval(getCart)
+          this.Cartl=this.getStorage().Cartl;
+        }
+      },350)
+    }
+    this.Cartl=this.getStorage().Cartl;
+  },
   created(){
-    var getStorage=this.getStorage();
     this.$axios.all([
       this.$axios.get("http://127.0.0.1:3000/index/banner"),
       this.$axios.get('http://127.0.0.1:3000/index/one_product'),
@@ -292,8 +301,6 @@ export default {
         }
       }
     })
-    this.Cartl=getStorage.Cartl;
-    this.product_arr=getStorage.product_arr
     window.addEventListener('scroll',this.handleScroll);
   },
   methods:{
