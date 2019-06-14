@@ -57,16 +57,16 @@ export default {
       console.log(11111)
     })
     if(sessionStorage.getItem("userId")!=(undefined||null)){
-      // var num=5;
-      // this.err_msg="对不起，请您退出后再进入本页面进行登录("+num+"s)"
-      // var isLogin=setInterval(()=>{
-      //   num--;
-      //   this.err_msg="对不起，请您退出后再进入本页面进行登录("+num+"s)"
-      //   if(num==0){
-      //     clearInterval(isLogin)
-      //     this.$router.push({path:'/Index'})
-      //   }
-      // },1000)
+      var num=5;
+      this.err_msg="对不起，请您退出后再进入本页面进行登录("+num+"s)"
+      var isLogin=setInterval(()=>{
+        num--;
+        this.err_msg="对不起，请您退出后再进入本页面进行登录("+num+"s)"
+        if(num==0){
+          clearInterval(isLogin)
+          this.$router.push({path:'/Index'})
+        }
+      },1000)
     }else if(localStorage.getItem("product")!=(undefined||null)){
       var getVal=localStorage.getItem("product");
       var userId=sessionStorage.getItem("userId")
@@ -120,17 +120,13 @@ export default {
             var user_id=sessionStorage.getItem("userId")
             for(var i=0;i<this.product_arr.length;i++){
               this.product_arr[i].user_id=user_id;
+              this.product_arr[i].product_isSelect=true;
             }
             for(var i=0;i<this.product_arr.length;i++){
               this.$axios.post("http://127.0.0.1:3000/cart/slCart",
               this.qs.stringify({user_id:user_id,
               product_id:this.product_arr[i].product_id}))
               .then(res=>{
-              // 第一个项目的响应式解决
-              // 商品详情商品加入购物车动画
-              // 注册页的定时器问题和style问题
-              // 注册点击隐藏之后，监听出现冲突了
-              // 点击登录成功加入本地数据到购物车的问题
                 if(res.data.code==1){
                   var product_arr="";
                   product_arr=res.data.slCart[0]
@@ -145,6 +141,9 @@ export default {
                       .then(res=>{
                         if(res.data.code==1){
                           localStorage.removeItem("product")
+                        }else{
+                          alert("对不起，参数错误")
+                          return;
                         }
                       })
                     }
@@ -155,6 +154,9 @@ export default {
                   .then(res=>{
                     if(res.data.code==1){
                       localStorage.removeItem("product")
+                    }else{
+                      alert("对不起，参数错误")
+                      return;
                     }
                   })
                   return;
@@ -197,6 +199,9 @@ export default {
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该邮箱未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"
+            }else{
+              alert("对不起，参数错误")
+              return;
             }
           })
           this.$refs.admin_err.innerHTML=""

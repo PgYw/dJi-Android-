@@ -818,9 +818,14 @@ ul{
   display:table;
   width:100%;
 }
+.help_list>li:first-child{
+  margin-left:11.5px;
+}
+.help_list>li:not(:first-child){
+  margin-left:23px;
+}
 .help_list>li{
   display:inline-table;
-  margin-left:23px;
   text-align: center;
   font-size: 12px;
   border:1px solid #ccc;

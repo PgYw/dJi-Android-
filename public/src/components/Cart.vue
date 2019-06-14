@@ -41,24 +41,24 @@
             <div class="input">
               <input type="checkbox" 
               :checked="product.product_isSelect"
-              @click="count(index,$event)" id="check">
+              @click="select(index,$event)" id="check">
             </div>
             <div class="img">
               <img v-lazy="product.product_img" alt="">
             </div>
             <div class="nc">
               <p>
-              <router-link :to="{path:'/Detail',query:{productId:product.product_id}}">{{product.product_title}}</router-link>
+              <router-link :to="{path:'/Detail',query:{productId:product.product_id}}">{{product.product_ify+" "+product.product_title}}</router-link>
               </p>
               <p class="pTime">发货时间:1个工作日内</p>
               <p>
-                <span>¥</span><span>{{product.product_price}}</span>
+                <span>¥</span><span>{{product.product_Oprice}}</span>
               </p>
               <div class="et">
                 <button @click="Dt(index)">移除</button>
                 <div class="Cell">
-                  <button @click="Ep(index)" ref="ep" :disabled="product_arr[index].product_count<=1">-</button>
-                  <input ref="input" type="text" readonly :value="product_arr[index].product_count"/>
+                  <button @click="Ep(index)" ref="ep" :disabled="product.product_count<=1">-</button>
+                  <input ref="input" type="text" v-model="product.product_count" readonly/>
                   <button @click="Up(index)">+</button>
                 </div>
               </div>
@@ -135,30 +135,22 @@ export default {
   name:"cart",
   components:{Loading,foter},
   data() {
+    // 第一个项目的响应式解决
+    // 商品详情商品加入购物车动画
+    // 点击登录成功加入本地数据到购物车的问题
+    // 购物车循环的问题
     return {
       isLoading:false,
       Cartl:false,
       show:false,
       clear:"",
-      num:1,
-      nb:0,
+      ldTime:0,
       product_arr:[],
       product_selects:[],
       total:0,
     }
   },
   created() {
-    if(sessionStorage.getItem("userId")!=(undefined||null)){
-      var getCart=setInterval(()=>{
-        if(this.getStorage().product_arr.length>0){
-          clearInterval(getCart)
-          for(var i=0;i<this.getStorage().product_arr.length;i++){
-            this.$axios.post("http://127.0.0.1:3000/detail/product")
-          }
-        }
-      },350)
-    }
-    this.product_arr=this.getStorage().product_arr;
     window.addEventListener("storage",()=>{
       this.product_arr=this.getStorage().product_arr
     })
@@ -167,30 +159,87 @@ export default {
     this.$axios.get("http://127.0.0.1:3000/cart/productSelect").then(res=>{
       this.product_selects=res.data.productSelect;
     })
+    if(sessionStorage.getItem("userId")!=(undefined||null)){
+      var num=0;
+      var cart_arr=[];
+      var user_id=sessionStorage.getItem("userId")
+      var getCart=setInterval(()=>{
+        if(this.getStorage().product_arr.length>0){
+          clearInterval(getCart)
+          cart_arr=this.getStorage().product_arr;
+          for(var i=0;i<cart_arr.length;i++){
+            this.product_arr=[];
+            this.$axios.post("http://127.0.0.1:3000/detail/product",
+            this.qs.stringify({product_id:cart_arr[i].product_id}))
+            .then(res=>{
+              if(res.data.code==1){
+                this.product_arr.push(res.data.product[0])
+                this.product_arr[num]["product_count"]=cart_arr[num].product_count
+                this.product_arr[num]["product_isSelect"]=cart_arr[num].product_isSelect
+                this.product_arr[num]["product_isSelect"]==1?this.product_arr[num]["product_isSelect"]=true:this.product_arr[num]["product_isSelect"]=false
+                num++;
+              }else{
+                alert("对不起，参数错误")
+                return;
+              }
+            })
+          }
+        }
+      },50)
+    }else{
+      this.product_arr=this.getStorage().product_arr;
+    }
   },
   methods: {
     Up(index){
-      this.product_arr[index].product_count++
-      this.setStorage(this.product_arr)
+      var product_id=this.product_arr[index].product_id
+      let obj=this.product_arr[index]
+      obj.product_count++
+      this.$set(this.product_arr, index, obj);
+      if(sessionStorage.getItem("userId")!=(undefined||null)){
+        this.setStorage(this.product_arr[index])
+      }else{
+       this.setStorage(this.product_arr)
+      }
     },
     Ep(index){
+      var product_id=this.product_arr[index].product_id
       if(this.product_arr[index].product_count<=1){
         return;
       }
-      this.product_arr[index].product_count--
-      this.setStorage(this.product_arr)
+      let obj=this.product_arr[index]
+      obj.product_count--
+      this.$set(this.product_arr, index, obj);
+      if(sessionStorage.getItem("userId")!=(undefined||null)){
+        this.setStorage(this.product_arr[index])
+      }else{
+        this.setStorage(this.product_arr)
+      }
     },
     Dt(index){
-      for(var i=0;i<this.product_arr.length;i++){
-        if(this.product_arr[i].product_id==this.product_arr[index].product_id){
-          this.product_arr.splice(index,1)
+      var product_id=this.product_arr[index].product_id
+      if(sessionStorage.getItem("userId")!=(undefined||null)){
+        this.dtCart(this.product_arr[index])
+        this.product_arr.splice(index,1);
+      }else{
+        for(var i=0;i<this.product_arr.length;i++){
+          if(this.product_arr[i].product_id==this.product_arr[index].product_id){
+            this.product_arr.splice(index,1)
+          }
         }
+        this.dtCart(this.product_arr)
       }
-      this.setStorage(this.product_arr)
     },
-    count(index,e){
+    select(index,e){
       e.target.checked?this.product_arr[index].product_isSelect=true:this.product_arr[index].product_isSelect=false
-      this.setStorage(this.product_arr)
+      let obj=this.product_arr[index]
+      this.$set(this.product_arr, index, obj);
+      if(sessionStorage.getItem("userId")!=(undefined||null)){
+        this.isSelect(this.product_arr[index])
+        this.$set(this.product_arr, index, obj);
+      }else{
+        this.isSelect(this.product_arr)
+      }
     },
     addCart(index){
       var isAdd=false;
@@ -215,8 +264,8 @@ export default {
       this.setStorage(this.product_arr)
     },
     loading(){
-      this.nb++;
-      if(this.nb==2){
+      this.ldTime++;
+      if(this.ldTime==2){
         this.isLoading=true
         clearInterval(this.clear);
       }
@@ -234,7 +283,7 @@ export default {
     }
   },
   watch: {
-    product_arr(){
+    "product_arr":function(){
       if(this.product_arr.length>0){
         this.show=true;
       }else{
@@ -246,15 +295,19 @@ export default {
     sum(){
       let sum=0,length=0;
       for(var i=0;i<this.product_arr.length;i++){
-        if(this.product_arr[i].product_isSelect){
           length++;
-          sum+=this.product_arr[i].product_price*this.product_arr[i].product_count
+        if(this.product_arr[i].product_isSelect){
+          sum+=this.product_arr[i].product_Oprice*this.product_arr[i].product_count
         }
       }
       return {sum,length};
     },
   },
 }
+// 第一个项目的响应式解决
+// 点击登录成功加入本地数据到购物车的问题
+// 购物车加减的问题
+// 购物车刷新页面push数据的问题
 </script>
 <style lang="css">
 *{

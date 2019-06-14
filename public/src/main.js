@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import axios from 'axios'
 import qs from	'qs'
-import {getStorage,setStorage} from './components/common/getStorage'
+import {getStorage,setStorage,isSelect,dtCart} from './components/common/getStorage'
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
 Vue.use(VueLazyload,{
@@ -21,6 +21,8 @@ Vue.prototype.$axios=axios;
 Vue.prototype.qs=qs;
 Vue.prototype.getStorage=getStorage
 Vue.prototype.setStorage=setStorage
+Vue.prototype.isSelect=isSelect
+Vue.prototype.dtCart=dtCart
 Vue.use(ElementUI);
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);

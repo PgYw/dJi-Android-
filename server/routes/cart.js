@@ -38,7 +38,7 @@ router.post("/addCart",(req,res)=>{
   var $product_arr=JSON.parse(req.body.product_arr)
   var num=0;
   for(var i=0;i<$product_arr.length;i++){
-    pool.query("INSERT INTO dji_cart VALUES(NULL,?,?,?)",[$product_arr[i].user_id,$product_arr[i].product_id,$product_arr[i].product_count],(err,result)=>{
+    pool.query("INSERT INTO dji_cart VALUES(NULL,?,?,?,?)",[$product_arr[i].user_id,$product_arr[i].product_id,$product_arr[i].product_count,$product_arr[i].product_isSelect],(err,result)=>{
       num++;
       if(err) throw err;
       if(num==$product_arr.length){
@@ -56,6 +56,32 @@ router.post("/upCart",(req,res)=>{
   var $user_id=req.body.user_id;
   var $product_id=req.body.product_id;
   pool.query("UPDATE dji_cart SET product_count=? WHERE user_id=? AND product_id=?",[$product_count,$user_id,$product_id],(err,result)=>{
+    if(err) throw err;
+    if(result.affectedRows>0){
+      res.send({code:1})
+    }else{
+      res.send({code:0})
+    }
+  });
+});
+router.post("/isSelect",(req,res)=>{
+  var $product_isSelect=req.body.product_isSelect;
+  var $user_id=req.body.user_id;
+  var $product_id=req.body.product_id;
+  $product_isSelect=="true"?$product_isSelect=1:$product_isSelect=0
+  pool.query("UPDATE dji_cart SET product_isSelect=? WHERE user_id=? AND product_id=?",[$product_isSelect,$user_id,$product_id],(err,result)=>{
+    if(err) throw err;
+    if(result.affectedRows>0){
+      res.send({code:1})
+    }else{
+      res.send({code:0})
+    }
+  });
+});
+router.post("/dtCart",(req,res)=>{
+  var $user_id=req.body.user_id;
+  var $product_id=req.body.product_id;
+  pool.query("DELETE FROM dji_cart WHERE user_id=? AND product_id=?",[$user_id,$product_id],(err,result)=>{
     if(err) throw err;
     if(result.affectedRows>0){
       res.send({code:1})

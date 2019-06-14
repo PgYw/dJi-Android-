@@ -199,7 +199,8 @@ export default {
         for(var i=0;i<this.productIds_cart.length;i++){
           if(this.productIds_cart[i].isCart){
             this.$axios.post("http://127.0.0.1:3000/cart/slCart",
-            this.qs.stringify({user_id:user_id,product_id:this.productIds_cart[i].product_id}))
+            this.qs.stringify({user_id:user_id,
+            product_id:this.productIds_cart[i].product_id}))
             .then(res=>{
               if(res.data.code==1){
                 // 因为用户只要点击了父商品都要添加购物车
@@ -211,7 +212,9 @@ export default {
                   if(product_arr[i].product_id==this.product.product_id){
                     product_arr[i].product_count++;
                     this.$axios.post("http://127.0.0.1:3000/cart/upCart",
-                    this.qs.stringify({user_id:user_id,product_id:this.product.product_id,product_count:product_arr[i].product_count}))
+                    this.qs.stringify({user_id:user_id,
+                    product_id:this.product.product_id,
+                    product_count:product_arr[i].product_count}))
                     .then(res=>{
                       if(res.data.code!=1){
                         alert("对不起，参数错误")
@@ -222,7 +225,9 @@ export default {
                   if(this.product.relevancy_id!=null&&product_arr[i].product_id==this.product.relevancy_id){
                     product_arr[i].product_count+=this.num;
                     this.$axios.post("http://127.0.0.1:3000/cart/upCart",
-                    this.qs.stringify({user_id:user_id,product_id:this.product.relevancy_id,product_count:product_arr[i].product_count}))
+                    this.qs.stringify({user_id:user_id,
+                    product_id:this.product.relevancy_id,
+                    product_count:product_arr[i].product_count}))
                     .then(res=>{
                       if(res.data.code!=1){
                         alert("对不起，参数错误")
@@ -281,8 +286,10 @@ export default {
           product_isSelect:true,
           product_id:this.product.product_id,
           product_img:this.product.product_img,
-          product_title:this.product.product_ify+" "+this.product.product_title,
-          product_price:this.product.product_Oprice,
+          product_ify:this.product.product_ify,
+          product_title:this.product.product_title,
+          product_Nprice:this.product.product_Nprice,
+          product_Oprice:this.product.product_Oprice,
           product_count:0
         }
         if(this.product_arr.length>0){
@@ -306,8 +313,10 @@ export default {
             product_isSelect:true,
             product_id:this.product.relevancy_id,
             product_img:this.relevancys[0].product_img,
-            product_title:this.relevancys[0].product_ify+" "+this.relevancys[0].product_title,
-            product_price:this.relevancys[0].product_Oprice,
+            product_ify:this.relevancys[0].product_ify,
+            product_title:this.relevancys[0].product_title,
+            product_Oprice:this.relevancys[0].product_Oprice,
+            product_Nprice:this.relevancys[0].product_Nprice,
             product_count:parseInt(this.num)
           }
           for(var i=0;i<this.product_arr.length;i++){
@@ -379,9 +388,6 @@ export default {
 .ball-enter-active {
   animation: ball-in 2.5s;
 }
-/* .ball-leave-active {
-  animation: ball-in 0.5s reverse;
-} */
 @keyframes ball-in {
   0% {
     transform:translate3d(0,0,0,0);

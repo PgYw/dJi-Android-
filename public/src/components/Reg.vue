@@ -1,5 +1,4 @@
 <template>
-  <div id="reg">
     <div class="reg">
       <div class="goOut" @click="goOut()">返回</div>
       <div class="reg">
@@ -11,7 +10,7 @@
           <transition name="fade" mode="out-in">
             <div class="phone" ref="Phone" v-if="!show" key="one">
               <div class="phone_tel">
-                <div>
+                <div class="phone_text">
                   <button disabled class="btn">+86</button>
                   <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
                 </div>
@@ -21,9 +20,11 @@
                 </div>
               </div>
               <div class="phone_yzm">
-                <input type="text" placeholder="请输入验证码*" ref="yzm" v-model="getYzm">
+                <div class="yzm_text">
+                  <input type="text" placeholder="请输入验证码*" ref="yzm" v-model="getYzm">
+                  <button class="goCode" ref="goCode" @click="goCode()">发送验证码</button>
+                </div>
                 <i class="clearYzm" ref="clearYzm" @click="clearYzm()"></i>
-                <button class="goCode" ref="goCode" @click="goCode()">发送验证码</button>
                 <div class="msg_err">
                   <span ref="yzm_err"></span>
                 </div>
@@ -51,17 +52,21 @@
                 </div>
               </div>
               <div class="two_phone">
-                <button disabled class="btn">+86</button>
-                <input type="text" placeholder="请输入手机号*" ref="phoned" v-model="getPhoned">
+                <div class="phone_text">
+                  <button disabled class="btn">+86</button>
+                  <input type="text" placeholder="请输入手机号*" ref="phoned" v-model="getPhoned">
+                </div>
                 <i class="clearPhoned" ref="clearPhoned" @click="clearPhoned()"></i>
                 <div class="msg_err">
                   <span ref="phoned_err"></span>
                 </div>
               </div>
               <div class="three_yzm">
-                <input type="text" placeholder="请输入验证码*" ref="yzmd" v-model="getYzmd">
+                <dir class="yzm_text">
+                  <input type="text" placeholder="请输入验证码*" ref="yzmd" v-model="getYzmd">
+                  <button class="goCode" ref="goCoded" @click="goCoded()">发送验证码</button>
+                </dir>
                 <i class="clearYzmd" ref="clearYzmd" @click="clearYzmd()"></i>
-                <button class="goCode" ref="goCoded" @click="goCoded()">发送验证码</button>
                 <div class="msg_err">
                   <span ref="yzmd_err"></span>
                 </div>
@@ -98,9 +103,8 @@
           </transition>
         </div>
       </div>
-    </div>
     <foter></foter>
-  </div>
+    </div>
 </template>
 <script>
 import foter from "@/components/UserFooter.vue"
@@ -164,7 +168,6 @@ export default {
     },
     clearYzm(){
       if(this.getYzm!=""){
-        console.log(123)
         this.getYzm=""
         this.$refs.clearYzm.style="display:none"
         this.$refs.yzm_err.innerHTML="验证码不能为空"
@@ -249,6 +252,11 @@ export default {
     },
     phone(){
       this.show=false;
+      this.getPhoned="";
+      this.getYzmd="";
+      this.getEmail="";
+      this.getUpwd="";
+      this.getUpwd="";
     },
     email(){
       this.show=true;
@@ -275,6 +283,9 @@ export default {
               this.$refs.phone_err.innerHTML="该手机号已被注册!"
               this.$refs.phone.style="border: 1px solid #f04848;"
               this.isReg[0]=false;
+            }else{
+              alert("对不起，参数错误")
+              return;
             }
           })
           this.$refs.phone_err.innerHTML=""
@@ -340,6 +351,9 @@ export default {
               this.$refs.email_err.innerHTML="该邮箱已被注册!"
               this.$refs.email.style="border: 1px solid #f04848;"
               this.isReg[2]=false;
+            }else{
+              alert("对不起，参数错误")
+              return;
             }
           })
           this.$refs.email_err.innerHTML=""
@@ -358,7 +372,6 @@ export default {
     },
     getPhoned(){
       if(this.getPhoned.length>=1){
-      var num=new Number(this.getPhoned);
       this.$refs.clearPhoned.style="display:block";
         if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getPhoned)){
           this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getPhoned).then(res=>{
@@ -366,6 +379,9 @@ export default {
               this.$refs.phoned_err.innerHTML="该手机号已被注册!"
               this.$refs.phoned.style="border: 1px solid #f04848;"
               this.isReg[5]=false;
+            }else{
+              alert("对不起，参数错误")
+              return;
             }
           })
           this.$refs.phoned_err.innerHTML=""
@@ -469,19 +485,15 @@ export default {
 }
 </style>
 <style lang="css">
-html,body,#reg,.reg{
-  height:100%;
-}
 .reg{
   text-align: center;
   margin:0 auto;
-  max-width: 24rem;
   position: relative;
+  max-width: 21rem;
 }
 .reg>.reg{
   position: relative;
   top:6.7rem;
-  min-width: 21rem;
 }
 .goOut{
   width:60px;
@@ -524,8 +536,8 @@ html,body,#reg,.reg{
   border:1px solid #e6e6e6;
 }
 .reg .padding{
-  padding: 0 20px;
-  min-width: 21rem;
+  min-width: 14rem;
+  padding: 0 10px;
 }
 .reg .phone,.reg .email{
   margin-top:1.4rem;
@@ -544,16 +556,24 @@ html,body,#reg,.reg{
   text-align: left;
   position: relative;
 }
+.phone>.phone_tel>.phone_text{
+  display: flex;
+  justify-content: space-between;
+}
 .reg .phone>.phone_yzm input{
   width:10.7rem;
 }
 .reg .phone_tel input{
-  width:14.4rem;
+  width:16rem;
 }
-.reg>.reg .email>.phone_yzm>input{
+.reg .phone>.phone_yzm>.yzm_text{
+  display: flex;
+  justify-content: space-between;
+}
+.reg>.reg .email>.phone_yzm>.yzm_text>input{
   width:11.7rem !important;
 }
-.reg .phone_tel input,.reg .phone>.phone_yzm>input{
+.reg .phone_tel input,.reg .phone_yzm>.yzm_text>input{
   height: 2.2rem;
   position: relative;
   border: 1px solid #e6e6e6;
@@ -565,7 +585,7 @@ html,body,#reg,.reg{
   box-shadow: none;
   outline: none;
 }
-.reg .phone_yzm>.goCode{
+.reg .phone_yzm>.yzm_text>.goCode{
   text-align: center;
   margin-left: 1.05rem;
   color: #44a8f2;
@@ -610,10 +630,10 @@ html,body,#reg,.reg{
   padding: .1rem;
 }
 .reg .phone_tel>.clearInput{
-  right: 2.8rem;
+  right: 1.3rem;
 }
 .reg .phone_yzm>.clearYzm{
-  right: 10.7rem;
+  right: 9.7rem;
 }
 .reg .phone_psword>.clearPsword{
   right:1.3rem;
@@ -713,7 +733,11 @@ html,body,#reg,.reg{
   outline: none;
   box-sizing: border-box;
 }
-.reg .email>.three_yzm>button{
+.reg .email>.three_yzm>.yzm_text{
+  display: flex;
+  justify-content: space-between;
+}
+.reg .email>.three_yzm>.yzm_text>button{
   text-align: center;
   margin-left: 1.05rem;
   color: #44a8f2;
@@ -721,7 +745,7 @@ html,body,#reg,.reg{
   border-radius: 0.05rem;
   border: 1px solid #44a8f2;
   height: 2.4rem;
-  width: 6.62rem;
+  width: 11.62rem;
   font-size: 0.92rem;
   outline: none;
 }
@@ -731,7 +755,11 @@ html,body,#reg,.reg{
 .reg .email>.three_yzm>i{
   right:10.1rem !important;
 }
-.reg .email>.two_phone>.btn{
+.reg .email>.two_phone>.phone_text{
+  display: flex;
+  justify-content: space-between;
+}
+.reg .email>.two_phone>.phone_text>.btn{
   width: 3.84rem;
   height: 2.4rem;
   color: #b3b3b3;
@@ -743,9 +771,6 @@ html,body,#reg,.reg{
   border-color: #fff;
   background: #fff;
   border:1px solid #e6e6e6;
-}
-.reg .email>.two_phone>input{
-  width:15.4rem;
 }
 .reg .email>.two_phone>.clearPhoned{
   right:3rem;

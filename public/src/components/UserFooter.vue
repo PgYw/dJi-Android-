@@ -19,6 +19,7 @@ export default {};
 .user_footer{
   position: relative;
   height:10rem;
+  min-width: 20rem;
   background-color: #f7f8f9;
   top:10rem;
   font-size: 0.12rem;

@@ -17,7 +17,8 @@ CREATE TABLE dji_cart(
   cart_id INT PRIMARY KEY AUTO_INCREMENT comment '购物车的id',
   user_id INT comment '用户的id',
   product_id INT comment '商品的id',
-  product_count INT comment '商品的数量'
+  product_count INT comment '商品的数量',
+  product_isSelect CHAR(1) comment '商品的选中状态'
 );
 
 CREATE TABLE dji_product(
