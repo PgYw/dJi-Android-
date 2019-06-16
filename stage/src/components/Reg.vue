@@ -97,7 +97,7 @@
                     <a href="">隐私政策</a>
                   </span>
                 </div>
-                <button id="emailReg" ref="emailReg" disabled>注册</button>
+                <button id="emailReg" ref="emailReg" class="buttonActive" disabled>注册</button>
               </div>
             </div>
           </transition>
@@ -616,7 +616,9 @@ export default {
   color:#44a8f2;
   text-decoration: none;
 }
-.reg .phone_tel>.clearInput,.reg .phone_yzm>.clearYzm,.reg .phone_psword>.clearPsword{
+.reg .phone_tel>.clearInput,
+.reg .phone_yzm>.clearYzm,
+.reg .phone_psword>.clearPsword{
   height:1rem;
   width:1rem;
   top: 1.3rem;
@@ -664,40 +666,34 @@ export default {
 .reg>.reg .email>.follow{
   text-align: left;
 }
-.reg>.reg .follow>.one_text>input,.reg>.reg .follow>.two_text>input{
+.reg>.reg .follow>.one_text>input,
+.reg>.reg .follow>.two_text>input{
   width:1.02rem;
   height:1.12rem;
   position: relative;
 }
-.reg>.reg .follow>.one_text>span,.reg>.reg .follow .two_text>span{
+.reg>.reg .follow>.one_text>span,
+.reg>.reg .follow .two_text>span{
   font-size: 0.82rem;
   color:#4c4c4c;
   position: absolute;
   line-height: 1.1rem;
   padding-left: 0.5rem;
 }
+.buttonActive{
+  background: #1897f2;
+  outline: none;
+  cursor: pointer;
+  border:none;
+  height:3rem;
+  margin-top:1.2rem;
+  cursor: pointer;
+}
 .reg>.reg .follow .two_text>span>a{
   color:#4c4c4c;
   text-decoration:1px solid #4c4c4c;
 }
-#emailReg:disabled,[readonly=readonly]#emailReg {
-  opacity: .6;
-  cursor: not-allowed;
-}
-#emailReg{
-  width: 100%;
-  color: #fff;
-  background: #44a8f2;
-  border: 1px solid #44a8f2;
-  text-transform: uppercase;
-  text-align: center;
-  border-radius: 2px;
-  height: 2.76rem;
-  font-size: 1.16rem;
-  cursor: pointer;
-  outline: none;
-  margin-top: 1.2rem;
-}
+
 .reg>.reg .email>div>i{
   height:1rem;
   width:1rem;

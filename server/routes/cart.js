@@ -38,7 +38,7 @@ router.post("/addCart",(req,res)=>{
   var $product_arr=JSON.parse(req.body.product_arr)
   var num=0;
   for(var i=0;i<$product_arr.length;i++){
-    pool.query("INSERT INTO dji_cart VALUES(NULL,?,?,?,?)",[$product_arr[i].user_id,$product_arr[i].product_id,$product_arr[i].product_count,$product_arr[i].product_isSelect],(err,result)=>{
+    pool.query("INSERT INTO dji_cart VALUES(NULL,?,?,?,1)",[$product_arr[i].user_id,$product_arr[i].product_id,$product_arr[i].product_count],(err,result)=>{
       num++;
       if(err) throw err;
       if(num==$product_arr.length){

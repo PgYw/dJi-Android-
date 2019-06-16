@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui';
-import {Swipe,SwipeItem} from 'mint-ui';
+import {Swipe,SwipeItem,Spinner} from 'mint-ui';
 import 'mint-ui/lib/style.css'
 import '@/components/common/common.css'
 import 'element-ui/lib/theme-chalk/index.css';
@@ -24,6 +24,7 @@ Vue.prototype.setStorage=setStorage
 Vue.prototype.isSelect=isSelect
 Vue.prototype.dtCart=dtCart
 Vue.use(ElementUI);
+Vue.component(Spinner.name, Spinner);
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
 Vue.config.productionTip = false;

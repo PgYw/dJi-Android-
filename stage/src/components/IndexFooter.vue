@@ -5,7 +5,7 @@
         <div>
           <ul>
             <li v-for="product_ify in products_ify" :key="product_ify.id">
-              <a href="">{{product_ify.product_ify}}</a>
+              <a href>{{product_ify.product_ify}}</a>
             </li>
           </ul>
         </div>
@@ -14,19 +14,19 @@
         <div>
           <ul>
             <li>
-              <a href="">支付方式</a>
+              <a href>支付方式</a>
             </li>
             <li>
-              <a href="">发货与物流</a>
+              <a href>发货与物流</a>
             </li>
             <li>
-              <a href="">Dji币介绍</a>
+              <a href>Dji币介绍</a>
             </li>
             <li>
-              <a href="">订单帮助</a>
+              <a href>订单帮助</a>
             </li>
             <li>
-              <a href="">退换货条款</a>
+              <a href>退换货条款</a>
             </li>
           </ul>
         </div>
@@ -35,10 +35,10 @@
         <div>
           <ul>
             <li>
-              <a href="">我的账号</a>
+              <a href>我的账号</a>
             </li>
             <li>
-              <a href="">我的订单</a>
+              <a href>我的订单</a>
             </li>
           </ul>
         </div>
@@ -46,12 +46,12 @@
     </el-collapse>
     <footer class="index_footer">
       <div>
-        <a href="">Dji.com</a>
-        <a href="">隐私政策</a>
-        <a href="">使用条款</a>
+        <a href>Dji.com</a>
+        <a href>隐私政策</a>
+        <a href>使用条款</a>
       </div>
       <div class="lang">
-        <a href="">
+        <a href>
           <div>
             <span>中国大陆(简体中文/¥ CNY)</span>
             <i class="el-icon-arrow-right"></i>
@@ -64,22 +64,22 @@
 </template>
 <script>
 export default {
-  name:"IndexFooter",
-  props:{
-    products_ify:"",
+  name: "IndexFooter",
+  props: {
+    products_ify: ""
   },
-  data(){
-    return{
-    }
-  },
-}
+  data() {
+    return {};
+  }
+};
 </script>
 <style lang="css">
-*{
-  padding:0;
-  margin:0;
+* {
+  padding: 0;
+  margin: 0;
 }
-.el-collapse-item__header,.el-collapse-item__wrap {
+.el-collapse-item__header,
+.el-collapse-item__wrap {
   background-color: transparent;
 }
 </style>
@@ -87,7 +87,7 @@ export default {
 ul {
   list-style: none;
 }
-a{
+a {
   text-decoration: none;
 }
 .body .el-collapse {
@@ -103,10 +103,10 @@ a{
 .el-collapse-item__content {
   padding: 0px;
 }
-.el-collapse-item__content>div>ul>li {
+.el-collapse-item__content > div > ul > li {
   padding: 10px 0;
 }
-.el-collapse-item__content>div>ul>li>a {
+.el-collapse-item__content > div > ul > li > a {
   font-size: 14px;
   color: #3b3e40;
   line-height: 30px;
@@ -119,7 +119,7 @@ a{
   line-height: 32px;
   color: #9fa3a6;
 }
-.index_footer>div:first-child>a {
+.index_footer > div:first-child > a {
   font-size: 12px;
   margin-right: 16px;
   color: #3b3e40;
@@ -127,7 +127,7 @@ a{
   line-height: 32px;
   display: inline-block;
 }
-.lang>a {
+.lang > a {
   width: 100%;
   font-size: 12px;
   color: #3b3e40;

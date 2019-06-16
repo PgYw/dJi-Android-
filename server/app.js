@@ -1,4 +1,4 @@
-const express=require("express");
+﻿const express=require("express");
 // 跨域访问
 const cors=require("cors");
 // 解析字符串和响应头请求
@@ -15,6 +15,8 @@ app.use(bodyParser.urlencoded({
 app.use(cors({
   orgin:["http://127.0.0.1:5500","http://127.0.0.1:8080","http://localhost:8080"]
 }))
+app.use(express.static('public'));
+app.use(express.static('../stage'));
 app.use("/index",index);
 app.use("/login",login);
 app.use("/detail",detail);

@@ -1,4 +1,4 @@
-SET NAMES UTF8;
+﻿SET NAMES UTF8;
 DROP DATABASE IF EXISTS dji;
 CREATE DATABASE djiApp CHARSET=UTF8;
 USE djiApp;
@@ -32,13 +32,13 @@ CREATE TABLE dji_product(
   relevancy_id INT comment '关联的子产品id'
 );
 INSERT INTO dji_product VALUES
-(NULL,'http://127.0.0.1:8080/static/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,0,0,7),
-(NULL,'http://127.0.0.1:8080/static/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,0,1,7),
-(NULL,'http://127.0.0.1:8080/static/images/Mavic1_one.jpg','"御" Mavic','2',9888,0,1,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/Mavic2_one.jpg','"御" Mavic','Air',4999,0,0,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/Mavic3_one.jpg','"御" Mavic','Pro 铂金版',6499,0,0,NULL),
-(NULL,'http://127.0.0.1:8080/static/images/spark1_one.jpg','"晓" Spark','操控套装',3199,0,1,NULL),
-(NULL,"http://127.0.0.1:8080/static/images/mobile1_relevancy.jpg","闪迪 microSD卡","64GB",119,0,1,NULL);
+(NULL,'http://127.0.0.1:3000/images/Osmo1_one.jpg','灵眸 Osmo','口袋云台相机',2499,0,0,7),
+(NULL,'http://127.0.0.1:3000/images/Osmo2_one.jpg','灵眸 Osmo','手机云台2',899,0,1,7),
+(NULL,'http://127.0.0.1:3000/images/Mavic1_one.jpg','"御" Mavic','2',9888,0,1,NULL),
+(NULL,'http://127.0.0.1:3000/images/Mavic2_one.jpg','"御" Mavic','Air',4999,0,0,NULL),
+(NULL,'http://127.0.0.1:3000/images/Mavic3_one.jpg','"御" Mavic','Pro 铂金版',6499,0,0,NULL),
+(NULL,'http://127.0.0.1:3000/images/spark1_one.jpg','"晓" Spark','操控套装',3199,0,1,NULL),
+(NULL,"http://127.0.0.1:3000/images/mobile1_relevancy.jpg","闪迪 microSD卡","64GB",119,0,1,NULL);
 
 CREATE TABLE dji_img(
   img_id INT PRIMARY KEY AUTO_INCREMENT comment '图片的id',
@@ -46,27 +46,27 @@ CREATE TABLE dji_img(
   img_url VARCHAR(128) comment '图片的地址'
 );
 INSERT INTO dji_img VALUES
-(NULL,"1","http://127.0.0.1:8080/static/images/Osmo1_one.jpg"),
-(NULL,"1","http://127.0.0.1:8080/static/images/Osmo1_two.jpg"),
-(NULL,"1","http://127.0.0.1:8080/static/images/Osmo1_three.jpg"),
-(NULL,"2","http://127.0.0.1:8080/static/images/Osmo2_one.jpg"),
-(NULL,"2","http://127.0.0.1:8080/static/images/Osmo2_two.jpg"),
-(NULL,"2","http://127.0.0.1:8080/static/images/Osmo2_three.jpg"),
-(NULL,"3","http://127.0.0.1:8080/static/images/Mavic1_one.jpg"),
-(NULL,"3","http://127.0.0.1:8080/static/images/Mavic1_two.jpg"),
-(NULL,"3","http://127.0.0.1:8080/static/images/Mavic1_three.jpg"),
-(NULL,"4","http://127.0.0.1:8080/static/images/Mavic2_one.jpg"),
-(NULL,"4","http://127.0.0.1:8080/static/images/Mavic2_two.jpg"),
-(NULL,"4","http://127.0.0.1:8080/static/images/Mavic2_three.jpg"),
-(NULL,"5","http://127.0.0.1:8080/static/images/Mavic3_one.jpg"),
-(NULL,"5","http://127.0.0.1:8080/static/images/Mavic3_two.jpg"),
-(NULL,"5","http://127.0.0.1:8080/static/images/Mavic3_three.jpg"),
-(NULL,"6","http://127.0.0.1:8080/static/images/spark1_one.jpg"),
-(NULL,"6","http://127.0.0.1:8080/static/images/spark1_two.jpg"),
-(NULL,"6","http://127.0.0.1:8080/static/images/spark1_three.jpg"),
-(NULL,"7","http://127.0.0.1:8080/static/images/mobile1_relevancy.jpg"),
-(NULL,"7","http://127.0.0.1:8080/static/images/mobile2_relevancy.jpg"),
-(NULL,"7","http://127.0.0.1:8080/static/images/mobile3_relevancy.jpg");
+(NULL,"1","http://127.0.0.1:3000/images/Osmo1_one.jpg"),
+(NULL,"1","http://127.0.0.1:3000/images/Osmo1_two.jpg"),
+(NULL,"1","http://127.0.0.1:3000/images/Osmo1_three.jpg"),
+(NULL,"2","http://127.0.0.1:3000/images/Osmo2_one.jpg"),
+(NULL,"2","http://127.0.0.1:3000/images/Osmo2_two.jpg"),
+(NULL,"2","http://127.0.0.1:3000/images/Osmo2_three.jpg"),
+(NULL,"3","http://127.0.0.1:3000/images/Mavic1_one.jpg"),
+(NULL,"3","http://127.0.0.1:3000/images/Mavic1_two.jpg"),
+(NULL,"3","http://127.0.0.1:3000/images/Mavic1_three.jpg"),
+(NULL,"4","http://127.0.0.1:3000/images/Mavic2_one.jpg"),
+(NULL,"4","http://127.0.0.1:3000/images/Mavic2_two.jpg"),
+(NULL,"4","http://127.0.0.1:3000/images/Mavic2_three.jpg"),
+(NULL,"5","http://127.0.0.1:3000/images/Mavic3_one.jpg"),
+(NULL,"5","http://127.0.0.1:3000/images/Mavic3_two.jpg"),
+(NULL,"5","http://127.0.0.1:3000/images/Mavic3_three.jpg"),
+(NULL,"6","http://127.0.0.1:3000/images/spark1_one.jpg"),
+(NULL,"6","http://127.0.0.1:3000/images/spark1_two.jpg"),
+(NULL,"6","http://127.0.0.1:3000/images/spark1_three.jpg"),
+(NULL,"7","http://127.0.0.1:3000/images/mobile1_relevancy.jpg"),
+(NULL,"7","http://127.0.0.1:3000/images/mobile2_relevancy.jpg"),
+(NULL,"7","http://127.0.0.1:3000/images/mobile3_relevancy.jpg");
 
 CREATE TABLE dji_banner(
   banner_id INT PRIMARY KEY AUTO_INCREMENT comment '轮播图的id',
@@ -76,8 +76,8 @@ CREATE TABLE dji_banner(
   banner_productLnBottom VARCHAR(128) comment '轮播图的简介(下)'
 );
 INSERT INTO dji_banner VALUES
-(NULL,null,"http://localhost:8080/static/images/swipe1.png","御 MAVIC 2","画质旗舰，变焦先锋"),
-(NULL,null,"http://localhost:8080/static/images/swipe2.png","灵眸 OSMO 口袋云台相机","转动随心，灵感不停");
+(NULL,null,"http://localhost:3000/images/swipe1.png","御 MAVIC 2","画质旗舰，变焦先锋"),
+(NULL,null,"http://localhost:3000/images/swipe2.png","灵眸 OSMO 口袋云台相机","转动随心，灵感不停");
 
 CREATE TABLE dji_shaky(
   shaky_id INT PRIMARY KEY AUTO_INCREMENT comment '活动的id',
@@ -87,7 +87,7 @@ CREATE TABLE dji_shaky(
 );
 
 INSERT INTO dji_shaky VALUES
-(NULL,"DJI Select 会员计划 7项会员权益｜最高5折优惠",NULL,"http://127.0.0.1:8080/static/images/select.png");
+(NULL,"DJI Select 会员计划 7项会员权益｜最高5折优惠",NULL,"http://127.0.0.1:3000/images/select.png");
 
 CREATE TABLE dji_favourable(
   favourable_id INT PRIMARY KEY AUTO_INCREMENT comment '优惠的id',
@@ -96,6 +96,6 @@ CREATE TABLE dji_favourable(
   favourable_imgUrl VARCHAR(128) comment '优惠的图片地址'
 );
 INSERT INTO dji_favourable VALUES
-(NULL,"翻新机 实惠价格 | 质量保证 | 同等保修",NULL,"http://127.0.0.1:8080/static/images/refurbished.png"),
-(NULL,"教育折扣 最高九折",NULL,"http://127.0.0.1:8080/static/images/edu_discount.png");
+(NULL,"翻新机 实惠价格 | 质量保证 | 同等保修",NULL,"http://127.0.0.1:3000/images/refurbished.png"),
+(NULL,"教育折扣 最高九折",NULL,"http://127.0.0.1:3000/images/edu_discount.png");
 
