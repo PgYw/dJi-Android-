@@ -266,20 +266,18 @@ export default {
       product_ifys: [],
       products_ify: [],
       activeName: "0",
-      Cartl: false
+      Cartl: 0
     };
   },
   mounted() {
     this.getStorage()
-    if (sessionStorage.getItem("userId") != (undefined || null)) {
-      var getCart = setInterval(() => {
-        if (this.getStorage().Cartl > 0&&this.getStorage().Cartl) {
-          clearInterval(getCart);
-          this.Cartl = this.getStorage().Cartl;
-        }
-      }, 350);
-    }
-    this.Cartl = this.getStorage().Cartl;
+    var user_id=sessionStorage.getItem("userId")
+    var getCart = setInterval(() => {
+      if (this.getStorage().Cartl>=0||user_id==(undefined||null)) {
+        clearInterval(getCart);
+        this.Cartl = this.getStorage().Cartl;
+      }
+    }, 350);
   },
   created() {
     this.$axios

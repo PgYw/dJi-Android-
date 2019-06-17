@@ -117,7 +117,8 @@ export default {
           .then(res=>{
           if(res.data.code==1){
             sessionStorage.setItem("userId",res.data.user_id)
-            var user_id=sessionStorage.getItem("userId")
+            var user_id=res.data.user_id
+            var num=0;
             for(var i=0;i<this.product_arr.length;i++){
               this.product_arr[i].user_id=user_id;
               this.product_arr[i].product_isSelect=true;
@@ -128,21 +129,18 @@ export default {
               product_id:this.product_arr[i].product_id}))
               .then(res=>{
                 if(res.data.code==1){
-                  var product_arr="";
-                  product_arr=res.data.slCart[0]
+                  var product_cart="";
+                  product_cart=res.data.slCart[0]
                   for(var i=0;i<this.product_arr.length;i++){
-                    if(this.product_arr[i].product_id==product_arr.product_id){
-                      product_arr.product_count+=this.product_arr[i].product_count;
+                    if(this.product_arr[i].product_id==product_cart.product_id){
                       this.product_arr.splice(i,1)
+                      product_cart.product_count+=this.product_arr[i].product_count;
                       this.$axios.post("http://127.0.0.1:3000/cart/upCart",
                       this.qs.stringify({user_id:user_id,
-                      product_id:product_arr.product_id,
-                      product_count:product_arr.product_count}))
+                      product_id:product_cart.product_id,
+                      product_count:product_cart.product_count}))
                       .then(res=>{
-                        if(res.data.code==1){
-                          localStorage.removeItem("product")
-                          return;
-                        }else{
+                        if(res.data.code!=1){
                           alert("对不起，参数错误")
                           return;
                         }
@@ -150,22 +148,28 @@ export default {
                     }
                   }
                 }else{
-                  this.$axios.post("http://127.0.0.1:3000/cart/addCart",
-                  this.qs.stringify({product_arr:JSON.stringify(this.product_arr)}))
-                  .then(res=>{
-                    if(res.data.code==1){
-                      localStorage.removeItem("product")
-                    }else{
-                      alert("对不起，参数错误")
-                      return;
-                    }
-                  })
-                  return;
+                  num++;
+                  if(num==this.product_arr.length){
+                    this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+                    this.qs.stringify({product_arr:JSON.stringify(this.product_arr)}))
+                    .then(res=>{
+                      if(res.data.code!=1){
+                        alert("对不起，参数错误")
+                        return;
+                      }
+                    })
+                  }
                 }
               })
             }
             this.$refs.err.innerHTML="";
-            this.$router.push({path:'/Index'});
+            var getCart = setInterval(() => {
+              if (this.getStorage().Cartl>=0||user_id==(undefined||null)) {
+                clearInterval(getCart);
+                this.$router.push("/Index")
+                localStorage.removeItem("product");
+              }
+            }, 350);
           }else{
             var num=5;
             this.$refs.err.innerHTML="账号或密码错误("+num+"s)"

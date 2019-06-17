@@ -110,16 +110,13 @@ export default {
     }
   },
   mounted() {
-    if(this.getStorage().product_arr.length==0&&sessionStorage.getItem("userId")!=(undefined||null)){
-      var getCart=setInterval(()=>{
-        this.getStorage()
-        if(this.getStorage().product_arr.length>0){
-          clearInterval(getCart)
-        }
-      },350)
-    }
-    this.Cartl=this.getStorage().Cartl;
-    this.product_arr=this.getStorage().product_arr
+    var user_id=sessionStorage.getItem("userId")
+    var getCart = setInterval(() => {
+      if (this.getStorage().Cartl>=0||user_id==(undefined||null)) {
+        clearInterval(getCart);
+        this.Cartl = this.getStorage().Cartl;
+      }
+    }, 350);
   },
   methods: {
     menu(){
@@ -137,6 +134,7 @@ export default {
     },
     Out(){
       sessionStorage.removeItem("userId");
+      this.getStorage()
       this.$router.push("/Index")
     }
   },

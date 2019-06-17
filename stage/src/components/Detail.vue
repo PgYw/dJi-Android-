@@ -155,22 +155,18 @@ export default {
       activeName: "1",
       isExist: false,
       num: 0,
-      Cartl: false
+      Cartl: 0
     };
   },
   mounted() {
-    if (this.getStorage().product_arr.length == 0 &&sessionStorage.getItem("userId") != (undefined || null)) {
-      var getCart = setInterval(() => {
-        this.getStorage();
-        if (this.getStorage().product_arr.length > 0) {
-          clearInterval(getCart);
-          this.Cartl = this.getStorage().Cartl;
-          this.product_arr=this.getStorage().product_arr
-        }
-      }, 350);
-    }
-    this.Cartl = this.getStorage().Cartl;
-    this.product_arr=this.getStorage().product_arr
+    var user_id=sessionStorage.getItem("userId")
+    var getCart = setInterval(() => {
+      if (this.getStorage().Cartl>=0||user_id==(undefined||null)) {
+        clearInterval(getCart);
+        this.Cartl = this.getStorage().Cartl;
+        this.product_arr=this.getStorage().product_arr
+      }
+    }, 350);
   },
   created() {
     var user_id = sessionStorage.getItem("userId");
@@ -239,22 +235,24 @@ export default {
       }
     },
     addCart(e) {
+      this.getStorage();
       this.isExist=true;
       let instance = Toast({
         message: '加入购物车成功',
         position: 'center',
-        duration: 2500,
         iconClass: 'mint-toast-icon mintui mintui-success'
       });
       setTimeout(() => {
         instance.close();
         this.isExist=false;
+        if(user_id!= (undefined || null)){
         this.$axios.post("http://127.0.0.1:3000/cart/cart",
           this.qs.stringify({ user_id: user_id }))
           .then(res => {
             this.Cartl = res.data.cart.length;
           });
-      }, 2500);
+        }
+      }, 1500);
       if (sessionStorage.getItem("userId") != (undefined || null)) {
         var user_id = sessionStorage.getItem("userId");
         for (var i = 0; i < this.productIds_cart.length; i++) {

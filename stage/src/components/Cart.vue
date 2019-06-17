@@ -147,11 +147,9 @@ export default {
   name: "cart",
   components: { loading, foter },
   data() {
-    // 第一个项目的响应式解决
-    // 购物车循环的问题
     return {
       isLoading: false,
-      Cartl: false,
+      Cartl: 0,
       show: false,
       clear: "",
       ldTime: 0,
@@ -173,7 +171,7 @@ export default {
       var cart_arr = [];
       var user_id = sessionStorage.getItem("userId");
       var getCart = setInterval(() => {
-        if (this.getStorage().product_arr.length > 0) {
+        if (this.getStorage().product_arr.length >= 0) {
           clearInterval(getCart);
           cart_arr = this.getStorage().product_arr;
           for (var i = 0; i < cart_arr.length; i++) {
@@ -202,8 +200,6 @@ export default {
           }
         }
       }, 50);
-    } else {
-      this.product_arr = this.getStorage().product_arr;
     }
   },
   methods: {

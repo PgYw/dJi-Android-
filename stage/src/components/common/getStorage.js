@@ -1,22 +1,19 @@
-let product_arr = [],
-  Cartl = false;
-var user_id = sessionStorage.getItem("userId");
-
+var product_arr = [],
+  Cartl = 0;
 function getStorage() {
-  // 获取本地存储数据，如果登陆了就获取数据库
+  var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
     this.$axios.post("http://127.0.0.1:3000/cart/cart",
-    this.qs.stringify({ user_id: user_id }))
+    this.qs.stringify({user_id: user_id }))
     .then(res => {
       if (res.data.code == 1) {
         product_arr = res.data.cart;
         Cartl = product_arr.length;
-      } else {
-        Cartl = false;
       }
     });
+    return { product_arr, Cartl };
   } else {
-    product_arr = [],Cartl = false;
+    product_arr = [],Cartl = 0;
     if (localStorage.getItem("product") != (undefined || null)) {
       var getVal = localStorage.getItem("product");
       getVal = JSON.parse(getVal);
@@ -30,7 +27,7 @@ function getStorage() {
 }
 
 function setStorage(value) {
-  // 添加购物车新的数据到本地，登陆了就添加到购物车
+  var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
     this.$axios.post("http://127.0.0.1:3000/cart/upCart",
       this.qs.stringify({
@@ -54,7 +51,7 @@ function setStorage(value) {
 }
 
 function isSelect(value) {
-  // 选中框的选中状态
+  var user_id=sessionStorage.getItem("userId")
   if(user_id!=(undefined||null)){
     this.$axios.post("http://127.0.0.1:3000/cart/isSelect",
       this.qs.stringify({
@@ -72,9 +69,10 @@ function isSelect(value) {
 }
 
 function dtCart(value) {
-  // 当用户点击删除按钮的时候向购物车查询并且删除
+  var user_id=sessionStorage.getItem("userId")
   this.$axios.post("http://127.0.0.1:3000/cart/dtCart",
-    this.qs.stringify({ user_id: user_id, 
+    this.qs.stringify({ 
+      user_id: user_id, 
       product_id: value.product_id 
     }))
     .then(res => {
@@ -84,8 +82,4 @@ function dtCart(value) {
       }
     });
 }
-// function getCart(){
-//   this.$axios.post()
-// }
-// 抛出方法，使得其他页面能够使用
 export { getStorage, setStorage, isSelect, dtCart };
