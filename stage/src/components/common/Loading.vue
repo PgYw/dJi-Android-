@@ -16,7 +16,7 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
-  background: #fff url('../../assets/loading.gif') center center no-repeat;
+  background: #fff url('~@/assets/images/loading.gif') center center no-repeat;
   background-size: 100px 100px;
   width: 100vw;
   height: 100vh;

@@ -34,7 +34,7 @@
         <div class="info_text">
           <div class="login_info">
             <div class="login_avatar">
-              <img src="http://localhost:8080/static/images/avatar.png" alt="">
+              <img src="~@/assets/images/avatar.png" alt="">
             </div>
             <div class="login_name">258535***91@qq.com</div>
           </div>
@@ -77,18 +77,18 @@
             <ul>
               <li>
                 <a href="">
-                  <img src="http://localhost:8080/static/images/user_email.png" alt="">
+                  <img src="~@/assets/images/user_email.png" alt="">
                   <p>邮箱</p>
                 </a>
               </li>
               <li>
                 <a href="">
-                  <img src="http://localhost:8080/static/images/user_chat.png" alt="">
+                  <img src="~@/assets/images/user_chat.png" alt="">
                   <p>在线咨询</p>
                 </a>
               </li>
               <li @click="help_phone()">
-                <img src="http://localhost:8080/static/images/user_phone.png" alt="">
+                <img src="~@/assets/images/user_phone.png" alt="">
                 <p>电话</p>
               </li>
             </ul>

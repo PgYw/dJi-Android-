@@ -6,7 +6,7 @@
           <i class="shanchu" @click="show=true,dwShow=1"></i>
         </button>
         <span class="logo">
-          <img src="http://localhost:8080/static/images/djiapp.png" alt>
+          <img src="~@/assets/images/djiapp.png" alt>
         </span>
         <span class="text">
           <div>大疆商城 APP</div>
@@ -227,15 +227,15 @@
           </div>
           <ul class="help_list">
             <li>
-              <img src="http://localhost:8080/static/images/email.png" alt>
+              <img src="~@/assets/images/email.png" alt>
               <p>邮箱</p>
             </li>
             <li>
-              <img src="http://localhost:8080/static/images/chat.png" alt>
+              <img src="~@/assets/images/chat.png" alt>
               <p>在线交谈</p>
             </li>
             <li>
-              <img src="http://localhost:8080/static/images/phone.png" alt>
+              <img src="~@/assets/images/phone.png" alt>
               <p>电话</p>
             </li>
           </ul>

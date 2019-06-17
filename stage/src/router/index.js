@@ -11,7 +11,7 @@ import Cart from '@/components/Cart.vue'
 Vue.use(Router)
 export default new Router({
   routes: [
-    {path:'/',component:Index},
+    {path:'*',component:Index},
     {path:'/Index',component:Index},
     {path:'/User',component:User},
     {path:'/Login',component:Login},
