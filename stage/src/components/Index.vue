@@ -220,11 +220,13 @@
         </div>
         <footer class="nav_footer">
           <div class="footer_title">服务与支持</div>
-          <div class="footer_ln">
-            <h3>中国大陆</h3>
-            <a href="tel:4007000303" class="tel">4007000303</a>
-            <p>周一至周日 9:00-21:00 (北京时间)</p>
-          </div>
+          <transition name="fade">
+            <div class="footer_ln" v-if="isShow2">
+              <h3>中国大陆</h3>
+              <a href="tel:4007000303" class="tel">4007000303</a>
+              <p>周一至周日 9:00-21:00 (北京时间)</p>
+            </div>
+          </transition>
           <ul class="help_list">
             <li>
               <img src="~@/assets/images/email.png" alt>
@@ -241,7 +243,7 @@
           </ul>
         </footer>
         <div class="Uparea">
-          <a href>更改国家或者地区</a>
+          <a href="javscript:;" @click="isShow2==false?isShow2=true:isShow2=false">更改国家或者地区</a>
         </div>
       </div>
     </transition>
@@ -256,6 +258,7 @@ export default {
     return {
       show: false,
       isShow: false,
+      isShow2:false,
       dwShow: 0,
       banners: [],
       one_products: [],
@@ -282,12 +285,12 @@ export default {
   created() {
     this.$axios
       .all([
-        this.$axios.get("http://127.0.0.1:3000/index/banner"),
-        this.$axios.get("http://127.0.0.1:3000/index/one_product"),
-        this.$axios.get("http://127.0.0.1:3000/index/two_product"),
-        this.$axios.get("http://127.0.0.1:3000/index/shaky"),
-        this.$axios.get("http://127.0.0.1:3000/index/three_product"),
-        this.$axios.get("http://127.0.0.1:3000/index/favourable")
+        this.$axios.get("http://192.168.1.102:3000/index/banner"),
+        this.$axios.get("http://192.168.1.102:3000/index/one_product"),
+        this.$axios.get("http://192.168.1.102:3000/index/two_product"),
+        this.$axios.get("http://192.168.1.102:3000/index/shaky"),
+        this.$axios.get("http://192.168.1.102:3000/index/three_product"),
+        this.$axios.get("http://192.168.1.102:3000/index/favourable")
       ])
       .then(
         this.$axios.spread(
@@ -311,7 +314,7 @@ export default {
           }
         )
       );
-    this.$axios.get("http://127.0.0.1:3000/index/products").then(res => {
+    this.$axios.get("http://192.168.1.102:3000/index/products").then(res => {
       for (var i = 0; i < res.data.length; i++) {
         if (res.data[i].relevancy_id != null) {
           var relevancy_id = res.data[i].relevancy_id;
@@ -598,7 +601,7 @@ ul {
   width: 20px;
 }
 .body {
-  max-width: 24rem;
+  max-width: 30rem;
   margin: auto;
   overflow-x: hidden;
 }
@@ -831,7 +834,6 @@ ul {
   background-color: #fff;
 }
 .nav_footer .footer_ln {
-  display: none;
   color: #707473;
   padding: 15px 0;
   text-align: center;

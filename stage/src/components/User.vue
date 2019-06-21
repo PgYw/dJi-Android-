@@ -274,7 +274,7 @@ html,body,#user,.user{
   width: 20px;
 }
 .info{
-  max-width: 24rem;
+  max-width: 30rem;
   margin: 0 auto;
   background: #F7F8F9;
 }

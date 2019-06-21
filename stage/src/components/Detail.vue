@@ -171,7 +171,7 @@ export default {
   created() {
     var user_id = sessionStorage.getItem("userId");
     if (this.$route.query.productId) {
-      this.$axios.post("http://127.0.0.1:3000/detail/product",
+      this.$axios.post("http://192.168.1.102:3000/detail/product",
         this.qs.stringify({ product_id: this.$route.query.productId }))
         .then(res => {
           this.product = res.data.product[0];
@@ -180,7 +180,7 @@ export default {
             isCart: true
           });
           if (this.product.relevancy_id != null) {
-            this.$axios.post("http://127.0.0.1:3000/detail/product",
+            this.$axios.post("http://192.168.1.102:3000/detail/product",
               this.qs.stringify({ product_id: this.product.relevancy_id }))
               .then(res => {
                 this.relevancys.push(res.data.product[0]);
@@ -194,7 +194,7 @@ export default {
         });
       this.$axios
         .get(
-          "http://127.0.0.1:3000/detail/productImg?product_id=" +
+          "http://192.168.1.102:3000/detail/productImg?product_id=" +
             this.$route.query.productId
         )
         .then(res => {
@@ -204,11 +204,11 @@ export default {
       this.$axios
         .all([
           this.$axios.post(
-            "http://127.0.0.1:3000/detail/product",
+            "http://192.168.1.102:3000/detail/product",
             this.qs.stringify({ product_id: this.$route.query.relevancyId })
           ),
           this.$axios.get(
-            "http://127.0.0.1:3000/detail/productImg?product_id=" +
+            "http://192.168.1.102:3000/detail/productImg?product_id=" +
               this.$route.query.relevancyId
           )
         ])
@@ -246,7 +246,7 @@ export default {
         instance.close();
         this.isExist=false;
         if(user_id!= (undefined || null)){
-        this.$axios.post("http://127.0.0.1:3000/cart/cart",
+        this.$axios.post("http://192.168.1.102:3000/cart/cart",
           this.qs.stringify({ user_id: user_id }))
           .then(res => {
             this.Cartl = res.data.cart.length;
@@ -257,7 +257,7 @@ export default {
         var user_id = sessionStorage.getItem("userId");
         for (var i = 0; i < this.productIds_cart.length; i++) {
           if (this.productIds_cart[i].isCart) {
-            this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+            this.$axios.post("http://192.168.1.102:3000/cart/slCart",
               this.qs.stringify({
                 user_id: user_id,
                 product_id: this.productIds_cart[i].product_id
@@ -272,7 +272,7 @@ export default {
                     // 判断是否有父商品
                     if (product_arr[i].product_id == this.product.product_id) {
                       product_arr[i].product_count++;
-                      this.$axios.post("http://127.0.0.1:3000/cart/upCart",
+                      this.$axios.post("http://192.168.1.102:3000/cart/upCart",
                         this.qs.stringify({
                           user_id: user_id,
                           product_id: this.product.product_id,
@@ -287,7 +287,7 @@ export default {
                     // 判断是否有子产品，并且购物车数据库有没有该子产品
                     if (this.product.relevancy_id != null &&product_arr[i].product_id == this.product.relevancy_id) {
                       product_arr[i].product_count += this.num;
-                      this.$axios.post("http://127.0.0.1:3000/cart/upCart",
+                      this.$axios.post("http://192.168.1.102:3000/cart/upCart",
                         this.qs.stringify({
                           user_id: user_id,
                           product_id: this.product.relevancy_id,
@@ -302,7 +302,7 @@ export default {
                   }
                 } else {
                   var product_arr = [];
-                  this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+                  this.$axios.post("http://192.168.1.102:3000/cart/slCart",
                     this.qs.stringify({
                       user_id: user_id,
                       product_id: this.product.product_id
@@ -314,7 +314,7 @@ export default {
                           product_id: this.product.product_id,
                           product_count: 1
                         });
-                        this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+                        this.$axios.post("http://192.168.1.102:3000/cart/addCart",
                           this.qs.stringify({
                             product_arr: JSON.stringify(product_arr)
                           }))
@@ -327,7 +327,7 @@ export default {
                     });
                   // 说明购物车中没有该父子商品，那么就创建
                   if (this.num > 0) {
-                    this.$axios.post("http://127.0.0.1:3000/cart/slCart",
+                    this.$axios.post("http://192.168.1.102:3000/cart/slCart",
                       this.qs.stringify({
                         user_id: user_id,
                         product_id: this.product.relevancy_id
@@ -339,7 +339,7 @@ export default {
                             product_id: this.product.relevancy_id,
                             product_count: this.num
                           });
-                          this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+                          this.$axios.post("http://192.168.1.102:3000/cart/addCart",
                             this.qs.stringify({
                             product_arr: JSON.stringify(product_arr)}))
                             .then(res => {
@@ -499,7 +499,7 @@ ul {
   height: 100%;
 }
 .detail {
-  max-width: 24rem;
+  max-width: 30rem;
   margin: 0 auto;
   background: #f7f9fa;
 }
