@@ -54,7 +54,12 @@ export default {
   },
   mounted() {
     window.addEventListener("storage",function(){
-      console.log(11111)
+      var getCart = setInterval(() => {
+        if (this.getStorage().product_arr.length>0) {
+          clearInterval(getCart);
+          this.product_arr=this.getStorage().product_arr
+        }
+      }, 350);
     })
     if(sessionStorage.getItem("userId")!=(undefined||null)){
       var num=5;

@@ -1,5 +1,5 @@
 ﻿const express=require("express");
-// 跨域访问
+// 跨域访问;
 const cors=require("cors");
 // 解析字符串和响应头请求
 const bodyParser=require("body-parser");

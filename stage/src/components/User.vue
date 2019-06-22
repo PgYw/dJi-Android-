@@ -112,9 +112,9 @@ export default {
   mounted() {
     var user_id=sessionStorage.getItem("userId")
     var getCart = setInterval(() => {
-      if (this.getStorage().Cartl>=0||user_id==(undefined||null)) {
+      if (this.getStorage().product_arr.length>0) {
         clearInterval(getCart);
-        this.Cartl = this.getStorage().Cartl;
+        this.Cartl = this.getStorage().product_arr.length;
       }
     }, 350);
   },

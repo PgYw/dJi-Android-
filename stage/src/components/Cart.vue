@@ -160,12 +160,19 @@ export default {
       product_selects: [],
     };
   },
-  created() {
+  mounted() {
     window.addEventListener("storage", () => {
       this.product_arr = this.getStorage().product_arr;
     });
     this.clear = setInterval(this.loading, 1000);
-    this.product_arr = this.getStorage().product_arr;
+    var getCart = setInterval(() => {
+      if (this.getStorage().product_arr.length>0) {
+        clearInterval(getCart);
+        this.product_arr=this.getStorage().product_arr
+      }
+    }, 350);
+  },
+  created() {
     this.$axios.get("http://192.168.1.102:3000/cart/productSelect").then(res => {
       this.product_selects = res.data.productSelect;
     });

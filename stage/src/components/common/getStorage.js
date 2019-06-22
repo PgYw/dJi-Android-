@@ -1,5 +1,4 @@
-var product_arr = [],
-  Cartl = 0;
+var product_arr = []
 function getStorage() {
   var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
@@ -8,22 +7,20 @@ function getStorage() {
     .then(res => {
       if (res.data.code == 1) {
         product_arr = res.data.cart;
-        Cartl = product_arr.length;
       }
     });
-    return { product_arr, Cartl };
+    return { product_arr };
   } else {
-    product_arr = [],Cartl = 0;
+    product_arr = [];
     if (localStorage.getItem("product") != (undefined || null)) {
       var getVal = localStorage.getItem("product");
       getVal = JSON.parse(getVal);
       if (getVal != null) {
         product_arr = getVal;
-        Cartl = product_arr.length;
       }
     }
   }
-  return { product_arr, Cartl };
+  return { product_arr };
 }
 
 function setStorage(value) {

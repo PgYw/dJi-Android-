@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App'
+import VConsole from 'vconsole/dist/vconsole.min.js'
+let vconsole=new VConsole();
 import ElementUI from 'element-ui';
 import {Swipe,SwipeItem,Spinner} from 'mint-ui';
 import 'mint-ui/lib/style.css'
