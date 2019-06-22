@@ -132,7 +132,7 @@
           <i class="el-icon-arrow-right"></i>
         </div>
       </div>
-      <child></child>
+      <foter></foter>
     </div>
     <div id="backTop" @click="backTop()">
       <i class="mint-toast-icon mintui mintui-back"></i>
@@ -140,11 +140,11 @@
   </div>
 </template>
 <script>
-import foter from "./IndexFooter.vue";
+import foter from "@/components/IndexFooter.vue";
 import { Toast } from 'mint-ui';
 export default {
   name: "detail",
-  components: { child: foter },
+  components: { foter: foter },
   data() {
     return {
       product: {},

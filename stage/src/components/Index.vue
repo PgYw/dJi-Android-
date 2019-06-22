@@ -165,7 +165,7 @@
         <div id="backTop" @click="backTop()">
           <i class="mint-toast-icon mintui mintui-back"></i>
         </div>
-        <foter :products_ify="products_ify"></foter>
+        <foter></foter>
       </div>
     </transition>
     <transition name="fade" model="out-in">
