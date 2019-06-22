@@ -276,12 +276,9 @@ export default {
     if(sessionStorage.getItem("userId")!=(undefined||null)){
       var user_id=sessionStorage.getItem("userId")
     }
-    var getCart = setInterval(() => {
-      if (this.getStorage().product_arr.length>0) {
-        clearInterval(getCart);
-        this.Cartl = this.getStorage().product_arr.length;
-      }
-    }, 350);
+    this.getStorage().then(arr=>{
+      this.Cartl=arr.length
+    });
   },
   created() {
     this.$axios

@@ -54,12 +54,9 @@ export default {
   },
   mounted() {
     window.addEventListener("storage",function(){
-      var getCart = setInterval(() => {
-        if (this.getStorage().product_arr.length>0) {
-          clearInterval(getCart);
-          this.product_arr=this.getStorage().product_arr
-        }
-      }, 350);
+      this.getStorage().then(arr=>{
+        this.Cartl=arr.length
+      })
     })
     if(sessionStorage.getItem("userId")!=(undefined||null)){
       var num=5;
@@ -169,13 +166,11 @@ export default {
               })
             }
             this.$refs.err.innerHTML="";
-            var getCart = setInterval(() => {
-              if (this.getStorage().Cartl>=0||user_id==(undefined||null)) {
-                clearInterval(getCart);
-                this.$router.push("/Index")
-                localStorage.removeItem("product");
-              }
-            }, 350);
+            this.getStorage().then(arr=>{
+              this.product_arr=arr
+            })
+            this.$router.push("/Index")
+            localStorage.removeItem("product");
           }else{
             var num=5;
             this.$refs.err.innerHTML="账号或密码错误("+num+"s)"

@@ -103,7 +103,7 @@ export default {
   name:"user",
   data(){
     return{
-      Cartl:false,
+      Cartl:0,
       product_arr:[],
       isShow1:false,
       isShow2:false,
@@ -111,12 +111,9 @@ export default {
   },
   mounted() {
     var user_id=sessionStorage.getItem("userId")
-    var getCart = setInterval(() => {
-      if (this.getStorage().product_arr.length>0) {
-        clearInterval(getCart);
-        this.Cartl = this.getStorage().product_arr.length;
-      }
-    }, 350);
+    this.getStorage().then(arr=>{
+      this.Cartl=arr.length
+    })
   },
   methods: {
     menu(){

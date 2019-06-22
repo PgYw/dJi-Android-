@@ -160,13 +160,10 @@ export default {
   },
   mounted() {
     var user_id=sessionStorage.getItem("userId")
-    var getCart = setInterval(() => {
-      if (this.getStorage().product_arr.length>0) {
-        clearInterval(getCart);
-        this.product_arr=this.getStorage().product_arr
-        this.Cartl = this.getStorage().product_arr.length;
-      }
-    }, 350);
+    this.getStorage().then(arr=>{
+      this.product_arr=arr
+      this.Cartl=arr.length
+    })
   },
   created() {
     var user_id = sessionStorage.getItem("userId");

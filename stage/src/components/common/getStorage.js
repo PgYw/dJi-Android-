@@ -1,33 +1,39 @@
-var product_arr = []
-function getStorage() {
+import $axios from 'axios';
+import qs from 'qs';
+function getStorage(){
   var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
-    this.$axios.post("http://127.0.0.1:3000/cart/cart",
-    this.qs.stringify({user_id: user_id }))
-    .then(res => {
-      if (res.data.code == 1) {
-        product_arr = res.data.cart;
-      }
-    });
-    return { product_arr };
+    return new Promise(function(res1){
+      $axios.post("http://127.0.0.1:3000/cart/cart",
+      qs.stringify({user_id: user_id }))
+      .then(res => {
+        if (res.data.code == 1) {
+          res1(res.data.cart)
+        }
+      });
+    })
   } else {
-    product_arr = [];
     if (localStorage.getItem("product") != (undefined || null)) {
-      var getVal = localStorage.getItem("product");
-      getVal = JSON.parse(getVal);
-      if (getVal != null) {
-        product_arr = getVal;
-      }
+      return new Promise(function(res1){
+        var getVal = localStorage.getItem("product");
+        getVal = JSON.parse(getVal);
+        if (getVal != null) {
+          console.log(123)
+          res1(getVal);
+        }
+      });
+    }else{
+      return new Promise(function(res1){
+        res1([]);
+      });
     }
   }
-  return { product_arr };
 }
-
 function setStorage(value) {
   var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
-    this.$axios.post("http://127.0.0.1:3000/cart/upCart",
-      this.qs.stringify({
+    $axios.post("http://127.0.0.1:3000/cart/upCart",
+      qs.stringify({
         user_id: user_id,
         product_id: value.product_id,
         product_count: value.product_count
@@ -50,8 +56,8 @@ function setStorage(value) {
 function isSelect(value) {
   var user_id=sessionStorage.getItem("userId")
   if(user_id!=(undefined||null)){
-    this.$axios.post("http://127.0.0.1:3000/cart/isSelect",
-      this.qs.stringify({
+    $axios.post("http://127.0.0.1:3000/cart/isSelect",
+      qs.stringify({
         user_id: user_id,
         product_id: value.product_id,
         product_isSelect: value.product_isSelect
@@ -67,8 +73,8 @@ function isSelect(value) {
 
 function dtCart(value) {
   var user_id=sessionStorage.getItem("userId")
-  this.$axios.post("http://127.0.0.1:3000/cart/dtCart",
-    this.qs.stringify({ 
+  $axios.post("http://127.0.0.1:3000/cart/dtCart",
+    qs.stringify({ 
       user_id: user_id, 
       product_id: value.product_id 
     }))
@@ -79,4 +85,4 @@ function dtCart(value) {
       }
     });
 }
-export { getStorage, setStorage, isSelect, dtCart };
+  export { getStorage, setStorage, isSelect, dtCart };

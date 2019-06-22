@@ -162,55 +162,41 @@ export default {
   },
   mounted() {
     window.addEventListener("storage", () => {
-      this.product_arr = this.getStorage().product_arr;
+      this.getStorage().then(arr=>{
+        this.product_arr=arr
+      });
     });
     this.clear = setInterval(this.loading, 1000);
-    var getCart = setInterval(() => {
-      if (this.getStorage().product_arr.length>0) {
-        clearInterval(getCart);
-        this.product_arr=this.getStorage().product_arr
+    this.getStorage().then(arr=>{
+      var num = 0;
+      this.product_arr=arr
+      this.Cartl=arr.length
+      for (var i = 0; i < this.product_arr.length; i++) {
+        this.$axios.post("http://192.168.1.102:3000/detail/product",
+          this.qs.stringify({ product_id: this.product_arr[i].product_id }))
+        .then(res => {
+          if (res.data.code == 1) {
+            Object.assign(this.product_arr[num],res.data.product[0])
+            this.product_arr[num]["product_count"] =
+              arr[num].product_count;
+            this.product_arr[num]["product_isSelect"] =
+              arr[num].product_isSelect;
+            this.product_arr[num]["product_isSelect"] == 1
+              ? (this.product_arr[num]["product_isSelect"] = true)
+              : (this.product_arr[num]["product_isSelect"] = false);
+            num++;
+          } else {
+            alert("对不起，参数错误");
+            return;
+          }
+        });
       }
-    }, 350);
+    })
   },
   created() {
     this.$axios.get("http://192.168.1.102:3000/cart/productSelect").then(res => {
       this.product_selects = res.data.productSelect;
     });
-    if (sessionStorage.getItem("userId") != (undefined || null)) {
-      var num = 0;
-      var cart_arr = [];
-      var user_id = sessionStorage.getItem("userId");
-      var getCart = setInterval(() => {
-        if (this.getStorage().product_arr.length >= 0) {
-          clearInterval(getCart);
-          cart_arr = this.getStorage().product_arr;
-          for (var i = 0; i < cart_arr.length; i++) {
-            this.product_arr = [];
-            this.$axios
-              .post(
-                "http://192.168.1.102:3000/detail/product",
-                this.qs.stringify({ product_id: cart_arr[i].product_id })
-              )
-              .then(res => {
-                if (res.data.code == 1) {
-                  this.product_arr.push(res.data.product[0]);
-                  this.product_arr[num]["product_count"] =
-                    cart_arr[num].product_count;
-                  this.product_arr[num]["product_isSelect"] =
-                    cart_arr[num].product_isSelect;
-                  this.product_arr[num]["product_isSelect"] == 1
-                    ? (this.product_arr[num]["product_isSelect"] = true)
-                    : (this.product_arr[num]["product_isSelect"] = false);
-                  num++;
-                } else {
-                  alert("对不起，参数错误");
-                  return;
-                }
-              });
-          }
-        }
-      }, 50);
-    }
   },
   methods: {
     Up(index) {
@@ -218,7 +204,7 @@ export default {
       let obj = this.product_arr[index];
       obj.product_count++;
       this.$set(this.product_arr, index, obj);
-      if (sessionStorage.getItem("userId") != (undefined || null)) {
+      if (this.user_id != (undefined || null)) {
         this.setStorage(this.product_arr[index]);
       } else {
         this.setStorage(this.product_arr);
@@ -232,7 +218,7 @@ export default {
       let obj = this.product_arr[index];
       obj.product_count--;
       this.$set(this.product_arr, index, obj);
-      if (sessionStorage.getItem("userId") != (undefined || null)) {
+      if (this.user_id != (undefined || null)) {
         this.setStorage(this.product_arr[index]);
       } else {
         this.setStorage(this.product_arr);
@@ -240,7 +226,7 @@ export default {
     },
     Dt(index) {
       var product_id = this.product_arr[index].product_id;
-      if (sessionStorage.getItem("userId") != (undefined || null)) {
+      if (this.user_id != (undefined || null)) {
         this.dtCart(this.product_arr[index]);
         this.product_arr.splice(index, 1);
       } else {
@@ -253,15 +239,15 @@ export default {
       }
     },
     select(index, e) {
-      let obj = this.product_arr[index];
-      this.$set(this.product_arr, index, obj);
-      if (sessionStorage.getItem("userId") != (undefined || null)) {
-        this.isSelect(this.product_arr[index]);
-        this.$set(this.product_arr, index, obj);
-      } else {
       e.target.checked
         ? (this.product_arr[index].product_isSelect = true)
         : (this.product_arr[index].product_isSelect = false);
+      let obj = this.product_arr[index];
+      this.$set(this.product_arr, index, obj);
+      if (this.user_id != (undefined || null)) {
+        this.isSelect(this.product_arr[index]);
+        this.$set(this.product_arr, index, obj);
+      } else {
         this.setStorage(this.product_arr);
       }
     },
