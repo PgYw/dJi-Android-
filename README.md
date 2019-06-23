@@ -5,9 +5,10 @@
 3.请浏览和start的禁止上线</br>
 4.否则一系列法律问题，本人不做相应的承担</br>
 二.使用
-使用了Vue-cli脚手架进行编写</br>
-下载xmapp集成服务器和node.js</br>
-启动xmapp的Apache和mysql的start哦</br>
-打开xmapp集成服务器中的mysql的admin网页化管理导入Dji.sql哦</br>
-因为项目有一些图标没有，所以用了element-ui</br>
+1.使用了Vue-cli脚手架进行编写</br>
+2.下载xmapp集成服务器和node.js</br>
+3.启动xmapp的Apache和mysql的start哦</br>
+4.打开xmapp集成服务器中的mysql的admin网页化管理导入Dji.sql哦</br>
+4.因为项目有一些图标没有，所以用了element-ui</br>
 最后cmd运行:npm run dev
+本项目只供初学者学习和初学者浏览使用，请大神勿喷！
