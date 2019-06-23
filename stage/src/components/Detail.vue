@@ -41,7 +41,7 @@
           v-if="product!=undefined"
         >{{product.product_ify+" "+product.product_title}}</div>
       </div>
-      <div class="mast_but" ref="mast_but">
+      <div class="mast_but" v-if="relevancys!=undefined">
         <div class="but_title">选择必备组件</div>
         <div
           class="product_child"
@@ -50,7 +50,7 @@
         >
           <div class="child_img">
             <router-link
-              :to="{path:'/Detail',query:{relevancyId:relevancy.product_id}}"
+              :to="{path:'/Detail',query:{productId:relevancys[0].product_id}}"
               target="_blank"
             >
               <img v-lazy="relevancy.product_img" alt>
@@ -59,7 +59,7 @@
           <div class="child_value">
             <div class="value_title">
               <router-link
-                :to="{path:'/Detail',query:{relevancyId:relevancy.product_id}}"
+                :to="{path:'/Detail',query:{productId:relevancys[0].product_id}}"
                 target="_blank"
               >
                 <h6>{{relevancy.product_ify+" "+relevancy.product_title}}</h6>
@@ -181,7 +181,6 @@ export default {
               this.qs.stringify({ product_id: this.product.relevancy_id }))
               .then(res => {
                 this.relevancys.push(res.data.product[0]);
-                this.$refs.mast_but.style = "display:block;";
                 this.productIds_cart.push({
                   product_id: res.data.product[0].product_id,
                   isCart: false
@@ -239,19 +238,10 @@ export default {
         position: 'center',
         iconClass: 'mint-toast-icon mintui mintui-success'
       });
-      setTimeout(() => {
-        instance.close();
-        this.isExist=false;
-        if(user_id!= (undefined || null)){
-        this.$axios.post("http://192.168.1.102:3000/cart/cart",
-          this.qs.stringify({ user_id: user_id }))
-          .then(res => {
-            this.Cartl = res.data.cart.length;
-          });
-        }
-      }, 1500);
       if (sessionStorage.getItem("userId") != (undefined || null)) {
         var user_id = sessionStorage.getItem("userId");
+        // 循环查找用户是否添加了子商品
+            console.log(this.productIds_cart)
         for (var i = 0; i < this.productIds_cart.length; i++) {
           if (this.productIds_cart[i].isCart) {
             this.$axios.post("http://192.168.1.102:3000/cart/slCart",
@@ -263,17 +253,15 @@ export default {
                 if (res.data.code == 1) {
                   // 因为用户只要点击了父商品都要添加购物车
                   // 所以只需要判断子商品是否存在就行
-                  var product_arr = [];
-                  product_arr = res.data.slCart;
-                  for (var i = 0; i < product_arr.length; i++) {
+                  for (var i = 0; i < this.product_arr.length; i++) {
                     // 判断是否有父商品
-                    if (product_arr[i].product_id == this.product.product_id) {
-                      product_arr[i].product_count++;
+                    if (this.product_arr[i].product_id == this.product.product_id) {
+                      this.product_arr[i].product_count++;
                       this.$axios.post("http://192.168.1.102:3000/cart/upCart",
                         this.qs.stringify({
                           user_id: user_id,
                           product_id: this.product.product_id,
-                          product_count: product_arr[i].product_count
+                          product_count: this.product_arr[i].product_count
                         }))
                         .then(res => {
                           if (res.data.code != 1) {
@@ -282,13 +270,13 @@ export default {
                         });
                     }
                     // 判断是否有子产品，并且购物车数据库有没有该子产品
-                    if (this.product.relevancy_id != null &&product_arr[i].product_id == this.product.relevancy_id) {
-                      product_arr[i].product_count += this.num;
+                    if (this.product.relevancy_id != null &&this.product_arr[i].product_id == this.product.relevancy_id) {
+                      this.product_arr[i].product_count += this.num;
                       this.$axios.post("http://192.168.1.102:3000/cart/upCart",
                         this.qs.stringify({
                           user_id: user_id,
                           product_id: this.product.relevancy_id,
-                          product_count: product_arr[i].product_count
+                          product_count: this.product_arr[i].product_count
                         }))
                         .then(res => {
                           if (res.data.code != 1) {
@@ -311,6 +299,7 @@ export default {
                           product_id: this.product.product_id,
                           product_count: 1
                         });
+                        this.product_arr.push(product_arr)
                         this.$axios.post("http://192.168.1.102:3000/cart/addCart",
                           this.qs.stringify({
                             product_arr: JSON.stringify(product_arr)
@@ -336,6 +325,7 @@ export default {
                             product_id: this.product.relevancy_id,
                             product_count: this.num
                           });
+                          this.product_arr.push(product_arr)
                           this.$axios.post("http://192.168.1.102:3000/cart/addCart",
                             this.qs.stringify({
                             product_arr: JSON.stringify(product_arr)}))
@@ -351,6 +341,12 @@ export default {
               });
           }
         }
+        setTimeout(() => {
+          instance.close();
+          this.isExist=false;
+          this.Cartl=this.product_arr.length
+          console.log(this.product_arr)
+        }, 1500);
       } else {
         if (!(window.localStorage &&(window.localStorage.setItem("a", 123),window.localStorage.getItem("a") == 123))) {
           alert("您的电脑可能未开启本地存储");
@@ -456,7 +452,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener("scroll", this.BackTop);
-  }
+  },
 };
 </script>
 <style lang="css">
@@ -557,9 +553,6 @@ ul {
   line-height: 3.12rem;
   display: inline-block;
   width: 40px;
-}
-.mast_but {
-  display: none;
 }
 .mast_but>.but_title,
 .account>.price,.joinC,

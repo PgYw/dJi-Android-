@@ -14,7 +14,7 @@
                   <button disabled class="btn">+86</button>
                   <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
                 </div>
-                <i class="clearInput" ref="clearInput" @click="clearPhone()"></i>
+                <i class="clearInput" ref="clearInput" @click="clearPhone()" :style="getPhone.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="phone_err"></span>
                 </div>
@@ -24,14 +24,14 @@
                   <input type="text" placeholder="请输入验证码*" ref="yzm" v-model="getYzm">
                   <button class="goCode" ref="goCode" @click="goCode()">发送验证码</button>
                 </div>
-                <i class="clearYzm" ref="clearYzm" @click="clearYzm()"></i>
+                <i class="clearYzm" ref="clearYzm" @click="clearYzm()" :style="getYzm.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="yzm_err"></span>
                 </div>
               </div>
               <div class="phone_psword">
                 <input type="text" placeholder="请输入密码*" ref="psword" v-model="getPsword">
-                <i class="clearPsword" ref="clearPsword" @click="clearPsword()"></i>
+                <i class="clearPsword" ref="clearPsword" @click="clearPsword()" :style="getPsword.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="psword_err"></span>
                 </div>
@@ -56,7 +56,7 @@
                   <button disabled class="btn">+86</button>
                   <input type="text" placeholder="请输入手机号*" ref="phoned" v-model="getPhoned">
                 </div>
-                <i class="clearPhoned" ref="clearPhoned" @click="clearPhoned()"></i>
+                <i class="clearPhoned" ref="clearPhoned" @click="clearPhoned()" :style="getPhoned.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="phoned_err"></span>
                 </div>
@@ -66,7 +66,7 @@
                   <input type="text" placeholder="请输入验证码*" ref="yzmd" v-model="getYzmd">
                   <button class="goCode" ref="goCoded" @click="goCoded()">发送验证码</button>
                 </dir>
-                <i class="clearYzmd" ref="clearYzmd" @click="clearYzmd()"></i>
+                <i class="clearYzmd" ref="clearYzmd" @click="clearYzmd()" :style="getYzmd.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="yzmd_err"></span>
                 </div>
@@ -80,7 +80,7 @@
               </div>
               <div class="five_cpwd">
                 <input type="password" placeholder="请再次输入密码*" ref="cpwd" v-model="getCpwd">
-                <i class="clearCpwd" ref="clearCpwd" @click="clearCpwd()"></i>
+                <i class="clearCpwd" ref="clearCpwd" @click="clearCpwd()" :style="getCpwd.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="cpwd_err"></span>
                 </div>
@@ -114,11 +114,11 @@ export default {
   data() {
     return{
       getPhone:"",
-      getPhoned:"",
       getYzm:"",
       getPsword:"",
       show:false,
       getEmail:"",
+      getPhoned:"",
       getYzmd:"",
       getUpwd:"",
       getCpwd:"",
@@ -126,101 +126,89 @@ export default {
       change:[],
     }
   },
-  mounted() {
-    if(this.getPhone.length>=1){
-      this.$refs.clearInput.style="display:block"
-    }
-    if(this.getYzm.length>=1){
-      this.$refs.clearYzm.style="display:block"
-    }
-    if(this.getPsword.length>=1){
-      this.$refs.clearPsword.style="display:block"
-    }
-    if(this.getEmail.length>=1){
-      this.$refs.clearEmail.style="display:block"
-    }
-    if(this.getYzmd.length>=1){
-      this.$refs.clearYzmd.style="display:block"
-    }
-    if(this.getUpwd.length>=1){
-      this.$refs.clearUpwd.style="display:block"
-    }
-    if(this.getCpwd.length>=1){
-      this.$refs.clearCpwd.style="display:block"
-    }
-  },
   methods: {
-    goOut(){
-      if (window.history.length<=1) {
-        this.$router.push({path:'/'})
-        return false
+    clear_fail(data){
+      if(data=='this.getPhone'){
+        if(this.getPhone!=""){
+          this.getPhone=""
+          this.$refs.clearInput.style="display:none"
+          this.$refs.phone_err.innerHTML="手机号不能为空"
+          this.$refs.phone.style="border: 1px solid #f04848;"
+        }
+      }else if(data=="this.getYzm"){
+        if(this.getYzm!=""){
+          this.getYzm=""
+          this.$refs.clearYzm.style="display:none"
+          this.$refs.yzm_err.innerHTML="验证码不能为空"
+          this.$refs.yzm.style="border: 1px solid #f04848;"
+        }
+      }else if(data=='this.getPsword'){
+        if(this.getPsword!=""){
+          this.getPsword=""
+          this.$refs.clearPsword.style="display:none"
+          this.$refs.psword_err.innerHTML="密码不能为空"
+          this.$refs.psword.style="border: 1px solid #f04848;"
+        }
+      }else if(data=='this.getEmail'){
+        if(this.getEmail!=""){
+          this.getEmail=""
+          this.$refs.clearEmail.style="display:none"
+          this.$refs.email_err.innerHTML="邮箱不能为空"
+          this.$refs.email.style="border: 1px solid #f04848;"
+        }
+      }else if(data=='this.getPhoned'){
+        if(this.getPhoned!=""){
+          this.getPhoned=""
+          this.$refs.clearPhoned.style="display:none"
+          this.$refs.phoned_err.innerHTML="确认密码不能为空不能为空"
+          this.$refs.phoned.style="border: 1px solid #f04848;"
+        }
+      }else if(data=='this.getYzmd'){
+        if(this.getYzmd!=""){
+          this.getYzmd=""
+          this.$refs.clearYzmd.style="display:none"
+          this.$refs.yzmd_err.innerHTML="验证码不能为空"
+          this.$refs.yzmd.style="border: 1px solid #f04848;"
+        }
+      }else if(data=='this.getUpwd'){
+        if(this.getUpwd!=""){
+          this.getUpwd=""
+          this.$refs.clearUpwd.style="display:none"
+          this.$refs.upwd_err.innerHTML="密码不能为空"
+          this.$refs.upwd.style="border: 1px solid #f04848;"
+        }
       }else{
-        this.$router.go(-1)
+        if(this.getCpwd!=""){
+          this.getCpwd=""
+          this.$refs.clearCpwd.style="display:none"
+          this.$refs.cpwd_err.innerHTML="确认密码不能为空不能为空"
+          this.$refs.cpwd.style="border: 1px solid #f04848;"
+        }
       }
     },
     clearPhone(){
-      if(this.getPhone!=""){
-        this.getPhone=""
-        this.$refs.clearInput.style="display:none"
-        this.$refs.phone_err.innerHTML="手机号不能为空"
-        this.$refs.phone.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.getPhone')
     },
     clearYzm(){
-      if(this.getYzm!=""){
-        this.getYzm=""
-        this.$refs.clearYzm.style="display:none"
-        this.$refs.yzm_err.innerHTML="验证码不能为空"
-        this.$refs.yzm.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.getYzm')
     },
     clearPsword(){
-      if(this.getPsword!=""){
-        this.getPsword=""
-        this.$refs.clearPsword.style="display:none"
-        this.$refs.psword_err.innerHTML="密码不能为空"
-        this.$refs.psword.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.getPsword')
     },
     clearEmail(){
-      if(this.getEmail!=""){
-        this.getEmail=""
-        this.$refs.clearEmail.style="display:none"
-        this.$refs.email_err.innerHTML="邮箱不能为空"
-        this.$refs.email.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.getEmail')
     },
     clearPhoned(){
-      if(this.getPhoned!=""){
-        this.getPhoned=""
-        this.$refs.clearPhoned.style="display:none"
-        this.$refs.phoned_err.innerHTML="确认密码不能为空不能为空"
-        this.$refs.phoned.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.Phoned')
     },
     clearYzmd(){
-      if(this.getYzmd!=""){
-        this.getYzmd=""
-        this.$refs.clearYzmd.style="display:none"
-        this.$refs.yzmd_err.innerHTML="验证码不能为空"
-        this.$refs.yzmd.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.Yzmd')
     },
     clearUpwd(){
-      if(this.getUpwd!=""){
-        this.getUpwd=""
-        this.$refs.clearUpwd.style="display:none"
-        this.$refs.upwd_err.innerHTML="密码不能为空"
-        this.$refs.upwd.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.Upwd')
     },
     clearCpwd(){
-      if(this.getCpwd!=""){
-        this.getCpwd=""
-        this.$refs.clearCpwd.style="display:none"
-        this.$refs.cpwd_err.innerHTML="确认密码不能为空不能为空"
-        this.$refs.cpwd.style="border: 1px solid #f04848;"
-      }
+      this.clear_fail('this.Cpwd')
     },
     goCode(){
       var num=60;
@@ -264,6 +252,14 @@ export default {
       this.getYzm="";
       this.getPsword="";
     },
+    goOut(){
+      if (window.history.length<=1) {
+        this.$router.push({path:'/'})
+        return false
+      }else{
+        this.$router.go(-1)
+      }
+    }
   },
   watch: {
     change(){
@@ -777,5 +773,11 @@ export default {
   padding: 0;
   margin:0;
   height:0 !important;
+}
+.fail_border{
+  border: 1px solid #f04848;
+}
+.success_border{
+  border: 1px solid #e6e6e6;
 }
 </style>

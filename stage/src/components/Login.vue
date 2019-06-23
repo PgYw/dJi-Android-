@@ -133,7 +133,6 @@ export default {
                 if(res.data.code==1){
                   var product_cart="";
                   product_cart=res.data.slCart[0]
-                  console.log(product_cart)
                   for(var i=0;i<this.product_arr.length;i++){
                     if(this.product_arr[i].product_id==product_cart.product_id){
                       product_cart.product_count+=this.product_arr[i].product_count;

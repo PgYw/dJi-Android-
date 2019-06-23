@@ -18,7 +18,6 @@ function getStorage(){
         var getVal = localStorage.getItem("product");
         getVal = JSON.parse(getVal);
         if (getVal != null) {
-          console.log(123)
           res1(getVal);
         }
       });
