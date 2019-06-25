@@ -11,7 +11,7 @@ CREATE TABLE dji_user(
   user_pwd VARCHAR(128) comment '用户密码'
 );
 INSERT INTO dji_user VALUES
-(NULL,"phone",12312312311,"2585351891@qq.com","yangwei123");
+(NULL,"phone",12312312311,"2585351891@qq.com","123456..");
 
 CREATE TABLE dji_cart(
   cart_id INT PRIMARY KEY AUTO_INCREMENT comment '购物车的id',
