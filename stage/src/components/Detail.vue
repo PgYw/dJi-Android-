@@ -43,35 +43,31 @@
       </div>
       <div class="mast_but" v-if="relevancys!=undefined">
         <div class="but_title">选择必备组件</div>
-        <div
-          class="product_child"
-          v-for="(relevancy,index) in relevancys"
-          :key="relevancy.product_id"
-        >
+        <div class="product_child">
           <div class="child_img">
             <router-link
-              :to="{path:'/Detail',query:{productId:relevancys[0].product_id}}"
+              :to="{path:'/Detail',query:{productId:relevancys.product_id}}"
               target="_blank"
             >
-              <img v-lazy="relevancy.product_img" alt>
+              <img v-lazy="relevancys.product_img" alt>
             </router-link>
           </div>
           <div class="child_value">
             <div class="value_title">
               <router-link
-                :to="{path:'/Detail',query:{productId:relevancys[0].product_id}}"
+                :to="{path:'/Detail',query:{productId:relevancys.product_id}}"
                 target="_blank"
               >
-                <h6>{{relevancy.product_ify+" "+relevancy.product_title}}</h6>
+                <h6>{{relevancys.product_ify+" "+relevancys.product_title}}</h6>
               </router-link>
             </div>
             <div class="price">
               <span>¥</span>
-              <span ref="relevany_price">{{relevancy.product_Oprice}}</span>
+              <span ref="relevany_price">{{relevancys.product_Oprice}}</span>
               <div class="Upprice">
-                <button @click="Ep(index)" ref="ep">-</button>
+                <button @click="Ep()" ref="ep">-</button>
                 <input readonly type="text" ref="input" v-if="num==0?'':num" :value="num">
-                <button @click="Up(index)">+</button>
+                <button @click="Up()">+</button>
               </div>
             </div>
           </div>
@@ -81,7 +77,7 @@
         <div class="price">
           <span>¥</span>
           <span ref="product_price" v-if="product!=''">{{product.product_Oprice}}</span>
-          <span ref="product_price" v-else-if="relevancys!=''">{{relevancys[0].product_Oprice}}</span>
+          <span ref="product_price" v-else-if="relevancys!=''">{{relevancys.product_Oprice}}</span>
         </div>
         <div class="joinC">
           <transition name="ball">
@@ -149,7 +145,7 @@ export default {
     return {
       product: {},
       productImg: [],
-      relevancys: [],
+      relevancys: {},
       product_arr: [],
       productIds_cart: [],
       activeName: "1",
@@ -180,7 +176,8 @@ export default {
             this.$axios.post("http://127.0.0.1:3000/detail/product",
               this.qs.stringify({ product_id: this.product.relevancy_id }))
               .then(res => {
-                this.relevancys.push(res.data.product[0]);
+                this.relevancys=res.data.product[0];
+                console.log(this.relevancys)
                 this.productIds_cart.push({
                   product_id: res.data.product[0].product_id,
                   isCart: false
@@ -386,11 +383,11 @@ export default {
           var product_obj = {
             product_isSelect: true,
             product_id: this.product.relevancy_id,
-            product_img: this.relevancys[0].product_img,
-            product_ify: this.relevancys[0].product_ify,
-            product_title: this.relevancys[0].product_title,
-            product_Oprice: this.relevancys[0].product_Oprice,
-            product_Nprice: this.relevancys[0].product_Nprice,
+            product_img: this.relevancys.product_img,
+            product_ify: this.relevancys.product_ify,
+            product_title: this.relevancys.product_title,
+            product_Oprice: this.relevancys.product_Oprice,
+            product_Nprice: this.relevancys.product_Nprice,
             product_count: parseInt(this.num)
           };
           for (var i = 0; i < this.product_arr.length; i++) {
@@ -410,28 +407,28 @@ export default {
         this.Cartl = this.product_arr.length;
       }
     },
-    Up(index) {
+    Up() {
       // 因为第一位是父商品的位置，所以index要+1
-      this.productIds_cart[index + 1].isCart = true;
+      this.productIds_cart[1].isCart = true;
       this.num++;
-      this.$refs.ep[0].style = "display:inline-block";
+      this.$refs.ep.style = "display:inline-block";
       var price =
-        parseInt(this.num * this.$refs.relevany_price[0].innerHTML) +
+        parseInt(this.num * this.$refs.relevany_price.innerHTML) +
         parseInt(this.product.product_Oprice);
       this.$refs.product_price.innerHTML = price;
     },
-    Ep(index) {
+    Ep() {
       this.num--;
       var price =
-        parseInt(this.num * this.$refs.relevany_price[0].innerHTML) +
+        parseInt(this.num * this.$refs.relevany_price.innerHTML) +
         parseInt(this.product.product_Oprice);
       this.$refs.product_price.innerHTML = price;
       if (this.num == 0) {
-        this.productIds_cart[index + 1].isCart = false;
-        this.$refs.ep[0].style = "display:none";
+        this.productIds_cart[1].isCart = false;
+        this.$refs.ep.style = "display:none";
         return;
       }
-      this.$refs.ep[0].style = "display:inline-block";
+      this.$refs.ep.style = "display:inline-block";
     },
     backTop() {
       var top = setInterval(function() {
