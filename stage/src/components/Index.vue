@@ -283,12 +283,12 @@ export default {
   created() {
     this.$axios
       .all([
-        this.$axios.get("http://192.168.1.102:3000/index/banner"),
-        this.$axios.get("http://192.168.1.102:3000/index/one_product"),
-        this.$axios.get("http://192.168.1.102:3000/index/two_product"),
-        this.$axios.get("http://192.168.1.102:3000/index/shaky"),
-        this.$axios.get("http://192.168.1.102:3000/index/three_product"),
-        this.$axios.get("http://192.168.1.102:3000/index/favourable")
+        this.$axios.get("http://127.0.0.1:3000/index/banner"),
+        this.$axios.get("http://127.0.0.1:3000/index/one_product"),
+        this.$axios.get("http://127.0.0.1:3000/index/two_product"),
+        this.$axios.get("http://127.0.0.1:3000/index/shaky"),
+        this.$axios.get("http://127.0.0.1:3000/index/three_product"),
+        this.$axios.get("http://127.0.0.1:3000/index/favourable")
       ])
       .then(
         this.$axios.spread(
@@ -312,7 +312,7 @@ export default {
           }
         )
       );
-    this.$axios.get("http://192.168.1.102:3000/index/products").then(res => {
+    this.$axios.get("http://127.0.0.1:3000/index/products").then(res => {
       for (var i = 0; i < res.data.length; i++) {
         if (res.data[i].relevancy_id != null) {
           var relevancy_id = res.data[i].relevancy_id;

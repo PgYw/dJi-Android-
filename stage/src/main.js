@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+// 手机端console测试
 // import VConsole from 'vconsole/dist/vconsole.min.js'
 // let vconsole=new VConsole();
 import ElementUI from 'element-ui';
@@ -7,7 +8,7 @@ import {Swipe,SwipeItem,Spinner} from 'mint-ui';
 import 'mint-ui/lib/style.css'
 import '@/components/common/common.css'
 import 'element-ui/lib/theme-chalk/index.css';
-import router from './router'
+import router from './router/routes'
 import axios from 'axios'
 import qs from	'qs'
 import {getStorage,setStorage,isSelect,dtCart} from './components/common/getStorage'
@@ -21,10 +22,10 @@ Vue.use(VueLazyload,{
 })
 Vue.prototype.$axios=axios;
 Vue.prototype.qs=qs;
-Vue.prototype.getStorage=getStorage
-Vue.prototype.setStorage=setStorage
-Vue.prototype.isSelect=isSelect
-Vue.prototype.dtCart=dtCart
+Vue.prototype.getStorage=getStorage;
+Vue.prototype.setStorage=setStorage;
+Vue.prototype.isSelect=isSelect;
+Vue.prototype.dtCart=dtCart;
 Vue.use(ElementUI);
 Vue.component(Spinner.name, Spinner);
 Vue.component(Swipe.name, Swipe);

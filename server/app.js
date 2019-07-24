@@ -13,10 +13,14 @@ app.use(bodyParser.urlencoded({
   extended:false
 }));
 app.use(cors({
-  orgin:["http://127.0.0.1:5500","http://127.0.0.1:8080","http://localhost:8080","http://192.168.1.102:8080"]
+  // 允许跨域的地址
+  //192.168.1.102换自己的ip可以手机访问(手机，电脑同一局域网内)
+  orgin:["http://127.0.0.1:5500",
+    "http://127.0.0.1:8080",
+    "http://localhost:8080",
+    "http://192.168.1.102:8080"]
 }))
 app.use(express.static('public'));
-app.use(express.static('../stage'));
 app.use("/index",index);
 app.use("/login",login);
 app.use("/detail",detail);

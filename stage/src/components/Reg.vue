@@ -274,7 +274,7 @@ export default {
       var num=new Number(this.getPhone);
       this.$refs.clearInput.style="display:block";
         if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getPhone)){
-          this.$axios.get("http://192.168.1.102:3000/login/phone?phone="+this.getPhone).then(res=>{
+          this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getPhone).then(res=>{
             if(res.data.code!=0){
               this.$refs.phone_err.innerHTML="该手机号已被注册!"
               this.$refs.phone.style="border: 1px solid #f04848;"
@@ -342,7 +342,7 @@ export default {
       if(this.getEmail.length>=1){
       this.$refs.clearEmail.style="display:block";
         if((/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getEmail)){
-          this.$axios.get("http://192.168.1.102:3000/login/email?email="+this.getEmail).then(res=>{
+          this.$axios.get("http://127.0.0.1:3000/login/email?email="+this.getEmail).then(res=>{
             if(res.data.code!=0){
               this.$refs.email_err.innerHTML="该邮箱已被注册!"
               this.$refs.email.style="border: 1px solid #f04848;"
@@ -370,7 +370,7 @@ export default {
       if(this.getPhoned.length>=1){
       this.$refs.clearPhoned.style="display:block";
         if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getPhoned)){
-          this.$axios.get("http://192.168.1.102:3000/login/phone?phone="+this.getPhoned).then(res=>{
+          this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getPhoned).then(res=>{
             if(res.data.code!=0){
               this.$refs.phoned_err.innerHTML="该手机号已被注册!"
               this.$refs.phoned.style="border: 1px solid #f04848;"

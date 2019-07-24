@@ -112,7 +112,7 @@ export default {
     },
     Login(){
       if(this.isLogin==2){
-        this.$axios.post("http://192.168.1.102:3000/login/user",this.qs.stringify({
+        this.$axios.post("http://127.0.0.1:3000/login/user",this.qs.stringify({
           admin:this.getAdmin,
           upwd:this.getUpwd,
           }))
@@ -126,7 +126,7 @@ export default {
               this.product_arr[i].product_isSelect=true;
             }
             for(var i=0;i<this.product_arr.length;i++){
-              this.$axios.post("http://192.168.1.102:3000/cart/slCart",
+              this.$axios.post("http://127.0.0.1:3000/cart/slCart",
               this.qs.stringify({user_id:user_id,
               product_id:this.product_arr[i].product_id}))
               .then(res=>{
@@ -137,7 +137,7 @@ export default {
                     if(this.product_arr[i].product_id==product_cart.product_id){
                       product_cart.product_count+=this.product_arr[i].product_count;
                       this.product_arr.splice(i,1)
-                      this.$axios.post("http://192.168.1.102:3000/cart/upCart",
+                      this.$axios.post("http://127.0.0.1:3000/cart/upCart",
                       this.qs.stringify({user_id:user_id,
                       product_id:product_cart.product_id,
                       product_count:product_cart.product_count}))
@@ -152,7 +152,7 @@ export default {
                 }else{
                   num++;
                   if(num==this.product_arr.length){
-                    this.$axios.post("http://192.168.1.102:3000/cart/addCart",
+                    this.$axios.post("http://127.0.0.1:3000/cart/addCart",
                     this.qs.stringify({product_arr:JSON.stringify(this.product_arr)}))
                     .then(res=>{
                       if(res.data.code!=1){
@@ -200,19 +200,16 @@ export default {
         var num=new Number(this.getAdmin);
         this.$refs.clearInput.style="display:block";
         if(num.toString()=="NaN"&&(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getAdmin)){
-          this.$axios.post("http://192.168.1.102:3000/login/email",this.qs.stringify({email:this.getAdmin})).then(res=>{
+          this.$axios.post("http://127.0.0.1:3000/login/email",this.qs.stringify({email:this.getAdmin})).then(res=>{
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该邮箱未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"
-            }else{
-              alert("对不起，参数错误")
-              return;
             }
           })
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
         }else if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getAdmin)){
-           this.$axios.post("http://192.168.1.102:3000/login/phone",this.qs.stringify({phone:this.getAdmin})).then(res=>{ 
+           this.$axios.post("http://127.0.0.1:3000/login/phone",this.qs.stringify({phone:this.getAdmin})).then(res=>{ 
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该手机号未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"

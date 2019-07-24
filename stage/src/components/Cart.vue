@@ -172,7 +172,7 @@ export default {
       this.product_arr=arr
       this.Cartl=arr.length
       for (var i = 0; i < this.product_arr.length; i++) {
-        this.$axios.post("http://192.168.1.102:3000/detail/product",
+        this.$axios.post("http://127.0.0.1:3000/detail/product",
           this.qs.stringify({ product_id: this.product_arr[i].product_id }))
         .then(res => {
           if (res.data.code == 1) {
@@ -194,7 +194,7 @@ export default {
     })
   },
   created() {
-    this.$axios.get("http://192.168.1.102:3000/cart/productSelect").then(res => {
+    this.$axios.get("http://127.0.0.1:3000/cart/productSelect").then(res => {
       this.product_selects = res.data.productSelect;
     });
   },

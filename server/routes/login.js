@@ -9,7 +9,7 @@ router.post("/user",(req,res)=>{
     pool.query("SELECT * FROM dji_user WHERE user_email=? and user_pwd=?",[$admin,$upwd],(err,result)=>{
       if(err) throw err;
     if(result.length>0){
-      res.send({code:1,userId:result[0].user_id});
+      res.send({code:1,user_id:result[0].user_id});
     }else{
       res.send({code:0});
     }

@@ -71,7 +71,7 @@ export default {
     }
   },
   created() {
-    this.$axios.get("http://192.168.1.102:3000/index/products").then(res => {
+    this.$axios.get("http://127.0.0.1:3000/index/products").then(res => {
       for (var i = 0; i < res.data.length; i++) {
         if (res.data[i].relevancy_id != null) {
           var relevancy_id = res.data[i].relevancy_id;
