@@ -1,4 +1,4 @@
-# dJi-Android-
+﻿# dJi-Android-
 一.大疆(Andioid)项目</br>
 ! 此项目分为未登录和登录后的商城项目系统 !</br>
 1.模仿 https://m.dji.com/cn 项目官网</br>
@@ -7,7 +7,7 @@
 4.否则一系列法律问题，本人不做相应的承担</br>
 二.使用</br>
 ! 注意，此项目分为未登录与登录后，项目不允许向数据库进行注册 !</br>
-! 默认登录账号与密码  12312312311 123456.. !</br>
+! 默认登录账号与密码  15555555555 123456.. !</br>
 2.下载xmapp集成服务器和node.js</br>
 3.启动xmapp的Apache和mysql的start哦</br>
 4.打开xmapp集成服务器中的mysql的admin网页化管理导入Dji.sql哦</br>
