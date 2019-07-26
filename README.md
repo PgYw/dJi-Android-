@@ -18,20 +18,20 @@
 搜索127.0.0.1更换本地电脑ip(手机与电脑必须一个局域网内)</br>
 最后cmd运行vue-cli:npm run dev</br>
 本项目只供初学者学习和初学者浏览使用，请大神勿喷！</br>
-1.目录结构
+1.目录结构</br>
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/projectDir.PNG)
-1.首页
+1.首页</br>
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/index1.PNG)
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/index2.PNG)
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/index3.PNG)
-2.用户中心
+2.用户中心</br>
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/user.PNG)
-3.登录与注册
+3.登录与注册</br>
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/login.PNG)
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/reg.PNG)
-4.商品详情
+4.商品详情</br>
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/detail1.PNG)
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/detail2.PNG)
-5.购物车
+5.购物车</br>
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/cart1.PNG)
 ![image](https://github.com/PgYw/dJi-Android-/blob/master/projectImg/cart2.PNG)
