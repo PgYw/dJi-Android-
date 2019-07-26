@@ -104,24 +104,19 @@ export default {
   data(){
     return{
       Cartl:0,
-      product_arr:[],
       isShow1:false,
       isShow2:false,
     }
   },
-  mounted() {
-    var user_id=sessionStorage.getItem("userId")
-    this.getStorage().then(arr=>{
-      this.Cartl=arr.length
-    })
-  },
   methods: {
+    // 二级菜单按钮图标
     menu(){
       this.isShow1=true;
     },
     hidden(){
       this.isShow1=false;
     },
+    // 二级菜单客服帮助
     help_phone(){
       if(this.$refs.Cell_phone.style.display=="none"){
       this.$refs.Cell_phone.style="display:block";
@@ -129,15 +124,19 @@ export default {
       this.$refs.Cell_phone.style="display:none";
       }
     },
+    // 返回上一页
     Out(){
       sessionStorage.removeItem("userId");
       this.getStorage()
       this.$router.push("/Index")
     }
   },
+  // 加载和设置一些所需数据
   mounted() {
-    this.Cartl=this.getStorage().Cartl;
-    this.product_arr=this.getStorage().product_arr
+    this.getStorage().then(arr=>{
+      this.Cartl=arr.length;
+    });
+    var user_id=sessionStorage.getItem("userId")
   },
 }
 </script>

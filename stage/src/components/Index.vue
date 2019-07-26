@@ -162,7 +162,7 @@
             <img v-lazy="favourable.favourable_imgUrl" style="width:100%;height:100%;" alt>
           </a>
         </div>
-        <div id="backTop" @click="backTop()">
+        <div id="backTop" @click="BackTop()">
           <i class="mint-toast-icon mintui mintui-back"></i>
         </div>
         <foter></foter>
@@ -272,6 +272,7 @@ export default {
       Cartl: 0
     };
   },
+  // 加载和设置所需数据
   mounted() {
     if(sessionStorage.getItem("userId")!=(undefined||null)){
       var user_id=sessionStorage.getItem("userId")
@@ -280,6 +281,7 @@ export default {
       this.Cartl=arr.length
     });
   },
+  // 加载和设置所需数据
   created() {
     this.$axios
       .all([
@@ -328,6 +330,7 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
+    // 监听滚动条
     handleScroll() {
       if (document.documentElement.scrollTop <= 500) {
         document.getElementById("backTop").style.display = "none";
@@ -335,6 +338,7 @@ export default {
         document.getElementById("backTop").style.display = "block";
       }
     },
+    // 二级菜单图标点击
     menu() {
       if (!this.isShow && this.show && this.dwShow == 1) {
         this.isShow = true;
@@ -348,7 +352,8 @@ export default {
         this.show = true;
       }
     },
-    backTop() {
+    // 返回顶部
+    BackTop() {
       var top = setInterval(function() {
         document.documentElement.scrollTop -= 150;
         if (document.documentElement.scrollTop == 0) {
@@ -357,10 +362,12 @@ export default {
       }, 30);
     }
   },
+  // 离开页面清除监听滚动条
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
   },
   computed: {
+    // 判断是否为登录状态
     isLogin() {
       if (sessionStorage.getItem("userId") != undefined) {
         return { text: "我的账户", route: "/User" };

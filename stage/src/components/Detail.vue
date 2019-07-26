@@ -41,7 +41,7 @@
           v-if="product!=undefined"
         >{{product.product_ify+" "+product.product_title}}</div>
       </div>
-      <div class="mast_but" v-if="relevancys!=undefined">
+      <div class="mast_but" v-if="relevancys.product_id!=null">
         <div class="but_title">选择必备组件</div>
         <div class="product_child">
           <div class="child_img">
@@ -49,7 +49,7 @@
               :to="{path:'/Detail',query:{productId:relevancys.product_id}}"
               target="_blank"
             >
-              <img v-lazy="relevancys.product_img" alt>
+              <img :src="relevancys.product_img" alt>
             </router-link>
           </div>
           <div class="child_value">
@@ -130,7 +130,7 @@
       </div>
       <foter></foter>
     </div>
-    <div id="backTop" @click="backTop()">
+    <div id="backTop" @click="BackTop()">
       <i class="mint-toast-icon mintui mintui-back"></i>
     </div>
   </div>
@@ -154,6 +154,7 @@ export default {
       Cartl: 0
     };
   },
+  // 加载和设置所需数据
   mounted() {
     var user_id=sessionStorage.getItem("userId")
     this.getStorage().then(arr=>{
@@ -161,6 +162,7 @@ export default {
       this.Cartl=arr.length
     })
   },
+  // 加载和设置所需数据
   created() {
     var user_id = sessionStorage.getItem("userId");
     if (this.$route.query.productId) {
@@ -177,7 +179,6 @@ export default {
               this.qs.stringify({ product_id: this.product.relevancy_id }))
               .then(res => {
                 this.relevancys=res.data.product[0];
-                console.log(this.relevancys)
                 this.productIds_cart.push({
                   product_id: res.data.product[0].product_id,
                   isCart: false
@@ -212,12 +213,17 @@ export default {
           })
         );
     }
-    window.addEventListener("storage", () => {
-      this.Cartl = this.getStorage().Cartl;
-      this.product_arr = this.getStorage().product_arr;
-    });
+    // 监听本地数据的变化
+    if(user_id==undefined||null){
+      window.addEventListener("storage", () => {
+        this.Cartl = this.getStorage().Cartl;
+        this.product_arr = this.getStorage().product_arr;
+      });
+    }
+    window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
+    // 返回顶部判断
     BackTop() {
       var scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
@@ -227,18 +233,24 @@ export default {
         document.getElementById("backTop").style.display = "block";
       }
     },
+    // 加入购物车
     addCart(e) {
-      this.getStorage();
-      this.isExist=true;
+      // debugger
       let instance = Toast({
         message: '加入购物车成功',
         position: 'center',
         iconClass: 'mint-toast-icon mintui mintui-success'
       });
+      setTimeout(() => {
+        instance.close();
+        this.isExist=false;
+        this.Cartl=this.product_arr.length;
+      }, 1500);
+      this.getStorage();
+      this.isExist=true;
       if (sessionStorage.getItem("userId") != (undefined || null)) {
         var user_id = sessionStorage.getItem("userId");
         // 循环查找用户是否添加了子商品
-            console.log(this.productIds_cart)
         for (var i = 0; i < this.productIds_cart.length; i++) {
           if (this.productIds_cart[i].isCart) {
             this.$axios.post("http://127.0.0.1:3000/cart/slCart",
@@ -248,7 +260,7 @@ export default {
               }))
               .then(res => {
                 if (res.data.code == 1) {
-                  // 因为用户只要点击了父商品都要添加购物车
+                  // 因为用户只要点击了加入购物车都要添加到购物车
                   // 所以只需要判断子商品是否存在就行
                   for (var i = 0; i < this.product_arr.length; i++) {
                     // 判断是否有父商品
@@ -266,7 +278,7 @@ export default {
                           }
                         });
                     }
-                    // 判断是否有子产品，并且购物车数据库有没有该子产品
+                    // 判断是否有子商品，并且购物车数据库有没有该子商品
                     if (this.product.relevancy_id != null &&this.product_arr[i].product_id == this.product.relevancy_id) {
                       this.product_arr[i].product_count += this.num;
                       this.$axios.post("http://127.0.0.1:3000/cart/upCart",
@@ -296,19 +308,11 @@ export default {
                           product_id: this.product.product_id,
                           product_count: 1
                         });
-                        this.product_arr.push(product_arr)
-                        this.$axios.post("http://127.0.0.1:3000/cart/addCart",
-                          this.qs.stringify({
-                            product_arr: JSON.stringify(product_arr)
-                          }))
-                          .then(res => {
-                            if (res.data.code != 1) {
-                              alert("对不起，参数错误");
-                            }
-                          });
+                        this.product_arr.push(product_arr[0])
+                        this.joinCart(product_arr);
                       }
                     });
-                  // 说明购物车中没有该父子商品，那么就创建
+                  // 说明购物车中没有该子商品，那么就创建
                   if (this.num > 0) {
                     this.$axios.post("http://127.0.0.1:3000/cart/slCart",
                       this.qs.stringify({
@@ -322,15 +326,8 @@ export default {
                             product_id: this.product.relevancy_id,
                             product_count: this.num
                           });
-                          this.product_arr.push(product_arr)
-                          this.$axios.post("http://127.0.0.1:3000/cart/addCart",
-                            this.qs.stringify({
-                            product_arr: JSON.stringify(product_arr)}))
-                            .then(res => {
-                            if (res.data.code != 1) {
-                              alert("对不起，参数错误");
-                            }
-                          });
+                          this.product_arr.push(product_arr);
+                          this.joinCart(product_arr);
                         }
                       });
                   }
@@ -338,13 +335,8 @@ export default {
               });
           }
         }
-        setTimeout(() => {
-          instance.close();
-          this.isExist=false;
-          this.Cartl=this.product_arr.length
-          console.log(this.product_arr)
-        }, 1500);
       } else {
+        // 执行本地数据存储
         if (!(window.localStorage &&(window.localStorage.setItem("a", 123),window.localStorage.getItem("a") == 123))) {
           alert("您的电脑可能未开启本地存储");
           return;
@@ -403,10 +395,11 @@ export default {
             this.product_arr.push(product_obj);
           }
         }
-        this.setStorage(this.product_arr);
+        this.upCart(this.product_arr);
         this.Cartl = this.product_arr.length;
       }
     },
+    // 增加
     Up() {
       // 因为第一位是父商品的位置，所以index要+1
       this.productIds_cart[1].isCart = true;
@@ -417,6 +410,7 @@ export default {
         parseInt(this.product.product_Oprice);
       this.$refs.product_price.innerHTML = price;
     },
+    // 减少
     Ep() {
       this.num--;
       var price =
@@ -430,14 +424,15 @@ export default {
       }
       this.$refs.ep.style = "display:inline-block";
     },
-    backTop() {
-      var top = setInterval(function() {
-        document.documentElement.scrollTop -= 50;
-        if (document.documentElement.scrollTop == 0) {
-          clearInterval(top);
-        }
-      }, 30);
+    // 监听滚动条
+    handleScroll() {
+      if (document.documentElement.scrollTop <= 500) {
+        document.getElementById("backTop").style.display = "none";
+      } else {
+        document.getElementById("backTop").style.display = "block";
+      }
     },
+    // 返回上一页
     goOut() {
       if (window.history.length <= 1) {
         this.$router.push({ path: "/" });
@@ -445,10 +440,20 @@ export default {
       } else {
         this.$router.go(-1);
       }
+    },
+    // 返回顶部
+    BackTop() {
+      var top = setInterval(function() {
+        document.documentElement.scrollTop -= 150;
+        if (document.documentElement.scrollTop == 0) {
+          clearInterval(top);
+        }
+      }, 30);
     }
   },
+  // 离开页面清除监听滚动条
   destroyed() {
-    window.removeEventListener("scroll", this.BackTop);
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -700,7 +705,7 @@ ul {
   transition: all 2s linear;
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 1px;
   padding: 0;
 }
 .xinxi_title > i:first-child {

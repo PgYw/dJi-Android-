@@ -25,8 +25,8 @@ router.post("/user",(req,res)=>{
     })
   }
 })
-router.post("/phone",(req,res)=>{
-  var $phone=req.body.phone;
+router.get("/phone",(req,res)=>{
+  var $phone=req.query.phone;
   pool.query("SELECT * FROM dji_user WHERE user_phone=?",$phone,(err,result)=>{
     if(err) throw err;
     if(result.length>0){

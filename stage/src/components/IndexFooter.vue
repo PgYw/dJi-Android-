@@ -70,6 +70,7 @@ export default {
       products_ify:[],
     }
   },
+  // 加载商品分类
   created() {
     this.$axios.get("http://127.0.0.1:3000/index/products").then(res => {
       for (var i = 0; i < res.data.length; i++) {

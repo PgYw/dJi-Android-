@@ -1,5 +1,7 @@
+// 引入所需模块
 import $axios from 'axios';
 import qs from 'qs';
+// 获取本地购物车数据或者服务器端购物车数据
 function getStorage(){
   var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
@@ -28,7 +30,8 @@ function getStorage(){
     }
   }
 }
-function setStorage(value) {
+// 更新商品的数据
+function upCart(value) {
   var user_id=sessionStorage.getItem("userId")
   if (user_id != (undefined || null)) {
     $axios.post("http://127.0.0.1:3000/cart/upCart",
@@ -39,7 +42,7 @@ function setStorage(value) {
       }))
       .then(res => {
         if (res.data.code != 1) {
-          alert("对不起，参数错误");
+          alert("对不起，服务器端错误");
           return;
         }
       });
@@ -51,7 +54,7 @@ function setStorage(value) {
     }
   }
 }
-
+// 取消单选或者选中单选
 function isSelect(value) {
   var user_id=sessionStorage.getItem("userId")
   if(user_id!=(undefined||null)){
@@ -69,7 +72,7 @@ function isSelect(value) {
       });
   }
 }
-
+// 删除商品
 function dtCart(value) {
   var user_id=sessionStorage.getItem("userId")
   $axios.post("http://127.0.0.1:3000/cart/dtCart",
@@ -84,4 +87,17 @@ function dtCart(value) {
       }
     });
 }
-  export { getStorage, setStorage, isSelect, dtCart };
+// 增加商品
+function addCart(product_arr){
+  this.$axios.post("http://127.0.0.1:3000/cart/addCart",
+  this.qs.stringify({
+    product_arr: JSON.stringify(product_arr)
+  }))
+  .then(res => {
+    if (res.data.code != 1) {
+      alert("对不起，参数错误");
+    }
+  });
+}
+// 导出所需function，共mian.js使用
+  export { getStorage, upCart, isSelect, dtCart , addCart };

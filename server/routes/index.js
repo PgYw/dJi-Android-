@@ -57,36 +57,3 @@ router.get("/products",(req,res)=>{
   })
 });
 module.exports=router;
-
-
-
-
-
-// { '无线网络连接':
-//    [ { address: 'fe80::ad1c:ec29:92aa:e6bb',
-//        netmask: 'ffff:ffff:ffff:ffff::',
-//        family: 'IPv6',
-//        mac: 'e0:06:e6:f9:a3:25',
-//        scopeid: 11,
-//        internal: false,
-//        cidr: 'fe80::ad1c:ec29:92aa:e6bb/64' },
-//      { address: '192.168.1.103',
-//        netmask: '255.255.255.0',
-//        family: 'IPv4',
-//        mac: 'e0:06:e6:f9:a3:25',
-//        internal: false,
-//        cidr: '192.168.1.103/24' } ],
-//   'Loopback Pseudo-Interface 1':
-//    [ { address: '::1',
-//        netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
-//        family: 'IPv6',
-//        mac: '00:00:00:00:00:00',
-//        scopeid: 0,
-//        internal: true,
-//        cidr: '::1/128' },
-//      { address: '127.0.0.1',
-//        netmask: '255.0.0.0',
-//        family: 'IPv4',
-//        mac: '00:00:00:00:00:00',
-//        internal: true,
-//        cidr: '127.0.0.1/8' } ] }

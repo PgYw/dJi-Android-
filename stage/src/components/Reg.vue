@@ -14,7 +14,7 @@
                   <button disabled class="btn">+86</button>
                   <input type="text" placeholder="请输入手机号*" ref="phone" v-model="getPhone">
                 </div>
-                <i class="clearInput" ref="clearInput" @click="clearPhone()" :style="getPhone.length>0?'display:block':''"></i>
+                <i class="clearInput" ref="clearPhone" @click="clearPhone()" :style="getPhone.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="phone_err"></span>
                 </div>
@@ -46,7 +46,7 @@
             <div class="email" ref="Email" v-if="show" key="two">
               <div class="one_email">
                 <input type="text" placeholder="邮箱*" ref="email" v-model="getEmail">
-                <i class="clearEmail" ref="clearEmail" @click="clearEmail()"></i>
+                <i class="clearEmail" ref="clearEmail" @click="clearEmail()" :style="getCpwd.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="email_err"></span>
                 </div>
@@ -62,24 +62,24 @@
                 </div>
               </div>
               <div class="three_yzm">
-                <dir class="yzm_text">
+                <div class="yzm_text">
                   <input type="text" placeholder="请输入验证码*" ref="yzmd" v-model="getYzmd">
                   <button class="goCode" ref="goCoded" @click="goCoded()">发送验证码</button>
-                </dir>
+                </div>
                 <i class="clearYzmd" ref="clearYzmd" @click="clearYzmd()" :style="getYzmd.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="yzmd_err"></span>
                 </div>
               </div>
               <div class="four_upwd">
-                <input type="password" placeholder="密码*" ref="upwd" v-model="getUpwd">
-                <i class="clearUpwd" ref="clearUpwd" @click="clearUpwd()"></i>
+                <input type="password" placeholder="密码*" ref="upwd" v-model="getUpwd" readonly onfocus="this.removeAttribute('readonly');">
+                <i class="clearUpwd" ref="clearUpwd" @click="clearUpwd()" :style="getCpwd.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="upwd_err"></span>
                 </div>
               </div>
               <div class="five_cpwd">
-                <input type="password" placeholder="请再次输入密码*" ref="cpwd" v-model="getCpwd">
+                <input type="password" placeholder="请再次输入密码*" ref="cpwd" v-model="getCpwd" readonly onfocus="this.removeAttribute('readonly');">
                 <i class="clearCpwd" ref="clearCpwd" @click="clearCpwd()" :style="getCpwd.length>0?'display:block':''"></i>
                 <div class="msg_err">
                   <span ref="cpwd_err"></span>
@@ -126,90 +126,33 @@ export default {
       change:[],
     }
   },
+  // 清除相应的绑定数据
   methods: {
-    clear_fail(data){
-      if(data=='this.getPhone'){
-        if(this.getPhone!=""){
-          this.getPhone=""
-          this.$refs.clearInput.style="display:none"
-          this.$refs.phone_err.innerHTML="手机号不能为空"
-          this.$refs.phone.style="border: 1px solid #f04848;"
-        }
-      }else if(data=="this.getYzm"){
-        if(this.getYzm!=""){
-          this.getYzm=""
-          this.$refs.clearYzm.style="display:none"
-          this.$refs.yzm_err.innerHTML="验证码不能为空"
-          this.$refs.yzm.style="border: 1px solid #f04848;"
-        }
-      }else if(data=='this.getPsword'){
-        if(this.getPsword!=""){
-          this.getPsword=""
-          this.$refs.clearPsword.style="display:none"
-          this.$refs.psword_err.innerHTML="密码不能为空"
-          this.$refs.psword.style="border: 1px solid #f04848;"
-        }
-      }else if(data=='this.getEmail'){
-        if(this.getEmail!=""){
-          this.getEmail=""
-          this.$refs.clearEmail.style="display:none"
-          this.$refs.email_err.innerHTML="邮箱不能为空"
-          this.$refs.email.style="border: 1px solid #f04848;"
-        }
-      }else if(data=='this.getPhoned'){
-        if(this.getPhoned!=""){
-          this.getPhoned=""
-          this.$refs.clearPhoned.style="display:none"
-          this.$refs.phoned_err.innerHTML="确认密码不能为空不能为空"
-          this.$refs.phoned.style="border: 1px solid #f04848;"
-        }
-      }else if(data=='this.getYzmd'){
-        if(this.getYzmd!=""){
-          this.getYzmd=""
-          this.$refs.clearYzmd.style="display:none"
-          this.$refs.yzmd_err.innerHTML="验证码不能为空"
-          this.$refs.yzmd.style="border: 1px solid #f04848;"
-        }
-      }else if(data=='this.getUpwd'){
-        if(this.getUpwd!=""){
-          this.getUpwd=""
-          this.$refs.clearUpwd.style="display:none"
-          this.$refs.upwd_err.innerHTML="密码不能为空"
-          this.$refs.upwd.style="border: 1px solid #f04848;"
-        }
-      }else{
-        if(this.getCpwd!=""){
-          this.getCpwd=""
-          this.$refs.clearCpwd.style="display:none"
-          this.$refs.cpwd_err.innerHTML="确认密码不能为空不能为空"
-          this.$refs.cpwd.style="border: 1px solid #f04848;"
-        }
-      }
-    },
     clearPhone(){
-      this.clear_fail('this.getPhone')
+      this.getPhone="";
     },
     clearYzm(){
-      this.clear_fail('this.getYzm')
+      this.getYzm="";
     },
     clearPsword(){
-      this.clear_fail('this.getPsword')
+      this.getPsword="";
     },
     clearEmail(){
-      this.clear_fail('this.getEmail')
+      this.getEmail="";
     },
     clearPhoned(){
-      this.clear_fail('this.Phoned')
+      this.getPhoned="";
     },
     clearYzmd(){
-      this.clear_fail('this.Yzmd')
+      this.getYzmd="";
     },
     clearUpwd(){
-      this.clear_fail('this.Upwd')
+      this.getUpwd="";
     },
     clearCpwd(){
-      this.clear_fail('this.Cpwd')
+      this.getCpwd="";
     },
+    // 发送验证码
     goCode(){
       var num=60;
       this.$refs.goCode.innerHTML="重新发送("+num+"s)";
@@ -238,6 +181,7 @@ export default {
         }
       },1000)
     },
+    // 手机与邮箱按钮互切
     phone(){
       this.show=false;
       this.getPhoned="";
@@ -252,6 +196,7 @@ export default {
       this.getYzm="";
       this.getPsword="";
     },
+    // 返回上一页
     goOut(){
       if (window.history.length<=1) {
         this.$router.push({path:'/'})
@@ -262,6 +207,7 @@ export default {
     }
   },
   watch: {
+    // 监听
     change(){
       if(this.change[0]&&this.change[1]){
         this.$refs.emailReg.style="opacity:1;-webkit-appearance:button;cursor: pointer;"
@@ -272,16 +218,12 @@ export default {
     getPhone(){
       if(this.getPhone.length>=1){
       var num=new Number(this.getPhone);
-      this.$refs.clearInput.style="display:block";
         if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getPhone)){
           this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getPhone).then(res=>{
             if(res.data.code!=0){
-              this.$refs.phone_err.innerHTML="该手机号已被注册!"
+              this.$refs.phone_err.innerHTML="对不起，服务端错误"
               this.$refs.phone.style="border: 1px solid #f04848;"
               this.isReg[0]=false;
-            }else{
-              alert("对不起，参数错误")
-              return;
             }
           })
           this.$refs.phone_err.innerHTML=""
@@ -293,14 +235,12 @@ export default {
           this.isReg[0]=false;
         }
       }else{
-        this.$refs.clearInput.style="display:none"
         this.$refs.phone_err.innerHTML="手机号不能为空"
         this.$refs.phone.style="border: 1px solid #f04848;"
       }
     },
     getYzm(){
       if(this.getYzm.length>=1){
-      this.$refs.clearYzm.style="display:block";
         if(this.getYzm=="ABCD"){
           this.$refs.yzm_err.innerHTML=""
           this.$refs.yzm.style="border: 1px solid #e6e6e6;"
@@ -318,7 +258,6 @@ export default {
     },
     getPsword(){
       if(this.getPsword.length>=1){
-      this.$refs.clearPsword.style="display:block";
         if(!this.isReg[1]){
           this.$refs.psword_err.innerHTML="请先填写验证码!"
           this.$refs.psword.style="border: 1px solid #f04848;"
@@ -340,16 +279,12 @@ export default {
     },
     getEmail(){
       if(this.getEmail.length>=1){
-      this.$refs.clearEmail.style="display:block";
         if((/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/).test(this.getEmail)){
           this.$axios.get("http://127.0.0.1:3000/login/email?email="+this.getEmail).then(res=>{
             if(res.data.code!=0){
               this.$refs.email_err.innerHTML="该邮箱已被注册!"
               this.$refs.email.style="border: 1px solid #f04848;"
               this.isReg[2]=false;
-            }else{
-              alert("对不起，参数错误")
-              return;
             }
           })
           this.$refs.email_err.innerHTML=""
@@ -368,16 +303,12 @@ export default {
     },
     getPhoned(){
       if(this.getPhoned.length>=1){
-      this.$refs.clearPhoned.style="display:block";
         if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getPhoned)){
           this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getPhoned).then(res=>{
             if(res.data.code!=0){
               this.$refs.phoned_err.innerHTML="该手机号已被注册!"
               this.$refs.phoned.style="border: 1px solid #f04848;"
               this.isReg[5]=false;
-            }else{
-              alert("对不起，参数错误")
-              return;
             }
           })
           this.$refs.phoned_err.innerHTML=""
@@ -439,8 +370,8 @@ export default {
     },
     getCpwd(){
       if(this.getCpwd.length>=1){
-      this.$refs.clearCpwd.style="display:block";
-        if((/^[0-9a-zA-Z]{6,20}$/).test(this.getCpwd)&&this.getCpwd==this.getUpwd){
+        console.log(this.isReg[3])
+        if((/^[0-9a-zA-Z]{6,20}$/).test(this.getCpwd)&&this.getCpwd==this.getUpwd&&this.isReg[3]){
           this.$refs.cpwd_err.innerHTML=""
           this.$refs.upwd_err.innerHTML=""
           this.$refs.cpwd.style="border: 1px solid #e6e6e6;"
@@ -455,7 +386,7 @@ export default {
           this.$refs.cpwd.style="border: 1px solid #f04848;"
           this.$refs.upwd.style="border: 1px solid #f04848;"
           this.isReg[4]=false;
-        }else if(this.getCpwd==this.getUpwd){
+        }else if(this.getCpwd==this.getUpwd&&this.isReg[3]){
           this.$refs.cpwd_err.innerHTML=""
           this.$refs.cpwd.style="border: 1px solid #e6e6e6;"
           this.$refs.upwd.style="border: 1px solid #e6e6e6;"
@@ -474,7 +405,7 @@ export default {
   },
 }
 </script>
-<style lang="css">
+<style lang="css" scoped>
 *{
   padding:0;
   margin:0;
@@ -745,7 +676,7 @@ export default {
   width:11.7rem;
 }
 .reg .email>.three_yzm>i{
-  right:10.1rem !important;
+  right:8.7rem !important;
 }
 .reg .email>.two_phone>.phone_text{
   display: flex;

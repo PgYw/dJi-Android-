@@ -52,6 +52,7 @@ export default {
       isLogin:"",
     }
   },
+  // 加载和设置所需数据
   mounted() {
     window.addEventListener("storage",function(){
       this.getStorage().then(arr=>{
@@ -91,6 +92,7 @@ export default {
     }
   },
   methods: {
+    // 返回上一页
     goOut(){
       if (window.history.length<=1) {
         this.$router.push({path:'/'})
@@ -99,6 +101,7 @@ export default {
         this.$router.go(-1)
       }
     },
+    // 是否显示密码
     Bg(){
       if(this.bg){
         this.$refs.upwdHidden.style.backgroundImage="url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTYgMTIiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNMTUuODE1IDcuMjg2QzE0LjI1IDQuNDgzIDExLjMyOCAyLjYxIDggMi42MWMtMy4zMyAwLTYuMjUgMS44NzUtNy44MTUgNC42NzctLjI0Ny40NC0uMjQ3Ljk4NyAwIDEuNDI4QzEuNzUgMTEuNTE3IDQuNjcyIDEzLjM5MSA4IDEzLjM5MWMzLjMzIDAgNi4yNS0xLjg3NSA3LjgxNS00LjY3Ny4yNDctLjQ0LjI0Ny0uOTg3IDAtMS40Mjh6TTggMTEuOTg0Yy0yLjA4OCAwLTMuNzc4LTEuNzgyLTMuNzc4LTMuOTg0UzUuOTEyIDQuMDE2IDggNC4wMTYgMTEuNzc4IDUuNzk4IDExLjc3OCA4IDEwLjA4OCAxMS45ODQgOCAxMS45ODR6TTEwLjg4OSA4YzAgMS42ODMtMS4yOTQgMy4wNDctMi44ODkgMy4wNDctMS41OTUgMC0yLjg4OS0xLjM2NC0yLjg4OS0zLjA0NyAwLS41MTkuMTIzLTEuMDA3LjM0LTEuNDM1di4wMDFjMCAuNjkzLjUzMyAxLjI1NSAxLjE5IDEuMjU1LjY1NyAwIDEuMTktLjU2MiAxLjE5LTEuMjU1IDAtLjY5My0uNTMzLTEuMjU0LTEuMTktMS4yNTRINi42NEEyLjc1OCAyLjc1OCAwIDAgMSA4IDQuOTUzYzEuNTk1IDAgMi44ODkgMS4zNjQgMi44ODkgMy4wNDd6Ii8+PC9kZWZzPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAtMikiPjxtYXNrIGlkPSJiIiBmaWxsPSIjZmZmIj48dXNlIHhsaW5rOmhyZWY9IiNhIi8+PC9tYXNrPjx1c2UgZmlsbD0iIzAwMCIgZmlsbC1ydWxlPSJub256ZXJvIiB4bGluazpocmVmPSIjYSIvPjxnIGZpbGw9IiMzQjNFNDAiIG1hc2s9InVybCgjYikiPjxwYXRoIGQ9Ik0wIDBoMTZ2MTZIMHoiLz48L2c+PC9nPjwvc3ZnPg==)";
@@ -110,6 +113,7 @@ export default {
         this.$refs.upwd.type="password";
       }
     },
+    // 登录按钮
     Login(){
       if(this.isLogin==2){
         this.$axios.post("http://127.0.0.1:3000/login/user",this.qs.stringify({
@@ -165,9 +169,6 @@ export default {
               })
             }
             this.$refs.err.innerHTML="";
-            this.getStorage().then(arr=>{
-              this.product_arr=arr
-            })
             this.$router.push("/Index")
             localStorage.removeItem("product");
           }else{
@@ -187,6 +188,7 @@ export default {
         })
       }
     },
+    // 清除
     clear(){
       this.getAdmin="";
       this.$refs.clearInput.style="display:none"
@@ -195,6 +197,7 @@ export default {
     }
   },
   watch: {
+    // 监听
     getAdmin:function(){
       if(this.getAdmin.length>=1){
         var num=new Number(this.getAdmin);
@@ -209,7 +212,7 @@ export default {
           this.$refs.admin_err.innerHTML=""
           this.$refs.admin.style="border: 1px solid #e6e6e6;"
         }else if(num.toString()!="NaN"&&(/^0?1[3|4|5|6|7|8][0-9]\d{8}$/).test(this.getAdmin)){
-           this.$axios.post("http://127.0.0.1:3000/login/phone",this.qs.stringify({phone:this.getAdmin})).then(res=>{ 
+           this.$axios.get("http://127.0.0.1:3000/login/phone?phone="+this.getAdmin).then(res=>{ 
             if(res.data.code!=1){
               this.$refs.admin_err.innerHTML="该手机号未被注册!"
               this.$refs.admin.style="border: 1px solid #f04848;"

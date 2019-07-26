@@ -43,13 +43,12 @@
       </div>
       <div class="detail" v-for="(product,index) in product_arr" :key="product.product_id">
         <transition name="fade">
-          <div :key="'one'+index">
+          <div>
             <div class="input">
               <input
                 type="checkbox"
                 :checked="product.product_isSelect"
                 @click="select(index,$event)"
-                id="check"
               >
             </div>
             <div class="img">
@@ -122,7 +121,7 @@
           <span>为您推荐</span>
         </div>
         <ul>
-          <li v-for="(product_select,index) in product_selects" :key="product_select.id">
+          <li v-for="(product_select,index) in product_selects" :key="product_select.product_id">
             <div class="product_img">
               <img :src="product_select.product_img" alt>
             </div>
@@ -162,14 +161,11 @@ export default {
   },
   mounted() {
     window.addEventListener("storage", () => {
-      this.getStorage().then(arr=>{
-        this.product_arr=arr
-      });
     });
     this.clear = setInterval(this.loading, 1000);
     this.getStorage().then(arr=>{
-      var num = 0;
       this.product_arr=arr
+      var num = 0;
       this.Cartl=arr.length
       for (var i = 0; i < this.product_arr.length; i++) {
         this.$axios.post("http://127.0.0.1:3000/detail/product",
@@ -193,23 +189,26 @@ export default {
       }
     })
   },
+  // 推荐商品
   created() {
     this.$axios.get("http://127.0.0.1:3000/cart/productSelect").then(res => {
       this.product_selects = res.data.productSelect;
     });
   },
   methods: {
+    // 增加
     Up(index) {
       var product_id = this.product_arr[index].product_id;
       let obj = this.product_arr[index];
       obj.product_count++;
       this.$set(this.product_arr, index, obj);
       if (this.user_id != (undefined || null)) {
-        this.setStorage(this.product_arr[index]);
+        this.upCart(this.product_arr[index]);
       } else {
-        this.setStorage(this.product_arr);
+        this.upCart(this.product_arr);
       }
     },
+    // 减少
     Ep(index) {
       var product_id = this.product_arr[index].product_id;
       if (this.product_arr[index].product_count <= 1) {
@@ -219,11 +218,12 @@ export default {
       obj.product_count--;
       this.$set(this.product_arr, index, obj);
       if (this.user_id != (undefined || null)) {
-        this.setStorage(this.product_arr[index]);
+        this.upCart(this.product_arr[index]);
       } else {
-        this.setStorage(this.product_arr);
+        this.upCart(this.product_arr);
       }
     },
+    // 删除
     Dt(index) {
       var product_id = this.product_arr[index].product_id;
       if (this.user_id != (undefined || null)) {
@@ -235,9 +235,10 @@ export default {
             this.product_arr.splice(index, 1);
           }
         }
-        this.setStorage(this.product_arr)
+        this.upCart(this.product_arr)
       }
     },
+    // 是否选中
     select(index, e) {
       e.target.checked
         ? (this.product_arr[index].product_isSelect = true)
@@ -248,12 +249,13 @@ export default {
         this.isSelect(this.product_arr[index]);
         this.$set(this.product_arr, index, obj);
       } else {
-        this.setStorage(this.product_arr);
+        this.upCart(this.product_arr);
       }
     },
+    // 推荐商品加入购物车
     addCart(e,index) {
       this.getStorage();
-      e.target.disabled?e.target.disabled='':e.target.disabled='disabled'
+      this.isExist?e.target.disabled='':e.target.disabled='disabled'
       this.isExist=true;
       let instance = Toast({
         message: '加入购物车成功',
@@ -263,29 +265,38 @@ export default {
       setTimeout(() => {
         instance.close();
         this.isExist=false;
+        this.isExist?e.target.disabled='disabled':e.target.disabled=''
       }, 1500);
-      var isAdd = false;
-      var product_obj = {
-        product_isSelect: true,
-        product_id: this.product_selects[index].product_id,
-        product_img: this.product_selects[index].product_img,
-        product_ify:this.product_selects[index].product_ify, 
-        product_title:this.product_selects[index].product_title,
-        product_Oprice: this.product_selects[index].product_Oprice,
-        product_Nprice: this.product_selects[index].product_Nprice,
-        product_count: 1
-      };
+      var isAdd=false;
       for (var i = 0; i < this.product_arr.length; i++) {
-        if (this.product_arr[i].product_id == product_obj.product_id) {
+        if (this.product_arr[i].product_id == this.product_selects[index].product_id) {
           this.product_arr[i].product_count++;
-          isAdd = true;
+          this.upCart(this.product_arr[i]);
+          isAdd=true;
+          return;
         }
       }
-      if (!isAdd) {
-        this.product_arr.push(product_obj);
+      if(!isAdd){
+        var product_obj = {
+          product_isSelect: true,
+          product_id: this.product_selects[index].product_id,
+          product_img: this.product_selects[index].product_img,
+          product_ify:this.product_selects[index].product_ify, 
+          product_title:this.product_selects[index].product_title,
+          product_Oprice: this.product_selects[index].product_Oprice,
+          product_Nprice: this.product_selects[index].product_Nprice,
+          product_count: 1
+        };
+        Vue.set(this.product_arr,this.product_arr.length,product_obj);
+        var arr=[{
+          user_id: this.user_id,
+          product_id: this.product_selects[index].product_id,
+          product_count: 1
+        }]
+        this.joinCart(arr);
       }
-      this.setStorage(this.product_arr);
     },
+    // 购物车页面加载框
     loading() {
       this.ldTime++;
       if (this.ldTime == 2) {
@@ -293,6 +304,7 @@ export default {
         clearInterval(this.clear);
       }
     },
+    // 返回上一页
     goOut() {
       if (window.history.length <= 1) {
         this.$router.push({ path: "/" });
@@ -301,11 +313,13 @@ export default {
         this.$router.go(-1);
       }
     },
+    // 结算
     goDt() {
       console.log("结算中.....");
     }
   },
   watch: {
+    // 监听商品数量，是否显示购物车为空内容
     product_arr: function() {
       if (this.product_arr.length > 0) {
         this.show = true;
@@ -315,6 +329,7 @@ export default {
     }
   },
   computed: {
+    // 计算商品总价格和选中商品的数量
     sum() {
       let sum = 0,
         length = 0;
